@@ -1,0 +1,28 @@
+% Encoding: UTF-8
+
+@Book{colosimo;2006,
+  title     = {Análise de Sobrevivência Aplicada},
+  publisher = {Editora Bucher},
+  year      = {2006},
+  author    = {Colosimo, E, A. e Giolo, S. R.},
+  address   = {São Paulo},
+}
+
+@Article{Barreto;1994,
+  author  = {Barreto, M. L.; Santos, L. M. P.; Assis, A. M. O.; Araújo, M. P. N.; Franzena, G. G.; Santos, P. A. B.; Fiaccone, R. L.},
+  title   = {Effect of vitamin A supplementation on diarrhoea acute lower-respiratory-tract infection in young children in Brazil},
+  journal = {Lancet 344},
+  year    = {1994},
+  pages   = {228-231},
+}
+
+@Book{Lawless;2003,
+  title     = {Statistical Models and Methods for Lifetime Data},
+  publisher = {John Wiley and sons},
+  year      = {2003},
+  author    = {Lawless, J. F.},
+  address   = {New York},
+  edition   = {2nd edition},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

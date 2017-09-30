@@ -1,0 +1,224 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsthm,amsmath,natbib,vmargin}
+
+\usepackage[ansinew,utf8]{inputenc}
+
+\usepackage{multirow,colortbl,color,array}
+
+\usepackage[brazil]{babel}
+
+\usepackage{graphicx}
+
+\usepackage{cite}
+%\usepackage{setspace}
+
+\bibliographystyle{bbs}
+
+%\pagestyle{headings}
+
+%\theoremstyle{plain}
+
+%\newtheorem{teo}{Teorema}[section]
+
+\definecolor{gray}{rgb}{0.8,0.8,0.8}
+
+%\setlength{\parindent}{1em}
+
+\usepackage{subfigure}
+
+\usepackage[T1]{fontenc} 
+
+\usepackage{ae}
+
+\usepackage[table,xcdraw]{xcolor}
+
+\usepackage{amsmath}
+
+\usepackage{scalefnt}
+
+\usepackage{multirow}
+
+\usepackage{indentfirst}
+
+\usepackage[a4paper,left=6cm,right=2cm,top=5cm,bottom=5cm]{geometry}
+
+\usepackage[]{xcolor}
+
+\usepackage{makeidx}
+
+\usepackage{multicol}
+
+\usepackage{float}
+
+\usepackage{scalefnt} %muda tamanho da letra
+
+%\usepackage{pdfpages}
+
+\usepackage{parskip}
+
+%\usepackage[font=small,skip=0pt]{caption}
+
+\usepackage{indentfirst}
+
+\setlength{\parindent}{1em}
+
+\begin{document}
+%___________________________________CAPA____________________________________
+\pagestyle{empty}
+\newpage
+
+ \begin{center}
+ \includegraphics[height=1.5cm,keepaspectratio]{unb}\\
+ {\Large Universidade de Brasília\\
+ IE - Departamento de Estatística\\
+ Estágio Supervisionado 1}
+ \vskip 10em
+ {\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
+ \par
+ \vskip 5em
+
+{\setlength{\baselineskip}{.5cm}
+\textbf{Daniel Lima Viegas}
+\par}
+\vskip 5em
+
+\begin{flushright}
+\small Proposta de Projeto Final\\
+\vskip 2em
+\small Orientador: Prof.ª Juliana Betini Fachini Gomes
+\end{flushright}
+
+\vskip 6em
+{\setlength{\baselineskip}{.5cm}
+Brasília\\
+Setembro de 2017}
+
+ \end{center}
+ \newpage
+
+
+%___________________________________SUMÁRIO____________________________________
+
+\tableofcontents
+
+%__________________________________INTRODUÇÃO__________________________________
+\newpage
+\pagestyle{plain}
+\section{Introdução}
+\noindent
+
+A análise de sobrevivência é um tópico importante utilizado em diversas áreas, como biologia, engenharia, medicina, entre outros. O principal objetivo desta análise é explicar ou predizer o tempo até a ocorrência do evento estudado, esse tempo é chamado de tempo de falha. A principal diferença desta técnica de modelagem para as demais é a capacidade de levar em consideração também os tempos onde não foi possível observar o evento de interesse, esse tipo de ocorrência é chamado de censura.
+
+Dentro os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar.
+
+Em diversos estudos de sobrevivência, estuda-se o relacionamento de covariáveis e o tempo, tendo o objetivo de realizar as análises estatísticas e tentando encontrar o melhor uso dessas variáveis para a criação de um modelo de regressão para dados censurados.
+
+Um dos objetivos deste trabalho é sugerir um modelo de regressão para dados grupados, ou seja, considerando-se a grande quantidade de empates. Para a análise, irão ser utilizadas funções relativas ao estudo de sobrevivência, sejam algumas delas para calcular a probabilidade de que o indivíduo permaneça no experimento além do tempo em que ele já está, ou a taxa de falha de um indivíduo, onde essas funções serão calculadas a partir de métodos não-paramétricos.
+
+
+
+%__________________________________OBJETIVOS__________________________________
+\section{Objetivo}
+\noindent
+
+\subsection{Objetivo Geral}
+
+O objetivo deste trabalho é propor um modelo de regressão para dados de sobrevivência com censura intervalar quando ocorrem muitos empates.
+
+\subsection{Objetivos Especificos}
+
+Como a Análise de Sobrevivência exige o estudo de algumas técnicas não-paramétricas para o cálculo de seus estimadores e devido a não normalidade dos dados, apresentam-se os seguintes objetivos específicos:
+
+\begin{itemize}
+	
+	\item Estudar a metodologia de análise de sobrevivência;
+	\item Revisar a bibliografia a respeito de estudos de sobrevivência com dados grupados;	
+	\item Estudar as metodologias computacionais presentes nos pacotes de análise de sobrevivência no software estatístico R, com auxílio da IDE RStudio;
+	\item Estudar o banco de dados para a aplicação de um possível modelo;
+	\item Aplicar métodos para verificar a relação entre a variável tempo e as covariáveis presentes no banco;
+	\item Propor um modelo de regressão para dados censurados para 
+\end{itemize}
+
+\vspace{1cm}
+%__________________________________METODOLOGIA__________________________________
+\newpage
+\section{Metodologia}
+\noindent
+
+\subsection{Material}
+
+A fim de propor um modelo de regressão para dados grupados, irá ser utilizado um banco de dados cedido pelo Instituto de Saúde Coletiva da Universidade Federal da Bahia. Esses dados foram obtidos a partir de um estudo conduzido por Barreto et al.(1994). O banco de dados é formado por 1207 crianças com idade entre 6 e 48 meses no início do estudo, que receberam placebo ou vitamina A. Dentre as variáveis se encontra a variável tempo, que é o tempo entre a primeira dose de placebo ou vitamina A e a ocorrência de diarreia na criança, a variável idade, tipo de tratamento e a variável sexo.
+
+\subsection{Métodos}
+
+A função de sobrevivência e a Taxa de risco acumulado são funções essenciais na análise de sobrevivência, por isso, primeiramente será necessário estimá-las.
+
+Para a estimação dessas funções irá ser usado o estimador de Kaplan-Meier, foi escolhido por ser um estimador de máxima verossimilhança tendo assim sua consistência assintótica. Além disso, esse é um dos poucos métodos que consideram a censura.
+
+O método da máxima verossimilhança também será usado para a estimação dos parâmetros do modelo a ser proposto, assim como os parâmetros de uma possível distribuição observada da variável tempo.
+
+%__________________________________CRONOGRAMA__________________________________
+	
+\section{Cronograma}
+
+O cronograma a seguir, foi organizado da seguinte forma:
+
+\begin{enumerate}
+	\item Escolha do tema a ser abordado;
+	\item Estudo da metodologia de análise de sobrevivência;
+	\item Estudo de modelos de sobrevivência para dados grupados;
+	\item Desenvolvimento da proposta de projeto final;	
+	\item Entrega da proposta final do projeto final;
+	\item Entrega do relatório parcial ao orientdo para correção;
+	\item Ajuste de modelo de dados de sobrevivência para dados grupados;
+	\item Descrever resultados para o relatório final;
+	\item Correção do relatório final;
+	\item Entrega do relatório final a banca examinadora; e
+	\item Apresentação do relatório final para a banca examinadora.
+\end{enumerate}
+		
+\newpage
+\begin{table}[H]
+\centering
+\caption{Cronograma 2/2017}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{6}{c|}{\textbf{2/2017}}                                                                                                                                                                                            \\ \hline
+\textbf{Atividades} & \textbf{Julho}                                  & \textbf{Agosto}          & \textbf{Setembro}                               & \textbf{Outubro}                                & \textbf{Novembro}        & \textbf{Dezezembro} \\ \hline
+\textbf{1}          & \cellcolor[HTML]{000000}                        &                          &                                                 &                                                 &                          &                     \\ \hline
+\textbf{2}          & \cellcolor[HTML]{000000}{\color[HTML]{333333} } & \cellcolor[HTML]{000000} &                                                \cellcolor[HTML]{000000} &                                                 &                          &                     \\ \hline
+\textbf{3}          &                                                 &  & \cellcolor[HTML]{000000}                        &                                                 &                          &                     \\ \hline
+\textbf{4}          &                                                 &                          & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{5}          &                                                 &                          &                         & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{6}          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000}                   &                     \\ \hline
+
+\end{tabular}
+\end{table}
+		
+\begin{table}[H]
+\centering
+\caption{Cronograma 1/2018}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{6}{c|}{\textbf{1/2018}}                                                                                                                                                                                                                        \\ \hline
+\textbf{Atividades} & \textbf{Janeiro}         & \textbf{Fevereiro}                              & \textbf{Março}           & \textbf{Abril}                                  & \textbf{Maio}                                   & \textbf{Junho}                                  \\ \hline
+\textbf{7}          & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000} &                                                 &                                                 &                                                 \\ \hline
+\textbf{8}         &                          &                                                 & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                                                 &                                                 \\ \hline
+\textbf{9}         &                          &                                                 &                          & \cellcolor[HTML]{000000}                        &                                                 &                                                 \\ \hline
+\textbf{10}         &                          &                                                 &                          &                                                 & \cellcolor[HTML]{000000}                        &                                                 \\ \hline
+\textbf{11}         &                          &                                                 &                          &                                                 & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } \\ \hline
+\end{tabular}
+\end{table}		
+		
+		
+\newpage
+
+\addcontentsline{toc}{section}{Referências}
+\nocite{*}
+\bibliography{referencias}
+
+
+\end{document} 
