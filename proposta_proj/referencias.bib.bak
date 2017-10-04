@@ -4,12 +4,12 @@
   title     = {Análise de Sobrevivência Aplicada},
   publisher = {Editora Bucher},
   year      = {2006},
-  author    = {Colosimo, E, A. e Giolo, S. R.},
+  author    = {Colosimo, E, A. and Giolo, S. R.},
   address   = {São Paulo},
 }
 
 @Article{Barreto;1994,
-  author  = {Barreto, M. L.; Santos, L. M. P.; Assis, A. M. O.; Araújo, M. P. N.; Franzena, G. G.; Santos, P. A. B.; Fiaccone, R. L.},
+  author  = {Barreto, M. L. and Santos, L. M. P. and Assis, A. M. O. and Araújo, M. P. N. and Franzena, G. G. and Santos, P. A. B. and Fiaccone, R. L.},
   title   = {Effect of vitamin A supplementation on diarrhoea acute lower-respiratory-tract infection in young children in Brazil},
   journal = {Lancet 344},
   year    = {1994},
