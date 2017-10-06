@@ -1,0 +1,88 @@
+% CUSTOMIZACOES PARA O DEPARTAMENTO DE ESTATÍSTICA DA UnB
+
+\ProvidesPackage{estunb}[2017/08/12 Criacao desta customizacao do abnTeX2]
+
+\renewcommand{\imprimircapa}{%
+	\begin{capa}%
+		\center
+		\includegraphics[scale=1]{unb}\\
+		
+		\hfill
+
+		\ABNTEXchapterfont Universidade de Brasília - UnB\\ Instituto de Ciências Exatas - IE\\ 
+		Departamento de Estatística - EST
+
+		\vfill
+		\begin{center}
+			\ABNTEXchapterfont\bfseries\LARGE\imprimirtitulo
+		\end{center}
+	
+		\vspace*{2cm}
+	
+	{\ABNTEXchapterfont\large\imprimirautor}
+	
+         \vspace*{2cm}
+         
+ {\ABNTEXchapterfont Orientador: \imprimirorientador
+ }
+
+		\vfill
+		
+		
+		
+		\large\imprimirlocal
+		
+		\large\imprimirdata
+		
+		\vspace*{1cm}
+	\end{capa}
+}
+
+% FOLHA DE ROSTO 
+
+\makeatletter
+
+\renewcommand{\folhaderostocontent}{
+	\begin{center}		
+		\vspace*{1cm}
+		
+		{\ABNTEXchapterfont\large\imprimirautor}
+		
+		\vspace*{\fill}\vspace*{\fill}
+		
+		\begin{center}
+			\ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+		\end{center}
+		
+		\vspace*{\fill}
+		
+		\abntex@ifnotempty{\imprimirpreambulo}{%
+			\hspace{.45\textwidth}
+			\begin{minipage}{.5\textwidth}
+				\SingleSpacing
+				\imprimirpreambulo
+			\end{minipage}%
+			\vspace*{\fill}
+		}%
+		
+		{\large\imprimirorientadorRotulo~\imprimirorientador\par}
+		
+		\abntex@ifnotempty{\imprimircoorientador}{%
+			{\large\imprimircoorientadorRotulo~\imprimircoorientador}%
+		}%
+		
+		\vspace*{\fill}
+		
+		%{\abntex@ifnotempty{\imprimirinstituicao}{\imprimirinstituicao\vspace*{\fill}}}
+		
+		{\large\imprimirlocal}
+		
+		\par
+		
+		{\large\imprimirdata}
+		\vspace*{1cm}
+	\end{center}
+}
+
+\makeatother
+

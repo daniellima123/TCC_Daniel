@@ -2,72 +2,100 @@
 
 \section*{Introdução e Justificativa}
 
-Este documento é um exemplo de proposta a ser apresentada em TCC 1. A ideia é que o aluno
-tenha organize, de maneira geral, seu plano de estudo e material de pesquisa.
+A análise de sobrevivência é um tópico importante utilizado em diversas áreas, como biologia, engenharia, medicina, entre outros. O principal objetivo desta análise é explicar ou predizer o tempo até a ocorrência do evento estudado, esse tempo é chamado de tempo de falha. A principal diferença desta técnica de modelagem para as demais é a capacidade de levar em consideração também os tempos em que não foi possível observar o evento de interesse, esse tipo de ocorrência é chamado de censura.
 
-Na introddução o aluno deverá apresentar, de forma resumida, o tema de estudo a ser abordado.
+Dentro os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar.
 
-\lipsum[1]
+Em diversos estudos de sobrevivência, estuda-se o relacionamento de covariáveis e o tempo, tendo o objetivo de realizar as análises estatísticas e tentando encontrar o melhor uso dessas variáveis para a criação de um modelo de regressão para dados censurados.
+
+Um dos objetivos deste trabalho é sugerir um modelo de regressão para dados grupados para analisar o banco de dados de Barreto et al. (1994).
 
 \section*{Objetivos}
 
-Aqui devará apresentar os objetivos de forma clara.
 
 \subsection*{Objetivo Geral}
 
-\lipsum[1]
+O objetivo deste trabalho é propor um modelo de regressão para dados grupados para analisar os dados de Barreto et al. (1994).
 
 \subsection*{Objetivos Específicos}
 
+Como a Análise de Sobrevivência exige o estudo de algumas técnicas não-paramétricas para o cálculo de seus estimadores e devido a não normalidade dos dados, apresentam-se os seguintes objetivos específicos:
+
 \begin{itemize}
-	\item Entender ...
-	\item Comparar ...
-	\item Implementar ...
-	\item \lipsum[1]
+	
+	\item Estudar a metodologia de análise de sobrevivência;
+	\item Revisar a bibliografia a respeito de estudos de sobrevivência com dados grupados;	
+	\item Estudar as metodologias computacionais presentes nos pacotes de análise de sobrevivência no software estatístico R, com auxílio da IDE RStudio;
+	\item Estudar o banco de dados para a aplicação de um possível modelo;
+	\item Aplicar métodos para verificar a relação entre a variável tempo e as covariáveis presentes no banco;
+	\item Propor um modelo de regressão para dados grupados.
 \end{itemize}
+
+\vspace{1cm}
 
 \section*{Metodologia}
 
-Apresentar um resumo da metodologia a ser aplicada ou que será investigada e justificativas
-para tal. Poderá incluir uma descrição de como será resolvido o problema em termos de programação, i.e.,
-uso de quais softwares, procedimentos, pacotes, etc.
+A fim de propor um modelo de regressão para dados grupados, irá ser utilizado um banco de dados cedido pelo Instituto de Saúde Coletiva da Universidade Federal da Bahia. Esses dados foram obtidos a partir de um estudo conduzido por Barreto et al.(1994). O banco de dados é formado por 1207 crianças com idade entre 6 e 48 meses no início do estudo, que receberam placebo ou vitamina A. Dentre as variáveis se encontra a variável tempo, que é o tempo entre a primeira dose de placebo ou vitamina A e a ocorrência de diarreia na criança, a variável idade, tipo de tratamento e a variável sexo.
 
-\lipsum[1]
+Para realizar uma análise preliminar no tempo até a ocorrência de diarréia na criança, é necessário estimar a função de sobrevivência para a análise descritiva da variável. Para essa estimação, será usado o estimador de Kaplan-Meier. Este estimador foi escolhido por ser um estimador de máxima verossimilhança, possuindo assim as propriedades de um estimador deste tipo. A partir da estimação da função de sobrevivência, pela propriedade da invariância, pode-se estimar a taxa de risco acumulado. Por meio desta função, encontra-se possíveis distribuições para a variável resposta.
+
+Neste trabalho, tem-se como um objetivo verificar o efeito de covariáveis, como sexo e idade, e a resposta, tempo. Para tal, será proposto um modelo de regressão, que é uma extensão da distribuição de probabilidade assumida para a variável resposta.
+
+Para a estimação dos parâmetros do modelo, não pode-se usar alguns métodos de estimação, tais como o método de mínimos quadrados e de momentos, pois eles não levam em consideração a censura presente nos dados de sobrevivência. Sendo assim, para incorporar a censura na análise dos dados, será utilizado uma adaptação do método de máxima verossimilhança.
+
+Para a análise dos dados, será utilizado o software estatístico R por meio da IDE Rstudio.
 
 \section*{Cronograma}
 
-Apresentar um cronograma tentativo para os dois semestres (2/2017 e 1/2018). Segue um exemplo.
+O cronograma a seguir, foi organizado da seguinte forma:
 
-\definecolor{midgray}{gray}{.5}
-	\def\tablename{Quadro} 
-	\setlength{\extrarowheight}{0.2cm}
-		\begin{table}[h]\scriptsize 
-			\centering {\caption{\label{cron} Cronograma - 2/2017}} 
-			\begin{tabular}{|l|c|c|c|c|c|c|} \hline
-				\textbf{Atividades}	& Jul	& Ago	& Set	& Out	& Nov	& Dez \\ \hline	
-				Escolha do tema a ser abordado & \cellcolor{gray} &&&&& \\ \hline	
-				Esttudo do tema & & \cellcolor{gray} & \cellcolor{gray} &&& \\ \hline	
-				Estudo de técnicas  & & \cellcolor{gray} & \cellcolor{gray} 
-												&\cellcolor{blue}& & \\ \hline
-				Elaboração de relatório parcial & &&& & \cellcolor{blue} & \\ \hline
-				Entrega e correção do relatório parcial & &&&& & \cellcolor{blue} \\ \hline	
-        	\end{tabular}
-		\end{table}
+\begin{enumerate}
+	\item Escolha do tema a ser abordado;
+	\item Estudo da metodologia de análise de sobrevivência;
+	\item Estudo de modelos de sobrevivência para dados grupados;
+	\item Desenvolvimento da proposta de projeto final;	
+	\item Entrega da proposta final do projeto final;
+	\item Entrega do relatório parcial ao orientador para correção;
+	\item Ajuste de modelo de dados de sobrevivência para dados grupados;
+	\item Descrever resultados para o relatório final;
+	\item Correção do relatório final;
+	\item Entrega do relatório final a banca examinadora; e
+	\item Apresentação do relatório final para a banca examinadora.
+\end{enumerate}
 		
-		\definecolor{midgray}{gray}{.5}
-	\def\tablename{Quadro} 
-	\setlength{\extrarowheight}{0.2cm}
-		\begin{table}[h]\scriptsize 
-			\centering {\caption{\label{cron} Cronograma - 1/2018}} 
-			\begin{tabular}{|l|c|c|c|c|c|c|} \hline
-				\textbf{Atividades}	& Fev & Mar	& Abr	& Maio	& Jun	& Jul	\\ \hline	
-				Desenvolvimento dos modelos em estudo & \cellcolor{blue} &&&&& \\ \hline	
-				Análise dos Resultados & & \cellcolor{blue} &&&& \\ \hline	
-				Elaboração do relatório Final & & \cellcolor{blue} & \cellcolor{blue} 
-												&\cellcolor{blue}& & \\ \hline
-				Entrega do relatório final ao prof. orientador & &&& & \cellcolor{blue} & \\ \hline
-				Correção do relatório final & &&&& & \cellcolor{blue} \\ \hline
-       			Apresentação do relatório final & &&&& & \cellcolor{blue} \\ \hline
-				Entrega do relatório final a banca & &&&& & \cellcolor{blue} \\ \hline	
-        	\end{tabular}
-		\end{table}
+\newpage
+\begin{table}[H]
+\centering
+\caption{Cronograma 2/2017}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{6}{c|}{\textbf{2/2017}}                                                                                                                                                                                            \\ \hline
+\textbf{Atividades} & \textbf{Julho}                                  & \textbf{Agosto}          & \textbf{Setembro}                               & \textbf{Outubro}                                & \textbf{Novembro}        & \textbf{Dezezembro} \\ \hline
+\textbf{1}          & \cellcolor[HTML]{000000}                        &                          &                                                 &                                                 &                          &                     \\ \hline
+\textbf{2}          & \cellcolor[HTML]{000000}{\color[HTML]{333333} } & \cellcolor[HTML]{000000} &                                                \cellcolor[HTML]{000000} &    \cellcolor[HTML]{000000}               &       \cellcolor[HTML]{000000}                   &  \cellcolor[HTML]{000000}                   \\ \hline
+\textbf{3}          &                                                 &  & \cellcolor[HTML]{000000}                        &                                                 &                          &                     \\ \hline
+\textbf{4}          &                                                 &                          & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{5}          &                                                 &                          &                         & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{6}          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000}                   &                     \\ \hline
+
+\end{tabular}
+\end{table}
+		
+\begin{table}[H]
+\centering
+\caption{Cronograma 1/2018}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{7}{c|}{\textbf{1/2018}}                                                                                                                                                                                                                        \\ \hline
+\textbf{Atividades} & \textbf{Janeiro}         & \textbf{Fevereiro}                              & \textbf{Março}           & \textbf{Abril}                                  & \textbf{Maio}                                   & \textbf{Junho} & \textbf{Julho}                                 \\ \hline
+\textbf{2} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & &  &\\
+ \hline
+\textbf{7}          & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000} &                                 \cellcolor[HTML]{000000}                &                                                 &                              &                   \\ \hline
+\textbf{8}         &                          &                                                 &  & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                                                \cellcolor[HTML]{000000} &   &                                              \\ \hline
+\textbf{9}         &                          &                                                 &                          &                         &                      \cellcolor[HTML]{000000} &                          &                                                 \\ \hline
+\textbf{10}         &                          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000} &                                          \\ \hline
+\textbf{11}         &                          &                                                 &                          &                                &                 & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } \\ \hline
+\end{tabular}
+\end{table}		
