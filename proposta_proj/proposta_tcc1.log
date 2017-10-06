@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.25)  4 OCT 2017 19:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.25)  5 OCT 2017 22:11
 entering extended mode
 **./proposta_tcc1.tex
 (proposta_tcc1.tex
@@ -797,12 +797,12 @@ File: omsaer.fd 1999/12/27
 LaTeX Font Info:    Font shape `OMS/aer/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 135.
  [4] [5] [6]
-Overfull \hbox (91.12256pt too wide) in paragraph at lines 186--198
+Overfull \hbox (91.12256pt too wide) in paragraph at lines 188--200
  [][] 
  []
 
 
-Overfull \hbox (56.47049pt too wide) in paragraph at lines 204--216
+Overfull \hbox (56.47049pt too wide) in paragraph at lines 206--218
  [][] 
  []
 
@@ -826,7 +826,7 @@ es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX
 s/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
 fonts/cm/cmti12.pfb>
-Output written on proposta_tcc1.pdf (8 pages, 109926 bytes).
+Output written on proposta_tcc1.pdf (8 pages, 110180 bytes).
 PDF statistics:
  58 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

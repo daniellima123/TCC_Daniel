@@ -152,11 +152,13 @@ A fim de propor um modelo de regressão para dados grupados, irá ser utilizado 
 
 \subsection{Métodos}
 
-A análise de sobrevivência tem como variável resposta o tempo, então para realizar a análise descritiva preliminar, serão estimadas a função de sobrevivência e a Taxa de risco acumulado. A Taxa de risco acumulado é importante para a determinação da distribuição da variável resposta, esta distribuição será generalizada para a construção do modelo. A fim de estimar essas funções, será usado o método de máxima verossimilhança.
+Para realizar uma análise preliminar no tempo até a ocorrência de diarréia na criança, é necessário estimar a função de sobrevivência para a análise descritiva da variável. Para essa estimação, será usado o estimador de Kaplan-Meier. Este estimador foi escolhido por ser um estimador de máxima verossimilhança, possuindo assim as propriedades de um estimador deste tipo. A partir da estimação da função de sobrevivência, pela propriedade da invariância, pode-se estimar a taxa de risco acumulado. Por meio desta função, encontra-se possíveis distribuições para a variável resposta.
 
-Para a estimação dessas funções irá ser usado o estimador de Kaplan-Meier. Este foi escolhido por ser um estimador de máxima verossimilhança, possuindo assim todas as propriedades dos estimadores de máxima verossimilhança. Além disso, esse é um dos poucos métodos que consideram a censura. Neste trabalho, será abordado uma forma adaptada do método de estimação em questão, essa forma leva em consideração o fato de os dados estarem grupados.
+Neste trabalho, tem-se como um objetivo verificar o efeito de covariáveis, como sexo e idade, e a resposta, tempo. Para tal, será proposto um modelo de regressão, que é uma extensão da distribuição de probabilidade assumida para a variável resposta.
 
-O método da máxima verossimilhança também será usado para a estimação dos parâmetros do modelo a ser proposto, assim como os parâmetros de uma possível distribuição observada da variável tempo.
+Para a estimação dos parâmetros do modelo, não pode-se usar alguns métodos de estimação, tais como o método de mínimos quadrados e de momentos, pois eles não levam em consideração a censura presente nos dados de sobrevivência. Sendo assim, para incorporar a censura na análise dos dados, será utilizado uma adaptação do método de máxima verossimilhança.
+
+Para a análise dos dados, será utilizado o software estatístico R por meio da IDE Rstudio.
 
 %__________________________________CRONOGRAMA__________________________________
 	
