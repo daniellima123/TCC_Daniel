@@ -40,17 +40,24 @@ Em alguns casos, não faz sentido utilizar uma distribuição contínua para des
 
 \subsection{Funções}
 
-\subsubsection{função de distribuição}
+\subsubsection{Função densidade de probabilidade}
 
-Seja T uma variável aleatória, pode-se descrevê-la como uma função que represente a distribuição de suas probabilidades a cada valor apresentado pela variável. Pode ser escrita da seguinte forma:
+Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando esse intervalo tende a zero. Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
 
-$$ F(t) = P(T \le t)$$
+A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
 
+	$$ F(t) = \int_0^{\infty} f(t)dt $$
+		
 \subsubsection{função de sobrevivência}
 
-A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Esta função é descrita da seguinte forma:
+A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
 
-$$ S(t) = P(T \ge t)$$
+\begin{equation*}
+	\begin{split}
+		S(t) & = P(T > t) \\
+		& = \int_t^{\infty} f(v)dv 
+  	\end{split}
+\end{equation*} 
 
 %% tem que continuar escrevendo sobre as funções%%
 
