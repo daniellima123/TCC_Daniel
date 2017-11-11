@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{indentfirst}
@@ -26,7 +27,7 @@ A principal característica dos dados de sobrevivência é a presença de censur
 
 \end{itemize}
 
-Além dessa censura também existem censuras importantes como a censura à esquerda e a censura intervalar. A censura à esquerda ocorre quando o evento ocorre e não consegue-se determinar o tempo em que ele ocorreu desde o início do experimento. Um exemplo desse tipo de censura seria colocar uma fruta em uma caixa, deixar um determinado e então olhar para verificar se a fruta apodreceu.
+Além dessa censura também existem censuras importantes como a censura à esquerda e a censura intervalar. A censura à esquerda ocorre quando o evento ocorre antes do começo do experimento. Por exemplo, deseja-se observar o tempo até uma criança aprender a ler, porém no começo do estudo, algumas crianças podem já ter aprendido a ler sem saber exatamente o tempo em que ela aprendeu, isto é caracterizado como censura à esquerda. % citar colosimo giolo.
 
 A censura intervalar pode ser dita como um caso genérico das outras censuras. Chama-se censura intervalar quando não se sabe o tempo em que ocorreu o evento de interesse
 ocorreu, porém sabe-se que ele não ocorreu antes de um determinado tempo. Por exemplo, em um estudo médico é necessário que hajam visitas regulares para a detecção de certas doenças, tal como câncer. Nesse tipo de experimento, sabe-se que a doença apareceu antes do tempo de uma consulta (V), mas também sabe-se que ela apareceu depois de uma consulta (U), ou seja, a doença se manifestou no intervalo [U, V). Quando V = $\infty$
@@ -40,11 +41,24 @@ Em alguns casos, não faz sentido utilizar uma distribuição contínua para des
 
 \subsection{Funções}
 
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 \subsubsection{Função densidade de probabilidade}
 
 Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando esse intervalo tende a zero. Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
 
 A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
+=======
+\subsubsection{função densidade de probabilidade}
+
+Segundo Meyer (1983), uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
+
+\begin{enumerate}[i]
+
+	\item $f(x) \ge 0$ para todo $x$,
+	\item $\int_{\tiny{-\infty}}^{\tiny{+\infty}} f(x)dx = 1$,
+	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
+\end{enumerate}
+>>>>>>> deu ruim
 
 	$$ F(t) = \int_0^{\infty} f(t)dt $$
 		

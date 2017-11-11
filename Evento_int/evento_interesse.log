@@ -1,4 +1,8 @@
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9) (preloaded format=pdflatex 2016.8.26)  5 NOV 2017 18:00
+=======
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6400) (preloaded format=pdflatex 2017.8.29)  23 SEP 2017 11:06
+>>>>>>> deu ruim
 entering extended mode
 **./evento_interesse.tex
 (evento_interesse.tex
@@ -424,12 +428,21 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty"
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 )
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
 Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+=======
+(/home/daniel/.miktex/texmfs/install/tex/latex/tools/enumerate.sty
+Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
+\@enLab=\toks21
+)
+(/home/daniel/.miktex/texmfs/install/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+>>>>>>> deu ruim
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks21
+\KV@toks@=\toks22
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
 Package: graphics 2016/07/10 v1.0t Standard LaTeX Graphics (DPC,SPQR)
@@ -480,7 +493,7 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutheight=\dimen120
 \Gm@layouthoffset=\dimen121
 \Gm@layoutvoffset=\dimen122
-\Gm@dimlist=\toks22
+\Gm@dimlist=\toks23
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
@@ -489,24 +502,25 @@ Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 (evento_interesse.aux)
 \openout1 = `evento_interesse.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count104
 \scratchdimen=\dimen123
 \scratchbox=\box28
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 \nofMPsegments=\count105
 \nofMParguments=\count106
 \everyMPshowfont=\toks23
@@ -518,6 +532,18 @@ LaTeX Font Info:    ... okay on input line 11.
 ) ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
 Package: pdftexcmds 2016/05/21 v0.22 Utility functions of pdfTeX for LuaTeX (HO
 )
+=======
+\nofMPsegments=\count104
+\nofMParguments=\count105
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count106
+\MPscratchDim=\dimen124
+\MPnumerator=\count107
+\makeMPintoPDFobject=\count108
+\everyMPtoPDFconversion=\toks25
+) (/home/daniel/.miktex/texmfs/install/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+>>>>>>> deu ruim
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty"
 Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
@@ -591,23 +617,29 @@ G,.JBIG2,.JB2,.eps]
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 21.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+=======
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 22.
+(/home/daniel/.miktex/texmfs/install/tex/latex/base/omscmr.fd
+>>>>>>> deu ruim
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 21.
-LaTeX Font Info:    Try loading font information for U+msa on input line 32.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 22.
+LaTeX Font Info:    Try loading font information for U+msa on input line 33.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 32.
+LaTeX Font Info:    Try loading font information for U+msb on input line 33.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
+<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2] [3] (evento_interesse
 .aux) ) 
 Here is how much of TeX's memory you used:
@@ -629,6 +661,36 @@ ts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy
 10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C
 :/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
 Output written on evento_interesse.pdf (3 pages, 117282 bytes).
+=======
+{/home/daniel/.miktex/texmfs/data/pdftex/config/pdftex.map}]
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 51.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 51.
+
+[2] [3] (evento_interesse.aux) ) 
+Here is how much of TeX's memory you used:
+ 3667 strings out of 495217
+ 48306 string characters out of 3181344
+ 118985 words of memory out of 3000000
+ 6885 multiletter control sequences out of 15000+200000
+ 9803 words of font info for 37 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 41i,4n,25p,694b,145s stack positions out of 5000i,500n,10000p,200000b,50000s
+</home/daniel/.miktex/texmfs/install/fonts/type
+1/public/amsfonts/cm/cmbx12.pfb></home/daniel/.miktex/texmfs/install/fonts/type
+1/public/amsfonts/cm/cmex10.pfb></home/daniel/.miktex/texmfs/install/fonts/type
+1/public/amsfonts/cm/cmmi12.pfb></home/daniel/.miktex/texmfs/install/fonts/type
+1/public/amsfonts/cm/cmmi6.pfb></home/daniel/.miktex/texmfs/install/fonts/type1
+/public/amsfonts/cm/cmmi8.pfb></home/daniel/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmr12.pfb></home/daniel/.miktex/texmfs/install/fonts/type1/p
+ublic/amsfonts/cm/cmr6.pfb></home/daniel/.miktex/texmfs/install/fonts/type1/pub
+lic/amsfonts/cm/cmr8.pfb></home/daniel/.miktex/texmfs/install/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb></home/daniel/.miktex/texmfs/install/fonts/type1/publi
+c/amsfonts/cm/cmsy8.pfb>
+Output written on evento_interesse.pdf (3 pages, 110459 bytes).
+>>>>>>> deu ruim
 PDF statistics:
  56 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{indentfirst}
@@ -26,7 +27,7 @@ A principal característica dos dados de sobrevivência é a presença de censur
 
 \end{itemize}
 
-Além dessa censura também existem censuras importantes como a censura à esquerda e a censura intervalar. A censura à esquerda ocorre quando o evento ocorre e não consegue-se determinar o tempo em que ele ocorreu desde o início do experimento. Um exemplo desse tipo de censura seria colocar uma fruta em uma caixa, deixar um determinado e então olhar para verificar se a fruta apodreceu.
+Além dessa censura também existem censuras importantes como a censura à esquerda e a censura intervalar. A censura à esquerda ocorre quando o evento ocorre antes do começo do experimento. Por exemplo, deseja-se observar o tempo até uma criança aprender a ler, porém no começo do estudo, algumas crianças podem já ter aprendido a ler sem saber exatamente o tempo em que ela aprendeu, isto é caracterizado como censura à esquerda. % citar colosimo giolo.
 
 A censura intervalar pode ser dita como um caso genérico das outras censuras. Chama-se censura intervalar quando não se sabe o tempo em que ocorreu o evento de interesse
 ocorreu, porém sabe-se que ele não ocorreu antes de um determinado tempo. Por exemplo, em um estudo médico é necessário que hajam visitas regulares para a detecção de certas doenças, tal como câncer. Nesse tipo de experimento, sabe-se que a doença apareceu antes do tempo de uma consulta (V), mas também sabe-se que ela apareceu depois de uma consulta (U), ou seja, a doença se manifestou no intervalo [U, V). Quando V = $\infty$
@@ -40,11 +41,16 @@ Em alguns casos, não faz sentido utilizar uma distribuição contínua para des
 
 \subsection{Funções}
 
-\subsubsection{função de distribuição}
+\subsubsection{função densidade de probabilidade}
 
-Seja T uma variável aleatória, pode-se descrevê-la como uma função que represente a distribuição de suas probabilidades a cada valor apresentado pela variável. Pode ser escrita da seguinte forma:
+Segundo Meyer (1983), uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
 
-$$ F(t) = P(T \le t)$$
+\begin{enumerate}[i]
+
+	\item $f(x) \ge 0$ para todo $x$,
+	\item $\int_{\tiny{-\infty}}^{\tiny{+\infty}} f(x)dx = 1$,
+	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
+\end{enumerate}
 
 \subsubsection{função de sobrevivência}
 
@@ -76,7 +82,7 @@ O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Ka
 
 $$ \hat{S}(t) = \prod_{j:t_{(j)}\le t} \dfrac{n_j - d_j}{n_j}$$
 
-Onde, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. 
+Onde, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. O estimador foi escolhido para esse trabalho, pois é um estimador de máxima verossimilhança
 
 A representação gráfica desse método se comporta em uma função da forma de escada, uma vez que a estimação entre o tempo $t_{(j)}$ e $t_{(j+1)}$ é constante.
 %% Coloco uma imagem aqui??%%
