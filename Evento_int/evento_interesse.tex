@@ -9,6 +9,7 @@
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{indentfirst}
 \author{Daniel Lima Viegas}
+
 \begin{document}
 
 \section{conceitos básicos}
@@ -41,13 +42,12 @@ Em alguns casos, não faz sentido utilizar uma distribuição contínua para des
 
 \subsection{Funções}
 
-<<<<<<< c8a526b44ca7ed5a80bf5f2ad968ebe29b38451f
 \subsubsection{Função densidade de probabilidade}
 
 Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando esse intervalo tende a zero. Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
 
 A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
-=======
+
 \subsubsection{função densidade de probabilidade}
 
 Segundo Meyer (1983), uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
@@ -58,23 +58,80 @@ Segundo Meyer (1983), uma função densidade de probabilidade é uma função qu
 	\item $\int_{\tiny{-\infty}}^{\tiny{+\infty}} f(x)dx = 1$,
 	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
 \end{enumerate}
->>>>>>> deu ruim
-
-	$$ F(t) = \int_0^{\infty} f(t)dt $$
+	 
 		
 \subsubsection{função de sobrevivência}
 
 A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
 
-\begin{equation*}
+\begin{equation} \label{eq:1}
 	\begin{split}
 		S(t) & = P(T > t) \\
 		& = \int_t^{\infty} f(v)dv 
   	\end{split}
-\end{equation*} 
+\end{equation} 
 
-%% tem que continuar escrevendo sobre as funções%%
+\subsubsection{Função de Risco Acumulado}
 
+A função de risco acumulado é uma função que não possui uma interpretação simples, porém possui importância dentro do campo da análise de sobrevivência. Esta função, denotada como $H(t)$, pode ser definida como o logaritmo da função de sobrevivência multiplicado por menos um, ou seja:
+\begin{equation} \label{eq:riskcum}
+ H(t) = -log(S(t))
+\end{equation}
+
+O gráfico desta função pode assumir algumas diferentes formas. Essas formas são utilizadas para determinar possíveis modelos probabilísticos que melhor se adequam aos dados. Com relação ao comportamento da função, o gráfico pode tomar as seguintes formas:
+
+\begin{itemize}
+	\item Reta diagonal $\Rightarrow$ Função de risco constante é adequada.
+	\item Curva convexa ou côncava $\Rightarrow$ Função
+risco é monotonicamente crescente ou decrescente, respectivamente.
+	\item Curva convexa e depois côncava $\Rightarrow$ Função risco tem forma de \textbf{U}.
+	\item Curva côncava e depois convexa $\Rightarrow$ Função risco tem comportamento unimodal.
+\end{itemize}
+
+\subsection{Modelos de Probabilidade}
+
+\subsubsection{Modelo Weibull}
+Sendo T uma variável aleatória contínua seguindo uma distribuição Weibull, sua função de densidade é dada por:
+
+$$ f(t) = \dfrac{\gamma}{\alpha^{\gamma}}t^{\gamma-1}\exp-\left\lbrace\left(\dfrac{t}{\alpha}\right)^{\gamma}\right\rbrace, \hspace{1cm} t \ge 0,$$
+
+Onde $\gamma$ e $\alpha$ são constantes positivas e correspondem aos parâmetros de forma e escala, respectivamente. O parâmetro $\alpha$ deve ter a mesma unidade de medida que t, enquanto o parâmetro $\gamma$ não possui nenhuma unidade de medida.
+
+É possível obter a função de sobrevivência para a distribuição Weibull a partir da equação \ref{eq:1}:
+
+\begin{equation} \label{eq:WeiHaz}
+S(t) = \exp \left\lbrace - \left( \dfrac{t}{\alpha} \right)^{\gamma} \right\rbrace, \hspace{1cm} t \ge 0
+\end{equation}
+
+E através da relação \ref{eq:riskcum}, tem-se que:
+
+\begin{equation} \label{eq:WeRis}
+	H(t) = - \left( \dfrac{t}{\alpha} \right)^{\gamma}
+\end{equation}
+
+O parâmetro $\gamma$ determina a forma da função de risco. Quando o parâmetro é menor que 1, a função de risco é monótona decrescente, caso o parâmetro maior que 1, a função de risco é monótona crescente e com o parâmetro assumindo valor igual a 1, a variável toma a forma de uma exponencial, que por sua vez, possui função risco constante.
+
+\subsubsection{Modelo Log-Normal}
+
+Considerando-se T uma variável aleatória contínua com distribuição Log-Normal, tem sua função densidade de probabilidade como:
+
+\begin{equation}
+ f(t) = \dfrac{1}{(2\pi)^{\frac{1}{2}}\sigma t}\exp\left\lbrace -\dfrac{1}{2} \left( \dfrac{\log(t) - \mu}{\sigma} \right) \right\rbrace, \hspace{1cm} t > 0
+\end{equation}
+
+Onde $\mu$ e $\sigma$ são, respectivamente, a média e o desvio padrão da variável aleatória. Ambos os parâmetros são maiores que 0.
+
+As funções de sobrevivência e risco acumulado podem ser descritas envolvendo a função distribuição de probabilidade da Normal Padrão, sendo que esta é:
+
+$$ \Phi(x) =  \int_{-\infty}^{x} \dfrac{1}{\sqrt{2\pi}\sigma} \exp \left\lbrace \dfrac{-u^2}{2\sigma^2} \right\rbrace du $$
+
+A função de sobrevivência da log-normal pode ser facilmente vista como:
+
+\begin{equation} \label{eq:LNSurv}
+ S(t) = 1 - \Phi\left(\dfrac{\log(t) - \mu}{\sigma}\right)
+\end{equation}
+
+A partir dessa equação, e da relação \ref{eq:riskcum} é simples encontrar a função risco acumulado.
 \subsection{Estimadores da função de sobrevivência}
 
 \subsubsection{Estimação simples}
