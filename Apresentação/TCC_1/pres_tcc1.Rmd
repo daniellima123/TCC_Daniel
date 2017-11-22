@@ -1,0 +1,135 @@
+---
+title: |
+       | Análise de Sobrevivência para
+       | Dados Grupados
+author: |
+        | Daniel Lima Viegas
+        | Profª Juliana Betini Fachini Gomes
+date: "24 de novembro de 2017"
+lang: "pt-BR"
+bibliography: ../../proposta_proj/referencias.bib
+nocite: "'@*"
+output:
+  beamer_presentation:
+    includes:
+      in_header: before.tex
+    theme: "Berkeley"
+    colortheme: "dolphin"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis', message = F, comment = F)
+library(tidyverse)
+library(ggfortify)
+library(ggplot2)
+library(ggthemes)
+dados <- read.csv2("../../Dados/vitamina.csv", header = T, stringsAsFactors = F)
+```
+
+## Introdução
+
+* Análise de Sobrevivência
+
+* Censura
+  - Censura a direita
+  - Censura a esquerda
+  - Censura intervalar
+  
+## Justificativa
+
+* Grande número de empates nos tempos
+
+```{r, fig.height=2.5, fig.width=3.5, fig.align='center'}
+qplot(tempo, data = dados, geom = "histogram", bins = 136)+theme_few()+
+  xlab("Tempos")+ylab("Frequência")
+```
+
+
+## Objetivo Geral
+
+* Propor um modelo de regressão para dados grupados.
+
+## Objetivos Específicos
+
+  * Estudar a metodologia de análise de sobrevivência
+  * Revisar a bibliografia de estudos de sobrevivência com dados grupados
+  * Estudar as metodologias computacionais presentes no software estatístico R
+  * Estudar o banco de dados para a aplicação de um possível modelo
+  * Aplicar mátodos para verificar a relação entre a variável tempo e as covariáveis no banco
+  * Propor um modelo de regressão para dados grupados
+
+## Metodologia
+
+  * Análise exploratória dos dados através de Kaplan-Meier
+  * Escolha da distribuição que melhor se adequa aos dados
+  * Uso do método de máxima verossimilhança para a determinação dos parâmetros das distribuições
+  * Estimação dos parâmetros do modelo de regressão
+  * Uso do software estatístico R para determinação dos parâmetros e ajuste do modelo
+
+## Cronograma
+\fontsize{10pt}{9pt}\selectfont
+\begin{enumerate}
+	\item Escolha do tema a ser abordado;
+	\item Estudo da metodologia de análise de sobrevivência;
+	\item Estudo de modelos de sobrevivência para dados grupados;
+	\item Desenvolvimento da proposta de projeto final;	
+	\item Entrega da proposta final do projeto final;
+	\item Entrega do relatório parcial ao orientador para correção;
+	\item Ajuste de modelo de dados de sobrevivência para dados grupados;
+	\item Descrever resultados para o relatório final;
+	\item Correção do relatório final;
+	\item Entrega do relatório final a banca examinadora; e
+	\item Apresentação do relatório final para a banca examinadora.
+\end{enumerate}
+
+
+## Cronograma
+### Calendário 2/2017
+
+\begin{table}[H]
+\centering
+\caption{Cronograma 2/2017}
+\label{my-label}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{6}{c|}{\textbf{2/2017}}                                                                                                                                                                                            \\ \hline
+\textbf{Atividades} & \textbf{Julho}                                  & \textbf{Agosto}          & \textbf{Setembro}                               & \textbf{Outubro}                                & \textbf{Novembro}        & \textbf{Dezezembro} \\ \hline
+\textbf{1}          & \cellcolor[HTML]{000000}                        &                          &                                                 &                                                 &                          &                     \\ \hline
+\textbf{2}          & \cellcolor[HTML]{000000}{\color[HTML]{333333} } & \cellcolor[HTML]{000000} &                                                \cellcolor[HTML]{000000} &    \cellcolor[HTML]{000000}               &       \cellcolor[HTML]{000000}                   &  \cellcolor[HTML]{000000}                   \\ \hline
+\textbf{3}          &                                                 &  & \cellcolor[HTML]{000000}                        &                                                 &                          &                     \\ \hline
+\textbf{4}          &                                                 &                          & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{5}          &                                                 &                          &                         & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
+\textbf{6}          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000}                   &                     \\ \hline
+
+\end{tabular}
+}
+\end{table}
+
+## Cronograma
+### Calendário 1/2018
+
+		
+\begin{table}[H]
+\centering
+\caption{Cronograma 1/2018}
+\label{my-label}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+                    & \multicolumn{7}{c|}{\textbf{1/2018}}                                                                                                                                                                                                                        \\ \hline
+\textbf{Atividades} & \textbf{Janeiro}         & \textbf{Fevereiro}                              & \textbf{Março}           & \textbf{Abril}                                  & \textbf{Maio}                                   & \textbf{Junho} & \textbf{Julho}                                 \\ \hline
+\textbf{2} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & &  &\\
+ \hline
+\textbf{7}          & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000} &                                 \cellcolor[HTML]{000000}                &                                                 &                              &                   \\ \hline
+\textbf{8}         &                          &                                                 &  & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                                                \cellcolor[HTML]{000000} &   &                                              \\ \hline
+\textbf{9}         &                          &                                                 &                          &                         &                      \cellcolor[HTML]{000000} &                          &                                                 \\ \hline
+\textbf{10}         &                          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000} &                                          \\ \hline
+\textbf{11}         &                          &                                                 &                          &                                &                 & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } \\ \hline
+\end{tabular}
+}
+\end{table}
+
+## Referências {.allowframebreaks}
+

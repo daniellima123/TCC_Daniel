@@ -1,0 +1,162 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+\usetheme[]{Berkeley}
+\usecolortheme{dolphin}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Análise de Sobrevivência para\\
+Dados Grupados}
+\author{Daniel Lima Viegas\\
+Profª Juliana Betini Fachini Gomes}
+\date{24 de novembro de 2017}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+
+\logo{\includegraphics[scale=0.14]{unb.jpg}}
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{introducao}{%
+Introdução}}
+
+\begin{itemize}
+\item
+  Análise de Sobrevivência
+\item
+  Censura
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Censura a direita
+  \item
+    Censura a esquerda
+  \item
+    Censura intervalar
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{justificativa}{%
+Justificativa}}
+
+\begin{itemize}
+\tightlist
+\item
+  Grande número de empates nos tempos
+\end{itemize}
+
+\begin{center}\includegraphics{pres_tcc1_files/figure-beamer/unnamed-chunk-1-1} \end{center}
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{objetivo-geral}{%
+Objetivo Geral}}
+
+\begin{itemize}
+\tightlist
+\item
+  Propor um modelo de regressão para dados grupados.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{objetivos-especificos}{%
+Objetivos Específicos}}
+
+\begin{itemize}
+\tightlist
+\item
+  Estudar a metodologia de análise de sobrevivência
+\item
+  Revisar a bibliografia de estudos de sobrevivência com dados grupados
+\item
+  Estudar as metodologias computacionais presentes no software
+  estatístico R
+\item
+  Estudar o banco de dados para a aplicação de um possível modelo
+\item
+  Aplicar mátodos para verificar a relação entre a variável tempo e as
+  covariáveis no banco
+\item
+  Propor um modelo de regressão para dados grupados
+\end{itemize}
+
+\end{frame}
+
+\end{document}
