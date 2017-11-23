@@ -35,7 +35,17 @@ dados <- read.csv2("../../Dados/vitamina.csv", header = T, stringsAsFactors = F)
   - Censura a direita
   - Censura a esquerda
   - Censura intervalar
-  
+
+## Material
+
+  * Composto por 1207 crianças com idades entre 6 e 48 anos.
+  * Tempo, em dias, após a aplicação da primeira dose de vitamina A até o primeiro episódio de diarréia
+  * Covariáveis binárias:
+    * Tipo de tratamento
+    * Sexo
+  *Covariável discreta:
+    * Idade
+
 ## Justificativa
 
 * Grande número de empates nos tempos
