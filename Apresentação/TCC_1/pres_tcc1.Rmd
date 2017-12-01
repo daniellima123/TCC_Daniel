@@ -25,6 +25,7 @@ library(ggfortify)
 library(ggplot2)
 library(ggthemes)
 dados <- read.csv2("../../Dados/vitamina.csv", header = T, stringsAsFactors = F)
+dados$cens <- factor(dados$cens, labels = c("Censurado", "Não Censurado"))
 ```
 
 ## Introdução
@@ -38,12 +39,13 @@ dados <- read.csv2("../../Dados/vitamina.csv", header = T, stringsAsFactors = F)
 
 ## Material
 
-  * Composto por 1207 crianças com idades entre 6 e 48 anos.
-  * Tempo, em dias, após a aplicação da primeira dose de vitamina A até o primeiro episódio de diarréia
+  * Composto por 1207 crianças com idades entre 6 e 48 meses.
+  * Tempo, após a aplicação da primeira dose de vitamina A até o primeiro episódio de diarréia
+  * Censura
   * Covariáveis binárias:
     * Tipo de tratamento
     * Sexo
-  *Covariável discreta:
+  * Covariável discreta:
     * Idade
 
 ## Justificativa
@@ -52,7 +54,7 @@ dados <- read.csv2("../../Dados/vitamina.csv", header = T, stringsAsFactors = F)
 
 ```{r, fig.height=2.5, fig.width=3.5, fig.align='center'}
 qplot(tempo, data = dados, geom = "histogram", bins = 136)+theme_few()+
-  xlab("Tempos")+ylab("Frequência")
+  xlab("Tempos")+ylab("Frequência")+facet_grid(cens~.)
 ```
 
 
@@ -66,7 +68,7 @@ qplot(tempo, data = dados, geom = "histogram", bins = 136)+theme_few()+
   * Revisar a bibliografia de estudos de sobrevivência com dados grupados
   * Estudar as metodologias computacionais presentes no software estatístico R
   * Estudar o banco de dados para a aplicação de um possível modelo
-  * Aplicar mátodos para verificar a relação entre a variável tempo e as covariáveis no banco
+  * Aplicar métodos para verificar a relação entre a variável tempo e as covariáveis no banco
   * Propor um modelo de regressão para dados grupados
 
 ## Metodologia

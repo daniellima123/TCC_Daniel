@@ -109,7 +109,7 @@ E através da relação \ref{eq:riskcum}, tem-se que:
 	H(t) = - \left( \dfrac{t}{\alpha} \right)^{\gamma}
 \end{equation}
 
-O parâmetro $\gamma$ determina a forma da função de risco. Quando o parâmetro é menor que 1, a função de risco é monótona decrescente, caso o parâmetro maior que 1, a função de risco é monótona crescente e com o parâmetro assumindo valor igual a 1, a variável toma a forma de uma exponencial, que por sua vez, possui função risco constante.
+O parâmetro $\gamma$ determina a forma da função de risco. Quando o parâmetro é menor que 1, a função de risco é monótona decrescente, caso o parâmetro seja maior que 1, a função de risco é monótona crescente e com o parâmetro assumindo valor igual a 1, a variável toma a forma de uma exponencial, que por sua vez, possui função risco constante.
 
 \subsubsection{Modelo Log-Normal}
 
@@ -121,7 +121,7 @@ Considerando-se T uma variável aleatória contínua com distribuição Log-Norm
 
 Onde $\mu$ e $\sigma$ são, respectivamente, a média e o desvio padrão da variável aleatória. Ambos os parâmetros são maiores que 0.
 
-As funções de sobrevivência e risco acumulado podem ser descritas envolvendo a função distribuição de probabilidade da Normal Padrão, sendo que esta é:
+As funções de sobrevivência e risco acumulado são descritas envolvendo a função distribuição de probabilidade da Normal Padrão devido a função distribuição de probabilidade não ser analiticamente explícita, sendo que normal padrão é descrita como:
 
 $$ \Phi(x) =  \int_{-\infty}^{x} \dfrac{1}{\sqrt{2\pi}\sigma} \exp \left\lbrace \dfrac{-u^2}{2\sigma^2} \right\rbrace du $$
 
@@ -132,6 +132,31 @@ A função de sobrevivência da log-normal pode ser facilmente vista como:
 \end{equation}
 
 A partir dessa equação, e da relação \ref{eq:riskcum} é simples encontrar a função risco acumulado.
+
+O parâmetro $\sigma$ determina a forma da função de risco, sendo que a partir de $\sigma$<1, a função é monótona decrescente e para valores maiores ou iguais a 1 a função é monótona crescente.
+
+\subsubsection{Modelo Log-Logístico}
+
+Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como
+
+\begin{equation}
+  f(t) = \dfrac{\beta\left(\dfrac{t}{\mu}\right)^{\beta - 1}}{\mu\left[1+\left(\dfrac{t}{\mu}\right)^{\beta}\right]^2}, \hspace{1cm} t > 0
+\end{equation}
+
+Onde $\mu$ e $\beta$ são constantes, ambas maiores que 0. Com base na função densidade, é possível descrever a função de sobrevivência da variável aleatória T como:
+
+\begin{equation} \label{eq: LLSurv}
+  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}
+\end{equation}
+
+E a partir desta função pode-se encontrar a função risco acumulado:
+
+\begin{equation} \label{eq: HazLL}
+H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}}
+\end{equation}
+
+Com relação ao comportamento da função de risco, quando $\beta$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente.
+
 \subsection{Estimadores da função de sobrevivência}
 
 \subsubsection{Estimação simples}

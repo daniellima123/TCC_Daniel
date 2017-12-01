@@ -8,9 +8,12 @@
 
 \usepackage[brazil]{babel}
 
+\usepackage{bm}
+
 \usepackage{graphicx}
 
-\usepackage{cite}
+\usepackage{natbib}
+
 %\usepackage{setspace}
 
 \bibliographystyle{bbs}
@@ -54,7 +57,7 @@
 \usepackage{scalefnt} %muda tamanho da letra
 
 %\usepackage{pdfpages}
-
+\newcommand*\NewPage{\newpage\null\newpage}
 \usepackage{parskip}
 
 %\usepackage[font=small,skip=0pt]{caption}
@@ -95,12 +98,33 @@ Brasília\\
 Setembro de 2017}
 
  \end{center}
- \newpage
-
-
+ \NewPage
+ 
+ 
+ %_________________________________Folha de rosto______________________________
+ 
+%  \centering{Daniel Lima Viegas}
+%  
+%  \vspace{10em}
+% 
+% {\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
+% 
+% \vspace{10em}
+% 
+% \begin{minipage}[t]{9cm}
+%   \flushright
+%   Orientadora:\\
+% Profª. Drª. \textbf{Juliana Betini Fachini Gomes}
+% \vspace{1cm}
+% 
+%   Relatório Parcial de Monografia apresentado ao Departamento de Estatística, Instituto de Ciências Exatas, Universidade de Brasília, como parte dos requisitos necessários para o grau de Bacharel em estatística. 
+% \end{minipage}
+% 
+% \NewPage
 %___________________________________SUMÁRIO____________________________________
 
 \tableofcontents
+\NewPage
 
 %__________________________________INTRODUÇÃO__________________________________
 \newpage
@@ -116,31 +140,202 @@ Em diversos estudos de sobrevivência, estuda-se o relacionamento de covariávei
 
 Um dos objetivos deste trabalho é sugerir um modelo de regressão para dados grupados para analisar o banco de dados de Barreto et al. (1994).
 
+%_________________________________Revisão de Literatura__________________________
+\section{Revisão de Literatura}
 
+A fim de dar fundamento teórico ao trabalho na área de análise de sobrevivência, serão apresentados, a seguir, conceitos e notações presentes nas literaturas do tema.
 
-%__________________________________OBJETIVOS__________________________________
-\section{Objetivo}
-\noindent
+\subsection{variável resposta e censuras}
+Chama-se evento de interesse, aquilo que se deseja encontrar informações sobre a ocorrência. Na análise de sobrevivência, esse evento pode ser a morte de um indivíduo, a cura, um casamento, divórcio ou funcionamento de um dispositivo ou componente de uma máquina. Em análise de sobrevivência, a variável resposta é geralmente o tempo até a ocorrência de um evento de interesse, sendo esse tempo denominado tempo de falha.%citar colosimo;giolo%
 
-\subsection{Objetivo Geral}
-
-O objetivo deste trabalho é propor um modelo de regressão para dados grupados para analisar os dados de Barreto et al. (1994).
-
-\subsection{Objetivos Especificos}
-
-Como a Análise de Sobrevivência exige o estudo de algumas técnicas não-paramétricas para o cálculo de seus estimadores e devido a não normalidade dos dados, apresentam-se os seguintes objetivos específicos:
+A principal característica dos dados de sobrevivência é a presença de censuras, ou seja, observações que por algum motivo não consegue-se determinar o tempo com precisão. Existem três tipos principais de censura, a mais usual é a censura à direita, esta censura acontece quando não se consegue registrar a ocorrência do evento de interesse. Em estudos médicos que analisam o tempo desde a obtenção da doença até a morte do paciente, por exemplo, este tipo de censura acontece quando o paciente é curado, morre por outra razão ou simplesmente não se pode mais observar tal paciente. Este tipo de censura tem três tipos de classificação:
 
 \begin{itemize}
+	\item Censura do Tipo I: acontece quando a pesquisa tem um tempo pré-determinado. Ao final do estudo, as observações que não falharam são consideradas censuras. Nesse tipo de estudo, o percentual de censura é descrito como uma variável aleatória.
 	
-	\item Estudar a metodologia de análise de sobrevivência;
-	\item Revisar a bibliografia a respeito de estudos de sobrevivência com dados grupados;	
-	\item Estudar as metodologias computacionais presentes nos pacotes de análise de sobrevivência no software estatístico R, com auxílio da IDE RStudio;
-	\item Estudar o banco de dados para a aplicação de um possível modelo;
-	\item Aplicar métodos para verificar a relação entre a variável tempo e as covariáveis presentes no banco;
-	\item Propor um modelo de regressão para dados grupados.
+	\item Censura do Tipo II: É encontrada quando se obtém um determinado número de falhas dentro do experimento. Nesse tipo de experimento, o número de falhas deve ser determinado antes de começar o experimento, fazendo com que o número de falhas seja constante. O número de falhas, claramente deve ser menor do que o tamanho da amostra.
+	
+	\item Censura Aleatória: engloba os outros dois tipos de censura. Acontece quando alguns componentes não podem mais ser acompanhados ou quando o motivo da observação falhar é diferente do que interessa. Esta censura ocorre sem intervenção do pesquisador.
+
 \end{itemize}
 
-\vspace{1cm}
+Além dessa censura também existem censuras importantes como a censura à esquerda e a censura intervalar. A censura à esquerda ocorre quando o evento ocorre antes do começo do experimento. Por exemplo, deseja-se observar o tempo até uma criança aprender a ler, porém no começo do estudo, algumas crianças podem já ter aprendido a ler sem saber exatamente o tempo em que ela aprendeu, isto é caracterizado como censura à esquerda. % citar colosimo giolo.
+
+A censura intervalar pode ser dita como um caso genérico das outras censuras. Chama-se censura intervalar quando não se sabe o tempo em que ocorreu o evento de interesse
+ocorreu, porém sabe-se que ele não ocorreu antes de um determinado tempo. Por exemplo, em um estudo médico é necessário que hajam visitas regulares para a detecção de certas doenças, tal como câncer. Nesse tipo de experimento, sabe-se que a doença apareceu antes do tempo de uma consulta (V), mas também sabe-se que ela apareceu depois de uma consulta (U), ou seja, a doença se manifestou no intervalo [U, V). Quando V = $\infty$
+tem-se a censura a direita, e quando a o tempo U = 0, essa censura se torna a esquerda. Daí vem o conhecimento de caso genérico da censura.
+
+\subsection{Tempo}
+
+Como visto anteriormente, a variável resposta do experimento em questão é o tempo até o evento de interesse. Quando esse tempo pode assumir qualquer ponto real não-negativo, descreve-se essa variável como contínua. Esse é o tipo mais comum de variável na análise de sobrevivência, devido a grande diversidade de distribuições contínuas. %% talvez complemente, talvez seja desnecessário.
+
+Em alguns casos, não faz sentido utilizar uma distribuição contínua para descrever o tempo, mas sim uma discreta. Pode-se ter como exemplo o tempo que um aluno leva para sair da universidade, pode levar 8 semestres, 9 semestres e assim por diante, ou seja, nunca vai levar um tempo real e sim um tempo pertencente aos naturais.%% Complementar
+
+\subsection{Funções}
+
+\subsubsection{Função densidade de probabilidade}
+
+Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando esse intervalo tende a zero. Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
+
+A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
+
+\subsubsection{função densidade de probabilidade}
+
+Segundo Meyer (1983), uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
+
+\begin{enumerate}
+
+	\item $f(x) \ge 0$ para todo $x$,
+	\item $\int_{\tiny{-\infty}}^{\tiny{+\infty}} f(x)dx = 1$,
+	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
+\end{enumerate}
+	 
+		
+\subsubsection{função de sobrevivência}
+
+A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
+
+\begin{equation} \label{eq:1}
+	\begin{split}
+		S(t) & = P(T > t) \\
+		& = \int_t^{\infty} f(v)dv 
+  	\end{split}
+\end{equation} 
+
+\subsubsection{Função de Risco Acumulado}
+
+A função de risco acumulado é uma função que não possui uma interpretação simples, porém possui importância dentro do campo da análise de sobrevivência. Esta função, denotada como $H(t)$, pode ser definida como o logaritmo da função de sobrevivência multiplicado por menos um, ou seja:
+\begin{equation} \label{eq:riskcum}
+ H(t) = -log(S(t))
+\end{equation}
+
+O gráfico desta função pode assumir algumas diferentes formas. Essas formas são utilizadas para determinar possíveis modelos probabilísticos que melhor se adequam aos dados. Com relação ao comportamento da função, o gráfico pode tomar as seguintes formas:
+
+\begin{itemize}
+	\item Reta diagonal $\Rightarrow$ Função de risco constante é adequada.
+	\item Curva convexa ou côncava $\Rightarrow$ Função
+risco é monotonicamente crescente ou decrescente, respectivamente.
+	\item Curva convexa e depois côncava $\Rightarrow$ Função risco tem forma de \textbf{U}.
+	\item Curva côncava e depois convexa $\Rightarrow$ Função risco tem comportamento unimodal.
+\end{itemize}
+
+\subsection{Estimadores da função de sobrevivência}
+
+\subsubsection{Estimação simples}
+
+A função de sobrevivência pode ser estimada amostralmente, como a proporção dos dados que não falharam até o tempo t. Esse estimador poderia ser escrito da seguinte forma:
+
+$$ \hat{S}(t) = \dfrac{n^o \ de \ dados \ com \ tempo \ > \ t}{n^o \ total \ de \ individuos}, \forall \ t \ \in t\ge 0$$
+
+Caso os dados sejam ordenados de forma crescente, pode-se representar a função de sobrevivência da seguinte forma:
+
+$$ \hat{S}(t) = \dfrac{n_j - d_j}{n} $$
+
+Onde $n_j$ é o número de indivíduos que podem falhar, $d_j$ é o número de indivíduos que que falharam no tempo e n é o número total de indivíduos.
+
+\subsubsection{Kaplan-Meier}
+
+Os estimadores apresentados acima, não podem ser usados nesse tipo de estudo porque não existe nenhuma forma de se incluir censuras.
+
+O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier. Esse estimador é muito popular em pesquisas que usam análise de sobrevivência. O estimador é escrito da seguinte forma:
+
+$$ \hat{S}(t) = \prod_{j:t_{(j)}\le t} \dfrac{n_j - d_j}{n_j}$$
+
+Onde, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. 
+
+A representação gráfica desse método se comporta em uma função da forma de escada, uma vez que a estimação entre o tempo $t_{(j)}$ e $t_{(j+1)}$ é constante.
+
+
+\subsection{Modelos de Probabilidade}
+
+\subsubsection{Modelo Weibull}
+Sendo T uma variável aleatória contínua seguindo uma distribuição Weibull, sua função de densidade é dada por:
+
+$$ f(t) = \dfrac{\gamma}{\alpha^{\gamma}}t^{\gamma-1}\exp-\left\lbrace\left(\dfrac{t}{\alpha}\right)^{\gamma}\right\rbrace, \hspace{1cm} t \ge 0,$$
+
+Onde $\gamma$ e $\alpha$ são constantes positivas e correspondem aos parâmetros de forma e escala, respectivamente. O parâmetro $\alpha$ deve ter a mesma unidade de medida que t, enquanto o parâmetro $\gamma$ não possui nenhuma unidade de medida.
+
+É possível obter a função de sobrevivência para a distribuição Weibull a partir da equação \ref{eq:1}:
+
+\begin{equation} \label{eq:WeiHaz}
+S(t) = \exp \left\lbrace - \left( \dfrac{t}{\alpha} \right)^{\gamma} \right\rbrace, \hspace{1cm} t \ge 0
+\end{equation}
+
+E através da relação \ref{eq:riskcum}, tem-se que:
+
+\begin{equation} \label{eq:WeRis}
+	H(t) = - \left( \dfrac{t}{\alpha} \right)^{\gamma}
+\end{equation}
+
+O parâmetro $\gamma$ determina a forma da função de risco. Quando o parâmetro é menor que 1, a função de risco é monótona decrescente, caso o parâmetro seja maior que 1, a função de risco é monótona crescente e com o parâmetro assumindo valor igual a 1, a variável toma a forma de uma exponencial, que por sua vez, possui função risco constante.
+
+\subsubsection{Modelo Log-Normal}
+
+Considerando-se T uma variável aleatória contínua com distribuição Log-Normal, tem sua função densidade de probabilidade como:
+
+\begin{equation}
+ f(t) = \dfrac{1}{(2\pi)^{\frac{1}{2}}\sigma t}\exp\left\lbrace -\dfrac{1}{2} \left( \dfrac{\log(t) - \mu}{\sigma} \right) \right\rbrace, \hspace{1cm} t > 0
+\end{equation}
+
+Onde $\mu$ e $\sigma$ são, respectivamente, a média e o desvio padrão da variável aleatória. Ambos os parâmetros são maiores que 0.
+
+As funções de sobrevivência e risco acumulado são descritas envolvendo a função distribuição de probabilidade da Normal Padrão devido a função distribuição de probabilidade não ser analiticamente explícita, sendo que normal padrão é descrita como:
+
+$$ \Phi(x) =  \int_{-\infty}^{x} \dfrac{1}{\sqrt{2\pi}\sigma} \exp \left\lbrace \dfrac{-u^2}{2\sigma^2} \right\rbrace du $$
+
+A função de sobrevivência da log-normal pode ser facilmente vista como:
+
+\begin{equation} \label{eq:LNSurv}
+ S(t) = 1 - \Phi\left(\dfrac{\log(t) - \mu}{\sigma}\right)
+\end{equation}
+
+A partir dessa equação, e da relação \ref{eq:riskcum} é simples encontrar a função risco acumulado.
+
+O parâmetro $\sigma$ determina a forma da função de risco, sendo que a partir de $\sigma$<1, a função é monótona decrescente e para valores maiores ou iguais a 1 a função é monótona crescente.
+
+\subsubsection{Modelo Log-Logístico}
+
+Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como
+
+\begin{equation}
+  f(t) = \dfrac{\beta\left(\dfrac{t}{\mu}\right)^{\beta - 1}}{\mu\left[1+\left(\dfrac{t}{\mu}\right)^{\beta}\right]^2}, \hspace{1cm} t > 0
+\end{equation}
+
+Onde $\mu$ e $\beta$ são constantes, ambas maiores que 0. Com base na função densidade, é possível descrever a função de sobrevivência da variável aleatória T como:
+
+\begin{equation} \label{eq: LLSurv}
+  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}
+\end{equation}
+
+E a partir desta função pode-se encontrar a função risco acumulado:
+
+\begin{equation} \label{eq: HazLL}
+H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}}
+\end{equation}
+
+Com relação ao comportamento da função de risco, quando $\beta$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente.
+
+\subsection{Método de Máxima Verossimilhança}
+
+Para a estimação dos parâmetros da função de distribuição, e também para os parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
+
+Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade.
+
+Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo:2006}:
+
+\begin{equation} \label{eq:maxv1}
+  L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[f(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i}, 
+\end{equation}
+
+onde $\delta_i$ é a variável indicadora de falha e $\boldsymbol{\theta}$ é o vetor de parâmetros que serão estimados.
+
+\subsection{Dados Grupados}
+
+A análise de sobrevivência com censura intervalar, tem como caso particular os dados grupados. Essa particularidade acontece quando acontece um número excessivo de empates, ou seja, os tempos de vida se repetem diversas vezes. Este tipo de experimento pode ser encontrado em estudos de medidas repetidas longitudinais.
+
+
+
+
 %__________________________________METODOLOGIA__________________________________
 \newpage
 \section{Metodologia}
@@ -160,68 +355,11 @@ Para a estimação dos parâmetros do modelo, não pode-se usar alguns métodos 
 
 Para a análise dos dados, será utilizado o software estatístico R por meio da IDE Rstudio.
 
-%__________________________________CRONOGRAMA__________________________________
-	
-\section{Cronograma}
 
-O cronograma a seguir, foi organizado da seguinte forma:
-
-\begin{enumerate}
-	\item Escolha do tema a ser abordado;
-	\item Estudo da metodologia de análise de sobrevivência;
-	\item Estudo de modelos de sobrevivência para dados grupados;
-	\item Desenvolvimento da proposta de projeto final;	
-	\item Entrega da proposta final do projeto final;
-	\item Entrega do relatório parcial ao orientador para correção;
-	\item Ajuste de modelo de dados de sobrevivência para dados grupados;
-	\item Descrever resultados para o relatório final;
-	\item Correção do relatório final;
-	\item Entrega do relatório final a banca examinadora; e
-	\item Apresentação do relatório final para a banca examinadora.
-\end{enumerate}
-		
-\newpage
-\begin{table}[H]
-\centering
-\caption{Cronograma 2/2017}
-\label{my-label}
-\begin{tabular}{|l|l|l|l|l|l|l|}
-\hline
-                    & \multicolumn{6}{c|}{\textbf{2/2017}}                                                                                                                                                                                            \\ \hline
-\textbf{Atividades} & \textbf{Julho}                                  & \textbf{Agosto}          & \textbf{Setembro}                               & \textbf{Outubro}                                & \textbf{Novembro}        & \textbf{Dezezembro} \\ \hline
-\textbf{1}          & \cellcolor[HTML]{000000}                        &                          &                                                 &                                                 &                          &                     \\ \hline
-\textbf{2}          & \cellcolor[HTML]{000000}{\color[HTML]{333333} } & \cellcolor[HTML]{000000} &                                                \cellcolor[HTML]{000000} &    \cellcolor[HTML]{000000}               &       \cellcolor[HTML]{000000}                   &  \cellcolor[HTML]{000000}                   \\ \hline
-\textbf{3}          &                                                 &  & \cellcolor[HTML]{000000}                        &                                                 &                          &                     \\ \hline
-\textbf{4}          &                                                 &                          & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
-\textbf{5}          &                                                 &                          &                         & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                          &                     \\ \hline
-\textbf{6}          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000}                   &                     \\ \hline
-
-\end{tabular}
-\end{table}
-		
-\begin{table}[H]
-\centering
-\caption{Cronograma 1/2018}
-\label{my-label}
-\begin{tabular}{|l|l|l|l|l|l|l|l|}
-\hline
-                    & \multicolumn{7}{c|}{\textbf{1/2018}}                                                                                                                                                                                                                        \\ \hline
-\textbf{Atividades} & \textbf{Janeiro}         & \textbf{Fevereiro}                              & \textbf{Março}           & \textbf{Abril}                                  & \textbf{Maio}                                   & \textbf{Junho} & \textbf{Julho}                                 \\ \hline
-\textbf{2} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & &  &\\
- \hline
-\textbf{7}          & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000} &                                 \cellcolor[HTML]{000000}                &                                                 &                              &                   \\ \hline
-\textbf{8}         &                          &                                                 &  & \cellcolor[HTML]{000000}{\color[HTML]{000000} } &                                                \cellcolor[HTML]{000000} &   &                                              \\ \hline
-\textbf{9}         &                          &                                                 &                          &                         &                      \cellcolor[HTML]{000000} &                          &                                                 \\ \hline
-\textbf{10}         &                          &                                                 &                          &                                                 &                         &       \cellcolor[HTML]{000000} &                                          \\ \hline
-\textbf{11}         &                          &                                                 &                          &                                &                 & \cellcolor[HTML]{000000}{\color[HTML]{000000} } & \cellcolor[HTML]{000000}{\color[HTML]{000000} } \\ \hline
-\end{tabular}
-\end{table}		
-		
-		
 \newpage
 
 \addcontentsline{toc}{section}{Referências}
-\nocite{*}
+
 \bibliography{referencias}
 
 
