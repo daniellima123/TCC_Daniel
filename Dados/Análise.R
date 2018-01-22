@@ -7,6 +7,8 @@ library(magrittr)
 library(survival)
 library(ggplot2)
 library(ggfortify)
+library(survminer)
+
 
 ############################ Análise Exploratória #############################
 
@@ -38,3 +40,19 @@ autoplot(vitamin.km)
 
 plot(vitamin.km)
 plot(x = vitamin.kmt$time, y = vitamin.kmt$risk.cum, type = "s")
+
+
+
+
+
+## verossimilhan?a da log logistica
+
+p_t <- function(t, mu, beta){
+
+  val = 1/(1 + (t/mu)^beta) - 1/(1 + ((t+1)/mu)^beta)
+  return(val)
+}
+
+
+
+

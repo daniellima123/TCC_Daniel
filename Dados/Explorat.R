@@ -23,14 +23,32 @@ vitamin.km <- survfit(formula = vitamin.surv ~ 1)
 
 vitamin.kmt <- tidy(vitamin.km)
 
-ggsurvplot(fit = vitamin.km, data = vitamin.df,
-           legend = "none",
+ggsurvplot(fit = vitamin.km, data = vitamin.df, legend = "none",
            ggtheme = theme_bw(), conf.int = F)+
   xlab("Tempo")+ylab("S(t) Estimada")
 
-##### 
-ggsurvplot(fit = vitamin.km, fun = "cumhaz",
-           data = vitamin.df, conf.int = F)
 
-### 
+### Utilizando tempo e tipo de tratamento
+
+vitamin.km1 <- survfit(formula = vitamin.surv ~ x2, data = vitamin.df)
+
+ggsurvplot(fit = vitamin.km1, data = vitamin.df, legend = "right",
+           legend.title = "Tratamento", legend.labs = c("Placebo",
+                                                         "Vitamina A"),
+           ggtheme = theme_bw(), conf.int = F, pval = T)+
+  xlab("Tempo")+ylab("S(t) Estimada")
+
+### Utilizando tempo e sexo
+vitamin.km2 <- survfit(formula = vitamin.surv ~ x3, data = vitamin.df)
+
+ggsurvplot(fit = vitamin.km2, data = vitamin.df, legend = "right",
+           legend.title = "Sexo", legend.labs = c("Feminino",
+                                                        "Masculino"),
+           ggtheme = theme_bw(), conf.int = F, pval = T)+
+  xlab("Tempo")+ylab("S(t) Estimada")
+
+##### Função risco acumulado
+ggsurvplot(fit = vitamin.km, fun = "cumhaz",
+           data = vitamin.df, conf.int = F, ggtheme = theme_bw())
+
 
