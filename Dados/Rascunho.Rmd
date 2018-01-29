@@ -1,0 +1,85 @@
+---
+title: "Rascunho TCC"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Leitura Banco de dados e pacotes utilizados
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(survival)
+library(ggplot2)
+library(ggfortify)
+library(survminer)
+
+vitamin.df <- read_csv2("vitamina.csv", col_names = T)
+
+vitamin.df %<>%
+  select(-obs) %>%
+  mutate(x0 = as.factor(x0),
+         x2 = as.factor(x2),
+         x3 = as.factor(x3))
+
+vitamin.surv <- Surv(vitamin.df$tempo, vitamin.df$cens)
+```
+
+
+## Análise Exploratória
+
+### Gráfico utilizando apenas o tempo
+
+```{r}
+vitamin.km <- survfit(formula = vitamin.surv ~ 1)
+
+ggsurvplot(fit = vitamin.km, data = vitamin.df, legend = "none",
+           ggtheme = theme_bw(), conf.int = F)+
+  xlab("Tempo")+ylab("S(t) Estimada")
+```
+
+### Gráfico utilizando tempo e tipo de tratamento
+
+```{r}
+vitamin.km1 <- survfit(formula = vitamin.surv ~ x2, data = vitamin.df)
+
+ggsurvplot(fit = vitamin.km1, data = vitamin.df, legend = "right",
+           legend.title = "Tratamento", legend.labs = c("Placebo",
+                                                         "Vitamina A"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")
+```
+
+Utilizando o teste log rank o p-valor fica um pouco acima de 5%, indicando que as curvas podem ser significativas a 10%
+
+### Gráfico utilizando tempo e sexo
+
+```{r}
+vitamin.km2 <- survfit(formula = vitamin.surv ~ x3, data = vitamin.df)
+
+ggsurvplot(fit = vitamin.km2, data = vitamin.df, legend = "right",
+           legend.title = "Sexo", legend.labs = c("Feminino",
+                                                        "Masculino"),
+           ggtheme = theme_bw(), conf.int = F, pval = T)+
+  xlab("Tempo")+ylab("S(t) Estimada")
+```
+
+Extremamente não significativo.
+
+### Função de máxima verossimilhança
+
+```{r}
+p_t <- function(t, cens, parameter){
+  mu = parameter[1]
+  beta = parameter[2]
+  val = -1 * sum(log((1/(1 + (t/mu)^beta) - 1/(1 + ((t+1)/mu)^beta))^cens * (1 - 1/(1 + (t/mu)^beta))^(1-cens)))
+  return(val)
+}
+
+survreg(formula = vitamin.surv ~ 1, data = vitamin.df, dist = "loglogistic")
+
+optim(par = c(2, 4), fn = p_t, t = vitamin.df$tempo, cens = vitamin.df$cens)
+```
+
+
