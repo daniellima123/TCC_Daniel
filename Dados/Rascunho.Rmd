@@ -70,16 +70,32 @@ Extremamente não significativo.
 ### Função de máxima verossimilhança
 
 ```{r}
+source("funcoes.R")
 p_t <- function(t, cens, parameter){
+  
   mu = parameter[1]
+  
   beta = parameter[2]
-  val = -1 * sum(log((1/(1 + (t/mu)^beta) - 1/(1 + ((t+1)/mu)^beta))^cens * (1 - 1/(1 + (t/mu)^beta))^(1-cens)))
+  
+  L1 = log(dist(t, mu, beta))
+  L2 = log(sobrev(t, mu, beta))
+  
+  if(mu > 0 && beta > 0){
+    val = -1 * sum(cens*L1 + (1-cens)*L2)
+  }
+  else val = -Inf
+  
   return(val)
 }
 
-survreg(formula = vitamin.surv ~ 1, data = vitamin.df, dist = "loglogistic")
 
-optim(par = c(2, 4), fn = p_t, t = vitamin.df$tempo, cens = vitamin.df$cens)
+reg_result <- survreg(formula = vitamin.surv ~ 1, data = vitamin.df, dist = "loglogistic")
+
+opt_result <- optim(par = c(2, 4), fn = p_t, t = vitamin.df$tempo, cens = vitamin.df$cens)
+
+c(exp(reg_result$coefficients), opt_result$par[1])
+
+c(1/reg_result$scale, opt_result$par[2])
 ```
 
 
