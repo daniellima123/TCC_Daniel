@@ -1,0 +1,19 @@
+---
+title: "Prova Prática 1"
+author: |
+        |  Daniel Lima Viegas - 14/0168109
+        |  Professor Raul Matsusita
+output: pdf_document
+---
+
+# Questão 1
+## Letra a)
+
+Série Temporal:
+![Série gerada com os dados de qualidade do ar](~/series_temporais/statio_q1.png)
+
+Função de autocorrelação:
+![Série gerada com os dados de qualidade do ar](~/series_temporais/acf_q1.png)
+
+Função de autocorrelação parcial:
+![Série gerada com os dados de qualidade do ar](~/series_temporais/pacf_q1.png)

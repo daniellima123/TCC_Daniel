@@ -1,0 +1,325 @@
+%% abtex2-modelo-trabalho-academico.tex, v-1.9.6 laurocesar
+%% Copyright 2012-2016 by abnTeX2 group at http://www.abntex.net.br/ 
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is the abnTeX2 team, led
+%% by Lauro César Araujo. Further information are available on 
+%% http://www.abntex.net.br/
+%%
+%% This work consists of the files abntex2-modelo-trabalho-academico.tex,
+%% abntex2-modelo-include-comandos and abntex2-modelo-references.bib
+%%
+
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+% abnTeX2: Modelo de Trabalho Academico (tese de doutorado, dissertacao de
+% mestrado e trabalhos monograficos em geral) em conformidade com 
+% ABNT NBR 14724:2011: Informacao e documentacao - Trabalhos academicos -
+% Apresentacao
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+\documentclass[
+	% -- opções da classe memoir --
+	article,
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	twoside,			% para impressão em recto e verso. Oposto a oneside
+	a4paper,			% tamanho do papel. 
+	% -- opções da classe abntex2 --
+	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil				% o último idioma é o principal do documento
+	]{abntex2}
+
+% ---
+% Pacotes básicos 
+% ---
+\usepackage{lmodern}			% Usa a fonte Latin Modern			
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{lastpage}			% Usado pela Ficha catalográfica
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}				% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{microtype} 			% para melhorias de justificação
+\usepackage{amsmath}
+
+% ---
+		
+% ---
+% Pacotes adicionais, usados apenas no âmbito do Modelo Canônico do abnteX2
+% ---
+\usepackage{lipsum}				% para geração de dummy text
+% ---
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES
+% --- 
+
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+% ---
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+% --- 
+
+% --- 
+% Espaçamentos entre linhas e parágrafos 
+% --- 
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+
+
+% Seleciona o idioma do documento (conforme pacotes do babel)
+%\selectlanguage{english}
+\selectlanguage{brazil}
+
+
+% ----------------------------------------------------------
+% Introdução (exemplo de capítulo sem numeração, mas presente no Sumário)
+% ----------------------------------------------------------
+\section{Introdução}
+% ----------------------------------------------------------
+
+A Análise de sobrevivência é a área da Estatística aplicada nas áreas da saúde, das ciências sociais e econômicas chegando até às engenharias. Por possuir tantas aplicações, essa área também é chamada de Análise de Confiabilidade.
+
+Nesse tipo de análise o objeto de estudo é o tempo até a ocorrência de um evento de interesse. Sua grande diferença com relação às outras áreas da Estatística é a presença de censura no estudo, ou seja, dados cujo a observação de tempo não se concluiu por algum motivo.
+
+O tempo juntamente com essa censura, formam a variável resposta. Considerando o tempo como uma variável aleatória, é possível aplicar certos tipos de gráficos e técnicas com o propósito de descobrir uma possível distribuição para esses dados e assim realizar possíveis inferências e tirar as devidas conclusões.
+
+Na grande maioria dos trabalhos nessa área mensuram a variável tempo de forma contínua, pela grande quantidade de distribuições de probabilidade as quais os dados podem se ajustar. Quando a variável é medida de forma discreta, é necessário utilizar de alguns artifícios para o estudo. Um desses artifícios é o uso da discretização de uma distribuição de probabilidade. Esse método causa uma adaptação nos métodos tradicionais da análise de sobrevivência. Segundo \cite{colosimo;2006}, uma distribuição de probabilidade muito utilizada como alternativa de distribuições mais flexíveis é a Log-Logística, pois é aplicável em muitas situações práticas.
+
+O trabalho abordará dois bancos de dados, sendo que o primeiro é o banco de dados utilizado por \cite{Barreto;1994}. Este banco de dados estuda pouco mais de mil e duzentas crianças e estuda o tempo entre a suplementação de vitamina A ou placebo até o primeiro caso de diarréia. O segundo banco de dados...
+\vfill
+% ----------------------------------------------------------
+% Introdução (exemplo de capítulo sem numeração, mas presente no Sumário)
+% ----------------------------------------------------------
+\section{Revisão de Literatura}
+% ----------------------------------------------------------
+\subsection{Análise de Sobrevivência}
+
+Em determinados tipos de estudo é desejável estudar o tempo até a ocorrência de determinado evento de interesse, na Estatística, o nome que se dá a esse tipo de estudo é Análise de Sobrevivência. O evento de interesse pode ter nomes diferentes para diferentes áreas, em geral o termo usado pela maioria é falha, na medicina esse evento pode ser a morte do paciente, a cura ou a manifestação de uma doença. Na engenharia, em geral, esse termo se refere a falha de um equipamento e nas ciências econômicas esse termo pode se referir a inadimplência de um determinadoo cliente.
+
+O tempo nesse estudo pode ser medido de diversas formas como dias, meses, anos e até intervalos de tempo pré-determinados. Por ser um tipo de estudo que é observado ao longo do tempo, o acompanhamento de determinadas observações pode ser interrompido por diversos motivos. Dentre esses motivos podem estar a desistência de um paciente em participar do estudo por motivos pessoais ou o defeito de um produto por outro motivo que não o desejado. Diferentemente de outras áreas da Estatística, na Análise de Sobrevivência esses dados incompletos também são utilizados e se caracterizam como censuras.
+
+Essa censura forma a variável resposta juntamente com as observações completas do tempo. Dentre essas censuras existem três tipos principais, à direita, à esquerda e a intervalar. A censura à direita acontece quando o tempo registrado no estudo é maior que o tempo de início do estudo. A censura à esquerda ocorre quando a evento de interesse ocorre antes mesmo do início do estudo. E a censura intervalar ocorre quando o evento ocorre dentro do intervalo de dois tempos, geralmente é encontrada quando existe um acompanhamento periódico do evento.
+
+Dentro da censura à direita, ainda é possível realizar a divisão dessa censura em três tipos. A censura de tipo I ocorre quando existe um tempo limite para a ocorrência desse evento, caso esse tempo seja atingido, todos as observações que não manifestaram o evento são marcadas como censura. Na censura de tipo II, o número de falhas é fixado no começo do estudo e ao
+atingir esse número de falhas, as outras observações são marcadas como censuras. A censura de tipo III é a censura aleatória e engloba as duas censuras anteriores, esta censura se caracteriza por possuir censuras que não se sabe o motivo dela ter acontecido. Nesse trabalho será utilizada a censura à direita aleatória.
+
+A utilização desse tipo de censura no estudo se mostra importante, pois apesar de não ter apresentado falha, há a informação de que a observação ainda poderia apresentar tal falha caso o estudo tivesse continuado. A ausência dessa censura pode causar um viés às estimativas e ainda não mostrar a verdadeira distribuição dos dados.
+
+\subsection{Funções}
+
+Pelo tempo estudado na Análise de Sobrevivência ser dado de forma aleatória, sua distribuição pode ser descrita como a aproximação de uma variável aleatória. Considerando-se T = [Y], em que [Y] é a parte inteira dos valores da variável Y, esta variável é descrita como uma variável aleatória discreta. Esse tipo de definição do tempo não é muito utilizado dentro desse tipo de estudo pelo pequeno número de variáveis discretas que representem bem as especificidades do tempo. Como uma forma de realizar esse estudo, é possível discretizar a função distribuição de probabilidade de uma variável. A seguir, serão apresentadas funções utilizadas na Análise de Sobrevivência descritas tanto para variáveis contínuas quanto para discretas.
+
+\subsubsection{Função Densidade de Probabilidade}
+
+Dada uma variável aleatória, não negativa, que descreva o tempo até a ocorrência de determinado evento. Chama-se função densidade de probabilidade, uma função f, que descreva a probabilidade de um evento, quando o intervalo de ocorrência desse evento tende a zero. Sendo assim, uma função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
+
+Uma função densidade de probabilidade é uma função que satisfaz as seguintes condições:
+
+\begin{enumerate}
+  \item $f(x) \ e \ \ge 0$ para todo x,
+  \item $\int_{-\infty}^{\infty} f(x)dx = 1$ ou $\sum\limits_{i=0}^{\infty}p(x)=1$, em que f(x) é para uma variável contínua e p(x) para discreta,
+  \item para quaisquer a e b com $-\infty<a<b<\infty$, $P(a \le X \le b) = \int_a^b f(x)dx $ ou $\sum\limits_{i=a}^{b}p(x)$, para variáveis contínuas e discretas respectivamente.
+\end{enumerate}
+
+\subsubsection{função de sobrevivência}
+
+A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
+
+\begin{equation} \label{eq:1}
+	\begin{split}
+		S(t) & = P(T > t) \\
+		& = \int_t^{\infty} f(v)dv 
+  	\end{split}
+\end{equation} 
+
+Assumindo que T possuam apenas valores inteiros não negativos, ou seja, $ T \in \{0, 1, 2, ...\}$, a variável assume caráter discreto e por isso perde as propriedades anteriores. Para esse caso, a função de Sobrevivência é dada por:
+
+\begin{equation} \label{eq:survDisc}
+	\begin{split}
+		S(t) & = P(T > t) \\
+		& = \sum_{j=t+1}^{\infty} P(T = k), \hspace{1cm} t=0,1,2,3,...
+  	\end{split}
+\end{equation} 
+
+onde P(T=t) é a função de probabilidade da variável discreta T.
+
+\subsubsection{Função de Risco Acumulado}
+
+A função de risco acumulado é uma função que não possui uma interpretação simples, porém possui importância dentro do campo da análise de sobrevivência. Esta função, denotada como $H(t)$, pode ser definida como o logaritmo da função de sobrevivência multiplicado por menos um, ou seja:
+\begin{equation} \label{eq:riskcum}
+ H(t) = -\log(S(t))
+\end{equation}
+
+O gráfico desta função pode assumir algumas diferentes formas. Essas formas são utilizadas para determinar possíveis modelos probabilísticos que melhor se adequam aos dados. Com relação ao comportamento da função, o gráfico pode tomar as seguintes formas:
+
+\begin{itemize}
+	\item Reta diagonal $\Rightarrow$ Função de risco constante é adequada.
+	\item Curva convexa ou côncava $\Rightarrow$ Função
+risco é monotonicamente crescente ou decrescente, respectivamente.
+	\item Curva convexa e depois côncava $\Rightarrow$ Função risco tem forma de \textbf{U}.
+	\item Curva côncava e depois convexa $\Rightarrow$ Função risco tem comportamento unimodal.
+\end{itemize}
+
+\subsection{Estimadores da função de sobrevivência}
+
+\subsubsection{Estimação simples}
+
+A função de sobrevivência pode ser estimada amostralmente, como a proporção dos dados que não falharam até o tempo t. Esse estimador poderia ser escrito da seguinte forma:
+
+$$ \hat{S}(t) = \dfrac{n^o \ de \ dados \ com \ tempo \ > \ t}{n^o \ total \ de \ individuos}, \forall \ t \ \in t\ge 0$$
+
+Caso os dados sejam ordenados de forma crescente, pode-se representar a função de sobrevivência da seguinte forma:
+
+$$ \hat{S}(t) = \dfrac{n_j - d_j}{n} $$
+
+Onde $n_j$ é o número de indivíduos que podem falhar, $d_j$ é o número de indivíduos que que falharam no tempo e n é o número total de indivíduos.
+
+\subsubsection{Kaplan-Meier}
+
+Os estimadores apresentados acima, não podem ser usados nesse tipo de estudo porque não existe nenhuma forma de se incluir censuras.
+
+O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier. Esse estimador é muito popular em pesquisas que usam análise de sobrevivência. O estimador é escrito da seguinte forma:
+
+$$ \hat{S}(t) = \prod_{j:t_{(j)}\le t} \dfrac{n_j - d_j}{n_j}$$
+
+Onde, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. 
+
+A representação gráfica desse método se comporta em uma função da forma de escada, uma vez que a estimação entre o tempo $t_{(j)}$ e $t_{(j+1)}$ é constante.
+\subsection{Modelos de Probabilidade}
+
+\subsubsection{Modelo Log-Logístico}
+
+Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como
+
+\begin{equation}
+  f(t) = \dfrac{\beta\left(\dfrac{t}{\mu}\right)^{\beta - 1}}{\mu\left[1+\left(\dfrac{t}{\mu}\right)^{\beta}\right]^2}, \hspace{1cm} t > 0
+\end{equation}
+
+Onde $\mu$ e $\beta$ são constantes, ambas maiores que 0. Com base na função densidade, é possível descrever a função de sobrevivência da variável aleatória T como:
+
+\begin{equation} \label{eq: LLSurv}
+  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}
+\end{equation}
+
+E a partir desta função pode-se encontrar a função risco acumulado:
+
+\begin{equation} \label{eq: HazLL}
+H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}}}
+\end{equation}
+
+Segundo \cite{damiao;2017}, dada uma variável aleatória contínua T, é possível encontrar sua função de probabilidade discretizada a partir de sua função de distribuição de probabilidade e função de Sobrevivência, através de:
+
+\begin{equation}
+  \begin{split}
+  p(t) &= P(T=t) \\
+  &=P(t\le T < t+1) \\
+  &=P(T < t+1) - P(T \le t) \\
+  &=F_T(t+1) - F_T(t) \\
+  &=[1 - S_T(t+1)] - [1 - S_T(t)] \\
+  &=S_T(t) - S_T(t+1)
+  \end{split}
+\end{equation}
+
+Dado que T é uma variável com distribuição Log-Logística, a função de probabilidade discretizada dessa variável pode ser descrita como:
+
+\begin{equation} \label{eq:ptLL}
+p(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\beta}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\mu}\right)^{\beta}}
+\end{equation}
+
+Com relação ao comportamento da função de risco, quando $\beta$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente.
+
+
+\subsection{Método de Máxima Verossimilhança}
+
+Para a estimação dos parâmetros da função de distribuição, e também para os parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
+
+Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade.
+
+Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo;2006}:
+
+\begin{equation} \label{eq:maxv1}
+  L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[f(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i}, 
+\end{equation}
+
+onde $\delta_i$ é a variável indicadora de falha e $\boldsymbol{\theta}$ é o vetor de parâmetros que serão estimados.
+
+\section{Metodologia}
+\subsection{Material}
+
+Tendo como objetivo a aplicação do modelo de regressão proposto serão utilizados dois bancos de dados com áreas de estudo distintas. Um dos bancos de dados foi cedido pelo Instituto de Saúde Coletiva da Universidade Federal da Bahia, enquanto o segundo banco de dados foi cedido por???????????.
+
+O banco de dados relacionado a Saúde Coletiva foram obtidos a partir de um estudo conduzido por Barreto\cite{Barreto;1994}, tal estudo tinha como objetivo avaliar avaliar o efeito da suplementação de vitamina A em casos de diarréia no Nordeste do Brasil no período de dezembro de 1990 e dezembro de 1991. O banco acompanha, durante esse período, 1207 crianças com idades entre 6 e 48 meses no início do estudo, que no início do estudo receberam placebo ou vitamina A. A variável referente ao tempo de sobrevivência nesse estudo foi definida como o número de dias entre a primeira dose do suplemento até a primeira sequência de dias onde a criança apresentou diarréia. Essa sequência de dias foi chamada de episódio da doença. O banco compreende um total de 5 variáveis, sendo estas, o tempo de sobrevivência, que possui caráter numérico e discreto, a presença de censura na observação, que possui caráter binário, a idade em meses da criança, com caráter quantitativo discreto, o sexo da criança e o tipo do suplemento, sendo que este pode ser placebo ou vitamina A.
+
+\subsection{Métodos}
+
+\subsubsection{Modelo de Regressão Log-Logístico Discreto}
+
+Nos estudos de análise de sobrevivência, pode-se verificar a influência de determinadas covariáveis sobre o tempo de sobrevivência do indivíduo. A partir disto, é comum utilizar estas covariáveis para tentar explicar o tempo de sobrevivência da população em questão por meio de um modelo de regressão.
+
+Utiliza-se uma função de ligação g(.) que liga a variável resposta ao vetor de variáveis explicativas $\bold{x}^T$, onde $\bold{x}^T$  = $(1, x_1, ..., x_p)$. O vetor de parâmetros $\bold{\theta}$ que será estimado a partir das p covariáveis
+
+\newpage
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+\bibliography{../proposta_proj/referencias.bib}
+
+
+\end{document}

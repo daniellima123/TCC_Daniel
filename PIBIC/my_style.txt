@@ -1,0 +1,35 @@
+\usepackage{lmodern}			% Usa a fonte Latin Modern			
+\usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+\usepackage{lastpage}			% Usado pela Ficha catalográfica
+\usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}				% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{microtype} 		
+\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+\renewcommand{\backref}{}
+
+\renewcommand*{\backrefalt}[4]{
+  \ifcase #1%
+      Nenhuma cotação no texto.%
+  \or
+      Citado na página #2.%
+  \fi}%
+  
+\usepackage{abntex2-cite}  
+\titulo{PIBIC}
+\autor{Daniel Lima Viegas}
+\local{Brasil}
+\setlrmarginsandblock{3cm}{3cm}{*}
+\setulmarginsandblock{3cm}{3cm}{*}
+\checkandfixthelayout
+\usepackage{cite}
+
+\setlength{parindent}{1.3cm}
+
+\setlength{\parskip}{0.2cm}
+
+\SingleSpacing

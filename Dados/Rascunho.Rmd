@@ -16,12 +16,8 @@ library(ggfortify)
 library(survminer)
 
 vitamin.df <- read_csv2("vitamina.csv", col_names = T)
-
-vitamin.df %<>%
-  select(-obs) %>%
-  mutate(x0 = as.factor(x0),
-         x2 = as.factor(x2),
-         x3 = as.factor(x3))
+vitamin.df %<>% 
+  mutate(idade_1 = ifelse(x1 <= 24, 0, 1))
 
 vitamin.surv <- Surv(vitamin.df$tempo, vitamin.df$cens)
 ```
@@ -34,10 +30,26 @@ vitamin.surv <- Surv(vitamin.df$tempo, vitamin.df$cens)
 ```{r}
 vitamin.km <- survfit(formula = vitamin.surv ~ 1)
 
-ggsurvplot(fit = vitamin.km, data = vitamin.df, legend = "none",
+(a <- ggsurvplot(fit = vitamin.km, data = vitamin.df, legend = "none",
            ggtheme = theme_bw(), conf.int = F)+
-  xlab("Tempo")+ylab("S(t) Estimada")
+  xlab("Tempo")+ylab("S(t) Estimada"))
 ```
+
+
+### Gráfico utilizando a variável idade em intervalo
+
+```{r}
+vitamin.kmi <- survfit(vitamin.surv ~ idade_1, data = vitamin.df)
+
+ggsurvplot(fit = vitamin.kmi, data = vitamin.df, legend = "right",
+           legend.title = "Tratamento", legend.labs = c("menos de 2 anos",
+                                                         "Mais de 2 anos"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")
+
+```
+
+
 
 ### Gráfico utilizando tempo e tipo de tratamento
 
@@ -70,14 +82,14 @@ Extremamente não significativo.
 ### Função de máxima verossimilhança
 
 ```{r}
-source("funcoes.R")
+#source("funcoes.R")
 p_t <- function(t, cens, parameter){
   
   mu = parameter[1]
   
   beta = parameter[2]
   
-  L1 = log(dist(t, mu, beta))
+  L1 = log(distr(t, mu, beta))
   L2 = log(sobrev(t, mu, beta))
   
   if(mu > 0 && beta > 0){
@@ -98,4 +110,9 @@ c(exp(reg_result$coefficients), opt_result$par[1])
 c(1/reg_result$scale, opt_result$par[2])
 ```
 
+```{r}
+a + 
+  geom_line(aes(x = a$plot$data$time, sobrev(a$plot$data$time, opt_result$par[1], opt_result$par[2])))
+```
+ 
 

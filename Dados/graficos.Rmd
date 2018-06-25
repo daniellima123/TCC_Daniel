@@ -1,0 +1,191 @@
+---
+title: "Gráficos"
+author: "Daniel Lima Viegas"
+date: "May 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, fig.height = 3, fig.width = 10, warning = F, message = F)
+dens<-function(tempo,mu,beta){					# sub-funções que realizarão o cálculo
+  (beta*(tempo/mu)^(beta-1)) / (  mu* (1+(tempo/mu)^beta)^2  )
+}		# da função densidade
+
+distr <- function(tempo, mu, beta){
+  sobrev(tempo, mu, beta) - sobrev(tempo + 1, mu, beta)
+}
+
+sobrev<-function(tempo,mu,beta){					# sub-funções que realizarão o cálculo
+
+  (1+((tempo+1)/mu)^beta)^-1
+
+}						# da função de sobrevivência
+
+
+l_t <- function(tempo, cens, parameter){
+  
+  mu = parameter[1]
+  
+  beta = parameter[2]
+  
+  L1 = log(distr(tempo, mu, beta))
+  L2 = log(sobrev(tempo, mu, beta))
+  
+  if(mu > 0 && beta > 0){
+    val = -1 * sum(cens*L1 + (1-cens)*L2)
+  }
+  else val = -Inf
+  
+  return(val)
+}
+
+```
+
+
+```{r}
+
+library(data.table)
+library(tidyverse)
+library(magrittr)
+library(survival)
+library(ggplot2)
+library(ggfortify)
+library(survminer)
+library(cowplot)
+
+vari <- c("Matrícula", "Entrada", "Ulti_Per", "Tempo", "Status", "Sexo", "Turno", "Curso",
+          "Escola", "Ingresso", "Idade", "Idade2", "Raca")
+
+d <- fread("~/Downloads/Banco de dados - QuimIn.csv")
+
+
+d <- d[, vari, with=F]
+d[, raca_1 := ifelse(Raca %in% c("N�o disp�e da informa��o", "N�o declarado"),
+                     "Não dispõe", Raca)]
+d[, raca_2 := ifelse(raca_1 %in% c("Parda", "Preta", "Ind�gena"), "Cota_Racial", raca_1)]
+d <- as_tibble(d)
+
+d.surv <- Surv(d$Tempo, d$Status)
+
+d.km <- survfit(formula = d.surv ~ 1)
+
+surv <- ggsurvplot(fit = d.km, data = d, legend = "none",
+                 ggtheme = theme_bw(), conf.int = F)+
+    xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Gráfico KM")
+d1 <- d[complete.cases(d),]
+
+d1.surv <- Surv(d1$Tempo, d1$Status)
+
+d1.km <- survfit(formula = d1.surv ~ 1)
+
+surv1 <- ggsurvplot(fit = d1.km, data = d1, legend = "none",
+                 ggtheme = theme_bw(), conf.int = F)+
+    xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Gráfico KM com os dados reduzidos")
+arrange_ggsurvplots(list(surv, surv1))
+```
+
+```{r}
+opt <- optim(par = c(2, 3), fn = l_t, tempo = d$Tempo, cens = d$Status)
+s <- seq(0,12,0.01)
+surv_line <- sobrev(s, opt$par[1], opt$par[2])
+surv_c_line <- surv+geom_line(aes(s, surv_line), data = data.frame(s, surv_line))+
+  ggtitle("Curva ajustada pelos dados completos")
+opt1 <- optim(par = c(2, 3), fn = l_t, tempo = d1$Tempo, cens = d1$Status)
+s <- seq(0,12,0.01)
+surv_line1 <- sobrev(s, opt1$par[1], opt1$par[2])
+surv_c_line1 <- surv1+geom_line(aes(s, surv_line1), data = data.frame(s, surv_line1))+
+  ggtitle("Curva ajustada pelos dados sem NA")
+arrange_ggsurvplots(list(surv_c_line, surv_c_line1))
+```
+
+
+```{r}
+d.km1 <- survfit(formula = d.surv ~ Sexo, data = d)
+
+g_km1 <- ggsurvplot(fit = d.km1, data = d, legend = "right",
+           legend.title = "Sexo", legend.labs = c("Masculino",
+                                                        "Feminino"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Com NA's")
+d1.km1 <- survfit(formula = d1.surv ~ Sexo, data = d1)
+
+g1_km1 <- ggsurvplot(fit = d1.km1, data = d1, legend = "right",
+           legend.title = "Sexo", legend.labs = c("Masculino",
+                                                        "Feminino"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Sem NA's")
+arrange_ggsurvplots(list(g_km1, g1_km1))
+```
+
+```{r}
+d.km2 <- survfit(formula = d.surv ~ Ingresso, data = d)
+
+g_km2 <- ggsurvplot(fit = d.km2, data = d, legend = "right",
+           legend.title = "Forma de Ingresso", legend.labs = c("Vestibular",
+                                                        "ENEM"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Com NA's")
+d1.km2 <- survfit(formula = d1.surv ~ Ingresso, data = d1)
+
+g1_km2 <- ggsurvplot(fit = d1.km2, data = d1, legend = "right",
+           legend.title = "Forma de Ingresso", legend.labs = c("Vestibular",
+                                                        "ENEM"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Sem NA's")
+arrange_ggsurvplots(list(g_km2, g1_km2))
+```
+
+```{r}
+d.km3 <- survfit(formula = d.surv ~ Turno, data = d)
+
+g_km3 <- ggsurvplot(fit = d.km3, data = d, legend = "right",
+           legend.title = "Turno", legend.labs = c("Diurno",
+                                                        "Noturno"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Com NA's")
+d1.km3 <- survfit(formula = d1.surv ~ Turno, data = d1)
+
+g1_km3 <- ggsurvplot(fit = d1.km3, data = d1, legend = "right",
+           legend.title = "Turno", legend.labs = c("Diurno",
+                                                        "Noturno"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Sem NA's")
+arrange_ggsurvplots(list(g_km3, g1_km3))
+```
+
+
+```{r}
+d.km6 <- survfit(formula = d.surv ~ raca_2, data = d)
+
+g_km4 <- ggsurvplot(fit = d.km6, data = d, legend = "right",
+           legend.title = "Raça", legend.labs = c("Amarela",
+                                                  "Branca",
+                                                  "Cota Racial",
+                                                  "Não dispõe"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Com NA's")
+d1.km4 <- survfit(formula = d1.surv ~ raca_2, data = d1)
+
+g1_km4 <- ggsurvplot(fit = d1.km4, data = d1, legend = "right",
+           legend.title = "Raça", legend.labs = c("Amarela",
+                                                  "Branca",
+                                                  "Cota Racial",
+                                                  "Não dispõe"),
+           ggtheme = theme_bw(), conf.int = F, pval = T, log.rank.weights = "n")+
+  xlab("Tempo")+ylab("S(t) Estimada")+ggtitle("Sem NA's")
+arrange_ggsurvplots(list(g_km4, g1_km4))
+```
+
+
+```{r, fig.height=3, fig.width=5, fig.align="center"}
+d.km_escola <- survfit(d.surv ~ Escola, data = d)
+
+ggsurvplot(d.km_escola, data = d, legend='right',
+           legend.title = "Tipo de Escola",
+           legend.labs = c("Publica", "Particular"),
+           ggtheme = theme_bw(), conf.int = F, pval = T,
+           log.rank.weights = "n")+
+  ylab("S(t) Estimada")+xlab("Tempo")+ggtitle("Dados da escola")
+```
+
+
