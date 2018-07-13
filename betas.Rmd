@@ -1,0 +1,77 @@
+---
+title: "Untitled"
+author: "Daniel Lima Viegas"
+date: "May 31, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Tabela com todas as variáveis
+
+| Variáveis | Tentativa 1| Tentativa 2|
+|-----------|------------|------------|
+| $\beta$   | 0.26798    | 0.4715164  |
+| Intercepto| 0.52759    | 2.1208303  |
+| Sexo      | 1.74323    | 2.5472201  |
+| Turno     | 3.9413620  | 1.6334855  |
+| Escola    | -2.2132513 | 1.4782425  |
+| Ingresso  | -2.1139406 | -1.2934448 |
+| Idade     | 6.7120346  | 2.3362658  |
+| Origem    | 6.2011041  | -2.9453478 |
+
+Máximo de variáveis onde não houve mudança:
+
+| Variáveis | Tentativa 1| Tentativa 2|p-valor      |
+|-----------|------------|------------|-------------|
+| $\beta$   | 1.8279524  | 1.8257213  |             |
+| Intercepto| 1.8553972  | 1.8564777  |$10^{-115}$  |
+| Sexo      | 0.3999709  | 0.3981292  |$10^{-6}$    |
+| Turno     | -0.1433694 | -0.1425938 |$1,0*10^{-1}$|
+| Idade     | -0.1440439 | -0.1435391 |$10^{-1}$    |
+
+Convergiu, mas Turno e Idade são não significativos.
+
+| Variáveis | Tentativa 1| Tentativa 2|p-valor      |
+|-----------|------------|------------|-------------|
+| $\beta$   | 1.8378157  | 1.8380974  |             |
+| Intercepto| 1.8914663  | 1.8910608  | $10^{-110}$ |
+| Sexo      | 0.3935699  | 0.3942129  | $10^{-6}$   |
+| Turno     | -0.1016289 | -0.1018017 | $2*10^{-1}$ |
+| Escola    | -0.1803001 | -0.1789793 | $3*10^{-2}$ |
+
+Convergiu, mas Turno foi não signigicativo
+
+
+| Variáveis | Tentativa 1| Tentativa 2|p-valor      |
+|-----------|------------|------------|-------------|
+| $\beta$   | 2.2939492  | 2.2907373  |             |
+| Intercepto| 2.1435883  | 2.1429958  | $10^{-220}$ |
+| Sexo      | 0.2638104  | 0.2637037  | $10^{-4}$   |
+| Turno     | -0.1142837 | -0.1140843 | $9*10^{-2}$ |
+| Ingresso  | -0.8436769 | -0.8423278 | $10^{-34}$ |
+
+Convergiu com Turno não significativo para 10%
+
+| Variáveis | Tentativa 1| Tentativa 2|p-valor      |
+|-----------|------------|------------|-------------|
+| $\beta$   | 2.29685880 | 2.29744417 |             |
+| Intercepto| 2.11745863 | 2.11671421 | $10^{-230}$ |
+| Sexo      | 0.27077954 | 0.27171726 | $10^{-5}$   |
+| Escola    | -0.07488051| -0.07458934| $2*10^{-1}$ |
+| Ingresso  | -0.82584626| -0.82599233| $10^{-33}$  |
+
+Escola não significativo
+
+| Variáveis | Tentativa 1| Tentativa 2|p-valor      |
+|-----------|------------|------------|-------------|
+| $\beta$   | 2.3008374  | 2.3021385  |             |
+| Intercepto| 2.1079077  | 2.1087351  | $10^{-273}$ |
+| Sexo      | 0.2755932  | 0.2750823  | $10^{-5}$   |
+| Escola    | -0.8350698 | -0.8355248 | $10^{-34}$  |
+| Ingresso  | -0.1012340 | -0.1020245 |$1,7*10^{-1}$|
+
