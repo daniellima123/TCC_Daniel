@@ -1,5 +1,6 @@
-library(survival)
-library(survminer)
+library(pacman)
+p_load(survival)
+p_load(survminer)
 
 ## Função densidade de probabilidade
 dens<-function(tempo,mu,beta){					

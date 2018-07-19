@@ -28,8 +28,9 @@ mu <- exp(x_b)
 e <- H_t(tempo = df[['Tempo']], beta = opt$par[1], mu = mu)
 
 s <- Surv(e, df[['Status']])
-km <- surv_fit(s ~ 1, df)
-a <- ggsurvplot(km, data = df, conf.int = F)
+km <- survfit(s ~ 1, df)
+a <- ggsurv(km, CI = F, surv.col = 'red')
 a + 
-  geom_line(aes(x = a$plot$data$time,
-                exp(-a$plot$data$time)))
+  geom_line(aes(x = a$data$time,
+                exp(-a$data$time)))+
+  theme_bw()

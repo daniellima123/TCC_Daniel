@@ -5,4 +5,23 @@
 \providecommand{\abntbstabout}[1]{}
 \abntbstabout{v-1.9.6 }
 
+\bibitem[Barreto et al. 1994]{Barreto;1994}
+\abntrefinfo{Barreto et al.}{BARRETO et al.}{1994}
+{BARRETO, M.~L. et al. Effect of vitamin a supplementation on diarrhoea acute
+  lower-respiratory-tract infection in young children in brazil.
+\emph{Lancet 344}, p. 228--231, 1994.}
+
+\bibitem[Colosimo E e Giolo 2006]{colosimo;2006}
+\abntrefinfo{Colosimo E e Giolo}{COLOSIMO E; GIOLO}{2006}
+{COLOSIMO E, A.; GIOLO, S.~R. \emph{Análise de Sobrevivência Aplicada}. São
+  Paulo: Editora Bucher, 2006.}
+
+\bibitem[Santos 2017]{damiao;2017}
+\abntrefinfo{Santos}{SANTOS}{2017}
+{SANTOS, D.~F. dos.
+\emph{Modelo de Regressão Log-Logístico discreto com fracão de cura para
+  dados de sobrevivência}.
+Disserta\c{c}\~{a}o (Mestrado) --- Universidade de Brasília. Departamento de
+  Estatística - Instituto de Ciências Exatas., Brasília, 2017.}
+
 \end{thebibliography}
