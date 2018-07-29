@@ -1,73 +1,64 @@
 ---
 title: "Relatório PIBIC"
+author: |
+        | Daniel Lima Viegas^[e-mail: daniel.limaviegas454@gmail.com]
+        | Juliana Betini Fachini-Gomes^[e-mail: jfachini@unb.br]
 lang: pt-BR
+fontsize: 11pt
+header-includes:
+  - \usepackage{float}
+  - \setlength\parindent{24pt}
+geometry: 'left=3cm,right=3cm,top=2cm,bottom=2cm'
 output:
   pdf_document:
     number_sections: yes
+bibliography: proposta_proj/referencias.bib
 ---
 
 ```{r, echo=F, include=F}
+knitr::opts_chunk$set(fig.height=3, fig.width=5 , fig.align='center', echo = FALSE, warning=F,message=F,
+                      fig.pos = 'H')
 source('~/TCC_Daniel/programacao/leitura.R')
 source('~/TCC_Daniel/programacao/funcoes.R')
 library(cowplot)
 library(GGally)
+library(xtable)
 vitamina <- read_vitamin('~/TCC_Daniel/Dados/vitamina.csv')
-s <- survfit(Surv(vitamina$tempo, vitamina$censura) ~ 1, data = vitamina)
+s_vit <- survfit(Surv(vitamina$tempo, vitamina$censura) ~ 1, data = vitamina)
+s_vit_trat <- survfit(Surv(vitamina$tempo, vitamina$censura) ~ tratamento, data = vitamina)
+s_vit_sex <- survfit(Surv(vitamina$tempo, vitamina$censura) ~ sexo, data = vitamina)
+s_vit_idade <- survfit(Surv(vitamina$tempo, vitamina$censura) ~ idade, data = vitamina)
+opt <- otimizador_max_veros(5, vitamina, "tempo", "censura")
+test <- teste_hipo(opt)
+betas <- c('Intercepto', 'Idade', 'Tratamento', 'Sexo')
+comp_table <- data.frame('Parâmetros' = opt$par[-1], 'P-valor' = round(test, 4))
+opt_vit_1 <- otimizador_max_veros(4, vitamina[, -6], "tempo", "censura")
+test2 <- teste_hipo(opt_vit_1)
+selec_table <- data.frame('Parâmetros' = opt_vit_1$par[-1], 'P-valor' = round(test2, 4))
 ```
 
 
 # Introdução
 
-A Análise de sobrevivência é a área da Estatística aplicada nas áreas da saúde, das ciências
-sociais e econômicas chegando até às engenharias. Por possuir tantas aplicações, essa área
-também é chamada de Análise de Confiabilidade.
-Nesse tipo de análise o objeto de estudo é o tempo até a ocorrência de um evento de
-interesse. Sua grande diferença com relação às outras áreas da Estatística é a presença de censura
-no estudo, ou seja, dados cujo a observação de tempo não se concluiu por algum motivo.
-O tempo juntamente com essa censura, formam a variável resposta. Considerando o tempo
-como uma variável aleatória, é possível aplicar certos tipos de gráficos e técnicas com o propósito
-de descobrir uma possível distribuição para esses dados e assim realizar possíveis inferências e
-tirar as devidas conclusões.
-Na grande maioria dos trabalhos nessa área mensuram a variável tempo de forma contínua,
-pela grande quantidade de distribuições de probabilidade as quais os dados podem se ajustar.
-Quando a variável é medida de forma discreta, é necessário utilizar de alguns artifícios para o
-estudo. Um desses artifícios é o uso da discretização de uma distribuição de probabilidade. Esse
-método causa uma adaptação nos métodos tradicionais da análise de sobrevivência. Segundo
-@colosimo, uma distribuição de probabilidade muito utilizada como alternativa de
-distribuições mais flexíveis é a Log-Logística, pois é aplicável em muitas situações práticas.
-O trabalho abordará dois bancos de dados, sendo que o primeiro é o banco de dados
-utilizado por Barreto et al. (1994). Este banco de dados estuda pouco mais de mil e duzentas
-crianças e estuda o tempo entre a suplementação de vitamina A ou placebo até o primeiro caso de
-diarréia. O segundo banco de dados, é um banco cedido pela Universidade Estadual da Paraíba
-(UEPB). A variável de estudo nesse caso é o tempo que um estudante de química leva para
-evadir do curso.
+\hspace{24pt}A Análise de sobrevivência é a área da Estatística aplicada nas áreas da saúde, das ciências sociais e econômicas chegando até às engenharias. Por possuir tantas aplicações, essa área também é chamada de Análise de Confiabilidade.
+
+Nesse tipo de análise o objeto de estudo é o tempo até a ocorrência de um evento de interesse. Sua grande diferença com relação às outras áreas da Estatística é a presença de censura no estudo, ou seja, dados cujo a observação de tempo não se concluiu por algum motivo.
+
+O tempo juntamente com essa censura, formam a variável resposta. Considerando o tempo como uma variável aleatória, é possível aplicar certos tipos de gráficos e técnicas com o propósito de descobrir uma possível distribuição para esses dados e assim realizar possíveis inferências e tirar as devidas conclusões.
+
+Na grande maioria dos trabalhos nessa área mensuram a variável tempo de forma contínua, pela grande quantidade de distribuições de probabilidade as quais os dados podem se ajustar. Quando a variável é medida de forma discreta, é necessário utilizar de alguns artifícios para o estudo. Um desses artifícios é o uso da discretização de uma distribuição de probabilidade. Esse método causa uma adaptação nos métodos tradicionais da análise de sobrevivência. Segundo @colosimo, uma distribuição de probabilidade muito utilizada como alternativa de distribuições mais flexíveis é a Log-Logística, pois é aplicável em muitas situações práticas.
+
 
 # Revisão de Literatura
 
 ## Análise de Sobrevivência
 
-Em determinados tipos de estudo é desejável estudar o tempo até a ocorrência de determi-
-nado evento de interesse, na Estatística, o nome que se dá a esse tipo de estudo é Análise de
+\hspace{24pt}Em determinados tipos de estudo é desejável estudar o tempo até a ocorrência de determinado evento de interesse, na Estatística, o nome que se dá a esse tipo de estudo é Análise de Sobrevivência. O evento de interesse pode ter nomes diferentes para diferentes áreas, em geral o termo usado pela maioria é falha, na medicina esse evento pode ser a morte do paciente, a cura ou a manifestação de uma doença. Na engenharia, em geral, esse termo se refere a falha de um equipamento e nas ciências econômicas esse termo pode se referir a inadimplência de um determinadoo cliente.
 
-Sobrevivência. O evento de interesse pode ter nomes diferentes para diferentes áreas, em geral
-o termo usado pela maioria é falha, na medicina esse evento pode ser a morte do paciente, a
-cura ou a manifestação de uma doença. Na engenharia, em geral, esse termo se refere a falha de
-um equipamento e nas ciências econômicas esse termo pode se referir a inadimplência de um
-determinadoo cliente.
+O tempo nesse estudo pode ser medido de diversas formas como dias, meses, anos e até intervalos de tempo pré-determinados. Por ser um tipo de estudo que é observado ao longo do tempo, o acompanhamento de determinadas observações pode ser interrompido por diversos motivos. Dentre esses motivos podem estar a desistência de um paciente em participar do estudo por motivos pessoais ou o defeito de um produto por outro motivo que não o desejado.
 
-O tempo nesse estudo pode ser medido de diversas formas como dias, meses, anos e até
-intervalos de tempo pré-determinados. Por ser um tipo de estudo que é observado ao longo do
-tempo, o acompanhamento de determinadas observações pode ser interrompido por diversos
-motivos. Dentre esses motivos podem estar a desistência de um paciente em participar do
-estudo por motivos pessoais ou o defeito de um produto por outro motivo que não o desejado.
-Diferentemente de outras áreas da Estatística, na Análise de Sobrevivência esses dados incompletos
-também são utilizados e se caracterizam como censuras.
-Essa censura forma a variável resposta juntamente com as observações completas do tempo.
-Dentre essas censuras existem três tipos principais, à direita, à esquerda e a intervalar. A censura
-à direita acontece quando o tempo registrado no estudo é maior que o tempo de início do estudo.
-A censura à esquerda ocorre quando a evento de interesse ocorre antes mesmo do início do
-estudo. E a censura intervalar ocorre quando o evento ocorre dentro do intervalo de dois tempos,
-geralmente é encontrada quando existe um acompanhamento periódico do evento.
+Diferentemente de outras áreas da Estatística, na Análise de Sobrevivência esses dados incompletos também são utilizados e se caracterizam como censuras. Essa censura forma a variável resposta juntamente com as observações completas do tempo. Dentre essas censuras existem três tipos principais, à direita, à esquerda e a intervalar. A censura à direita acontece quando o tempo registrado no estudo é maior que o tempo de início do estudo.
+
 Dentro da censura à direita, ainda é possível realizar a divisão dessa censura em três tipos.
 A censura de tipo I ocorre quando existe um tempo limite para a ocorrência desse evento, caso
 esse tempo seja atingido, todos as observações que não manifestaram o evento são marcadas
@@ -76,13 +67,15 @@ atingir esse número de falhas, as outras observações são marcadas como censu
 tipo III é a censura aleatória e engloba as duas censuras anteriores, esta censura se caracteriza
 por possuir censuras que não se sabe o motivo dela ter acontecido. Nesse trabalho será utilizada
 a censura à direita aleatória.
+
 A utilização desse tipo de censura no estudo se mostra importante, pois apesar de não ter
 apresentado falha, há a informação de que a observação ainda poderia apresentar tal falha caso o
 estudo tivesse continuado. A ausência dessa censura pode causar um viés às estimativas e ainda
 não mostrar a verdadeira distribuição dos dados.
+
 A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar
 até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do
-tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de
+tempo t. Dada uma variável aleatória T, discreta, não negativa. Pode-se descrever a função de
 sobrevivência como:
 
 
@@ -93,19 +86,9 @@ sobrevivência como:
   	\end{split}
 \end{equation} 
 
-
-A função de risco acumulado é uma função que não possui uma interpretação simples,
-porém possui importância dentro do campo da análise de sobrevivência. Esta função, denotada
-como H(t), pode ser definida como o logaritmo da função de sobrevivência multiplicado por
-menos um, ou seja:
-
-\begin{equation} \label{eq:riskcum}
- H(t) = -\log(S(t))
-\end{equation}
-
 ## Estimação da Função de Sobrevivência por Kaplan Meier
 
-O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier.
+\hspace{24pt}O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier.
 Esse estimador é muito popular em pesquisas que usam análise de sobrevivência. O estimador é
 escrito da seguinte forma:
 
@@ -118,20 +101,16 @@ A representação gráfica desse método se comporta em uma função da forma de
 
 ## Distribuição Log-Logística \label{logl}
 
-Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como
+\hspace{24pt}Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como:
 
 \begin{equation}
-  f(t) = \dfrac{\lambda\left(\dfrac{t}{\mu}\right)^{\lambda - 1}}{\mu\left[1+\left(\dfrac{t}{\mu}\right)^{\lambda}\right]^2}, \hspace{1cm} t > 0
+  f(t) = \dfrac{\lambda\left(\dfrac{t}{\mu}\right)^{\lambda - 1}}{\mu\left[1+\left(\dfrac{t}{\mu}\right)^{\lambda}\right]^2}, \hspace{1cm} t > 0, \mu > 0, \lambda > 0 
 \end{equation}
+
+Com isso, é possível definir a função de sobrevivência para a distribuição Log-Logística como:
 
 \begin{equation} \label{eq: LLSurv}
-  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}}
-\end{equation}
-
-E a partir desta função pode-se encontrar a função risco acumulado:
-
-\begin{equation} \label{eq: HazLL}
-H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}}}
+  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}}, \hspace{1cm} t > 0, \mu > 0, \lambda > 0
 \end{equation}
 
 Segundo @damiao, dada uma variável aleatória contínua T, é possível encontrar sua função de probabilidade discretizada a partir de sua função de distribuição de probabilidade e função de Sobrevivência, através de:
@@ -157,33 +136,35 @@ Com relação ao comportamento da função de risco, quando $\lambda$ é menor q
 
 # Modelo de Regressão Log-Logístico discreto
 
-Uma das técnicas mais utilizadas para tentar explicar a variabilidade de uma variável segundo um conjunto de covariáveis é o modelo de regressão. Na análise de sobrevivência, utiliza-se de covariáveis para tentar explicar o tempo até a ocorrência do evento de interesse, com base na correlação entre a variável tempo e cada uma das covariáveis. Segundo @damiao, dado um vetor de covariáveis $\boldsymbol{x}^T = (1, x_1, ..., x_p)$ utiliza-se uma função de ligação $g(.)$ que conecte a variável resposta ao vetor $\boldsymbol{x}^T$.
+\hspace{24pt}Uma das técnicas mais utilizadas para tentar explicar a variabilidade de uma variável segundo um conjunto de covariáveis é o modelo de regressão. Na análise de sobrevivência, utiliza-se de covariáveis para tentar explicar o tempo até a ocorrência do evento de interesse, com base na correlação entre a variável tempo e cada uma das covariáveis. Segundo @damiao, dado um vetor de covariáveis $\boldsymbol{x}^T = (1, x_1, ..., x_p)$ utiliza-se uma função de ligação $g(.)$ que conecte a variável resposta ao vetor $\boldsymbol{x}^T$.
 
 Definindo o preditor linear como $\boldsymbol{x}^T\boldsymbol{\beta}$, em que, $\boldsymbol{\beta}$ é o vetor com p+1 coeficientes de regressão. Considerando uma variável aleatória $T$ com distribuição log-logística discreta definida na seção 2.3, pode-se utilizar o parâmetro de escala $\mu$, com $\mu > 0$ como a função de ligação, ou seja, $\mu = g(\eta) = \exp(\boldsymbol{x}^T\boldsymbol{\beta})$. Com isso, é possível descrever o modelo de regressão Log-Logístico discreto como:
 
 \begin{equation} \label{eq: modp}
-p(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}}.
+p(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty
 \end{equation}
 
 A partir dessa função, é possível descrever também a função sobrevivência da seguinte forma:
 
 \begin{equation} \label{eq: LLSurvmod}
-  S(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}
+  S(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty
 \end{equation}
 
 Como a função risco acumulado pode ser descrita como uma função da função de sobrevivência, esta possui a seguinte forma:
 
 \begin{equation} \label{eq: HazLLmod}
-H(t|x) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}}
+h(t|x) = - \dfrac{d}{dt}\log{\frac{1}{1 + \left(\frac{t}{\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty,
 \end{equation}
+
+Onde, $\lambda$ é o parâmetro de forma e $\boldsymbol{\beta}$ é o vetor de coeficientes do modelo.
 
 # Método de Máxima Verossimilhança para dados discretos
 
-Para a estimação dos parâmetros da função de distribuição, e também para os parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
+\hspace{24pt}Para a estimação dos parâmetros da função de distribuição, e também para os parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
 
 Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade.
 
-Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo;2006}:
+Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por @colosimo:
 
 \begin{equation} \label{eq:maxv1}
   L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[p(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i}, 
@@ -197,35 +178,242 @@ Para o modelo Log-Logístico, utilizando as equações \ref{eq: modp} e \ref{eq:
   L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[\dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}}\right]^{\delta_i} \left[\dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}\right]^{1-\delta_i}, 
 \end{equation}
 
-A partir da equação \ref{maxvmod}, é possível obter os parâmteros do modelo encontrando o ponto de máximo global na função. Isto pode ser feito ao resolver o sistema:
+A partir da equação \ref{eq:maxvmod}, é possível obter os parâmteros do modelo encontrando o ponto de máximo global na função. Isto pode ser feito ao resolver o sistema:
 
 $$ \dfrac{\partial L(\boldsymbol{\theta})}{\partial\boldsymbol{\theta}} = \boldsymbol{0} $$
 
 # Análise de Dados
 
-A fim de ilustrar o funcionamento do modelo de regressão Log-Logístico, serão utilizados dois bancos de dados com aplicações distintas. O primeiro banco de dados é o banco utilizado por @Barreto. Este banco estuda o tempo desde a suplementação de vitamina A ou placebo, até o primeiro episódio de diarréia em crianças com idades entre 0 e 24 meses. Os dados foram obtidos ao acompanhar pouco mais de 1200 crianças e possui em sua estrutura 3 variáveis explicativas.
+\hspace{24pt}A fim de ilustrar o funcionamento do modelo de regressão Log-Logístico, serão utilizados dois bancos de dados com aplicações distintas. O primeiro banco de dados é o banco utilizado por @Barreto. Este banco estuda o tempo desde a suplementação de vitamina A ou placebo, até o primeiro episódio de diarréia em crianças com idades entre 0 e 24 meses. Os dados foram obtidos ao acompanhar pouco mais de 1200 crianças e possui em sua estrutura 3 variáveis explicativas.
 
 O segundo banco de dados foi cedido pela Universidade Estadual da Paraíba (UEPB). O banco estuda o tempo que um aluno leva para evadir do curso de Química nesta universidade com mais de 600 alunos presentes no conjunto. O banco possui informações sobre os alunos como covariáveis.
 
 ## Suplementação de Vitamina em Episódios de Diarréia
 
-No estudo de suplementação de vitamina, o evento de interesse era a ocorrência do primiero episódio de diarréia em crianças com idades entre 0 e 24 meses. Para o estudo, foi definido que um episódio da doença é quando a doença persiste por uma sequência de dias. Além da covariável que indica o uso de vitamina A ou placebo, o banco também conta com a idade da criança e o sexo. Para o estudo, foram coletadas as informações de 1207 crianças.
+\hspace{24pt}No estudo de suplementação de vitamina, o evento de interesse era a ocorrência do primiero episódio de diarréia em crianças com idades entre 0 e 24 meses. Para o estudo, foi definido que um episódio da doença é quando a doença persiste por uma sequência de dias. Além da covariável que indica o uso de vitamina A ou placebo, o banco também conta com a idade da criança e o sexo. Para o estudo, foram coletadas as informações de 1207 crianças.
 
 ### Análise Descritiva
 
-Para observar inicialmente o comportamento da variável tempo e levar em consideração as censuras ao longo do estudo, utiliza-se o estimador de Kaplan-Meier para a função de sobrevivência e assim poder estimar a curva de sobrevivência. Utiliza-se a função risco acumulado estimada para encontrar uma possível distribuição para realizar a modelagem através de seu gráfico.
+\hspace{24pt}Para observar inicialmente o comportamento da variável tempo e levar em consideração as censuras ao longo do estudo, utiliza-se o estimador de Kaplan-Meier para a função de sobrevivência e assim poder estimar a curva de sobrevivência. Utiliza-se a função risco acumulado estimada para encontrar uma possível distribuição para realizar a modelagem através de seu gráfico.
 
-```{r, fig.height=3, fig.width=5 , fig.align='center', echo = FALSE, warning=F,message=F}
-g1 <- ggsurv(s, CI = F, cens.col = 'black') + xlab('Tempo') + ylab('S(t) estimada')
-g2 <- ggsurvplot(s, conf.int = F, fun = 'cumhaz', color = 'black') + xlab('Tempo') + ylab('H(t) estimada')
+```{r,fig.cap='\\label{fig: figs1} À esquerda, está a curva de sobrevivência e à direita, está a curva risco acumulado.'}
+g1 <- ggsurv(s_vit, CI = F, cens.col = 'black') + xlab('Tempo') + ylab('S(t) estimada')
+g2 <- ggsurvplot(s_vit, conf.int = F, fun = 'cumhaz', color = 'black') + xlab('Tempo') + ylab('H(t) estimada')
 plot_grid(g1, g2$plot, align = 'h')
 ```
 
+Pode-se perceber pelos gráficos que as censuras começam a aparecer em tempos próximos de 50 e grande parte das censuras se concentram no final das curvas, próximo ao tempo 150. É possível perceber na curva risco acumulado na \ref{fig: figs1}, um comportamento decrescente. Esse tipo de comportamento é o indicador de que a distribuição Log-Logística é uma das possíveis distribuições a serem estudadas.
 
+Outra forma de se analisar descritivamente as variáveis em sobrevivência, é realizar o gráfico de sobrevivência facetado pelas covariáveis categóricas. Para a variável numérica idade, foi realizada uma categorização para a análise. Valores abaixo de 12 meses foram descritos como 0 e acima disso como 1.
+
+```{r, fig.height=4, fig.width=7, fig.cap='\\label{fig: figs2} Curvas de sobrevivência facetadas pelas covariáveis'}
+g3 <- ggsurvplot(s_vit_trat, data = vitamina, conf.int = F, palette = c('green', 'blue'),
+                pval = F, legend.title = 'Tratamento', legend.labs = c('Placebo', 'Vitamina A'),
+                legend = 'right')+
+  xlab('Tempo')+ylab('S(t) Estimada')
+g4 <- ggsurvplot(s_vit_sex, data = vitamina, conf.int = F, palette = c('green', 'blue'),
+                pval = F, legend.title = 'Sexo', legend.labs = c('Feminino', 'Masculino'),
+                legend='right')+
+  xlab('Tempo')+ylab('S(t) Estimada')
+g5 <- ggsurvplot(s_vit_idade, data = vitamina, conf.int = F, palette = c('green', 'blue'),
+                pval = F, legend.title = 'Idade', legend.labs = c('< 2 anos', '> 2 anos'),
+                legend='right')+
+  xlab('Tempo')+ylab('S(t) Estimada')
+plot_grid(g3$plot, g4$plot, g5$plot, align = 'h')
+```
+
+As variáveis que melhor explicam o tempo sem considerar nenhuma distribuição, são aquelas que possuem maior diferença nas curvas quando facetadas. Ao observar os gráficos na figura \ref{fig: figs2} percebe-se que a variável de idade possui curvas muito diferentes, o que indica que a covariável explica bem o tempo. A variável tratamento também apresenta diferença, apesar de não ser tão perceptível. O sexo da criança não mostrou grande diferença, o que indica que esse fator não é muito explicativo para a variável resposta.
+
+### Modelagem dos dados
+
+\hspace{24pt}Ao realizar a construção do modelo completo, obteu-se os seguintes parâmetros com seus respectivos p-valores:
+
+```{r, results='asis'}
+xt <- xtable(comp_table, caption = 'Parâmetros do modelo completo', label = 'tab_comp', align = 'lcc')
+rownames(xt) <- betas
+print.xtable(xt, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
+             comment = F, table.placement = 'H')
+```
+
+A partir da tabela, percebe-se que a idade e o tipo de tratamento são informações significativas para o  modelo, enquanto a informação de sexo, não. Desta forma, utilizando o método *backward* para seleção de variáveis com o p-valor como critério de retirada.
+
+Com isso, o modelo escolhido em seguida foi com as variáveis de idade e o tipo do tratamento:
+
+```{r, results='asis'}
+xt <- xtable(selec_table, caption = 'Parâmetros do modelo sem a variável sexo', label = 'tab_selec', align = 'lcc')
+rownames(xt) <- betas[-4]
+print.xtable(xt, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
+             comment = F, table.placement = 'H')
+```
+
+Observando a tabela \ref{tab_selec}, nota-se que todas as variáveis são significativas ao nível de 5% de significância. Pelo método *backward*, não tem nenhuma variável a ser retirada do modelo, sendo assim, este é o modelo escolhido no estudo.
+
+Para verificar a qualidade do ajuste do modelo, utiliza-se o critério gráfico de Cox-Snell. Neste critério, compara-se a curva de sobrevivência do resíduo do modelo com a curva de sobrevivência de uma exponêncial com parâmetro 1.
+
+```{r, fig.cap='\\label{fig: snell_vit} Resíduo de Cox-Snell.'}
+b <- opt_vit_1$par[-1]
+model_vars <- vitamina[, -which(names(vitamina) %in% c('tempo', 'censura', 'sexo'))]
+x_b <- as.matrix(model_vars)%*%b
+mu <- exp(x_b)
+e <- H_t(tempo = vitamina[['tempo']], beta = opt_vit_1$par[1], mu = mu)
+s_res_vit <- Surv(e, vitamina[['censura']])
+km_vit <- surv_fit(s_res_vit ~ 1, vitamina)
+a <- ggsurvplot(km_vit, data = vitamina, conf.int = F, legend = 'none', color = 'black')
+a$plot + 
+  geom_line(aes(x = a$plot$data$time,
+                exp(-a$plot$data$time)))
+
+```
+
+Pela figura \ref{fig: snell_vit}, percebe-se que a curva estimada é próxima da curva da exponencial, o que mostra que o modelo ajustado possui boa qualidade, e por isso o modelo final para esse estudo é o modelo com as variáveis de idade e tipo de tratamento.
+
+## Evasão dos alunos de química
+
+```{r}
+a <- read_quimica('Dados/Banco de dados - QuimIn.csv')
+```
+
+
+\hspace{24pt}Para este estudo, o evento de interesse foi definido como a evasão do aluno, é dito que houve censura caso o aluno se forme, ou o estudo acabe antes da evasão. O banco conta com 671 alunos do curso de química e 6 possíveis variáveis explicativas, sendo essas: Sexo, Turno, Tipo da Escola, Por onde ingressou, Idade e a Origem do aluno. Todas as variáveis são binárias, inclusive idade que está definida como "Maior que a idade mediana" e "Menor que a idade mediana".
 
 ### Análise Descritiva
 
+\hspace{24pt}Primeiramente observa-se o comportamento da variável tempo através do estimador de Kaplan-Meier, incorporando as censuras e verificando o comportamento da função risco acumulado:
 
-\newpage
+```{r, fig.cap='\\label{fig: figs3} À esquerda, está a curva de sobrevivência e à direita, está a curva risco acumulado.'}
+km_q <- surv_fit(Surv(a$Tempo, a$Status) ~ 1, data = a)
+g1 <- ggsurvplot(km_q, conf.int = F, data = a, color = 'black') + xlab('Tempo') + ylab('S(t) estimada')
+g2 <- ggsurvplot(km_q, conf.int = F, fun='cumhaz', data = a, color = 'black') + xlab('Tempo') + ylab('H(t) estimada')
 
-# Referências
+plot_grid(g1$plot, g2$plot, align = 'h')
+```
+
+É interessante notar pelo gráfico que as probabilidades de sobrevivência vão diminuindo de forma muito mais rápida nos primeiros tempos e para os tempos finais a probabilidade vai convergindo para algo em torno dos 0,25. A função risco acumulada à direita mostra um comportamento decrescente o que mostra que a distribuição estudada se adequa bem aos dados.
+
+Para verificar a relação entre o tempo e as variáveis explicativas, pode-se realizar o procedimento de Kaplan-Meier para cada uma das variáveis. Esse procedimento ajuda a entender se cada variável, individualmente, pode influenciar no tempo sem depender de distribuição nenhuma.
+
+```{r, fig.width=8}
+km_q1 <- surv_fit(Surv(a$Tempo, a$Status) ~ Sexo, data = a)
+g3 <- ggsurvplot(km_q1, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'sexo', legend.labs = c('Masculino', 'Feminino'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+km_q2 <- surv_fit(Surv(a$Tempo, a$Status) ~ Turno, data = a)
+g4 <- ggsurvplot(km_q2, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'Turno', legend.labs = c('Diurno', 'Noturno'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+km_q3 <- surv_fit(Surv(a$Tempo, a$Status) ~ Escola, data = a)
+g5 <- ggsurvplot(km_q3, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'Tipo de Escola', legend.labs = c('Privado', 'Público'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+km_q4 <- surv_fit(Surv(a$Tempo, a$Status) ~ Ingresso, data = a)
+g6 <- ggsurvplot(km_q4, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'Forma de Ingresso', legend.labs = c('Vestibular', 'ENEM'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+km_q5 <- surv_fit(Surv(a$Tempo, a$Status) ~ Idade, data = a)
+g7 <- ggsurvplot(km_q5, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'Idade', legend.labs = c('< Mediana', '> Mediana'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+km_q6 <- surv_fit(Surv(a$Tempo, a$Status) ~ Origem, data = a)
+g8 <- ggsurvplot(km_q6, conf.int = F, data = a, palette = c('green', 'blue'), legend.title = 'Origem', legend.labs = c('Outras Cidades', 'Campina Grande'), legend='right') + xlab('Tempo') + ylab('S(t) estimada')
+plot_grid(g3$plot, g4$plot, ncol = 2, align = 'h')
+
+```
+
+```{r, fig.height=6, fig.width=8, fig.cap='\\label{fig: fig_exp_q} Curva de sobrevivência estimada para as covariáveis'}
+plot_grid( g5$plot, g6$plot, g7$plot, g8$plot, ncol = 2, align = 'h')
+```
+
+Segundo os gráficos de cada covariável, nem todas aparentam ser bem explicativas para a resposta. Variáveis como tipo de escola e origem do aluno, possuem curvas muito parecidas entre suas categorias. Por outro lado, as variáveis de sexo e forma de ingresso se distanciam o suficiente para supor boa correlação com o tempo. As variáveis turno e idade são parecidas ao longo de parte da curva e depois começam a se diferenciar, não se sabe ao certo se elas poderiam explicar bem o tempo ou não.
+
+### Modelagem dos dados
+
+\hspace{24pt}Para modelagem deste banco de dados, será realizada uma adaptação mais fraca do método *forward* de seleção de variáveis. Assim, será realizada a estimação do modelo apenas com o intercepto e após isso, serão estimados modelos adicionando variáveis uma a uma e escolhendo a variável mais significativa. A seleção pára quando não tiver mais nenhuma variável significativa.
+
+O modelo apenas com o intercepto e uma variável apresentou os seguintes resultados:
+
+```{r, results='asis'}
+opt_q_Sexo <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Sexo')], tempo = 'Tempo', censura = 'Status')
+testq1 <- teste_hipo(opt_q_Sexo)
+opt_q_t <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Turno')], tempo = 'Tempo', censura = 'Status')
+testq2 <- teste_hipo(opt_q_t)
+opt_q_e <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Escola')], tempo = 'Tempo', censura = 'Status')
+testq3 <- teste_hipo(opt_q_e)
+opt_q_in <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq4 <- teste_hipo(opt_q_in)
+opt_q_id <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Idade')], tempo = 'Tempo', censura = 'Status')
+testq5 <- teste_hipo(opt_q_id)
+opt_q_o <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Origem')], tempo = 'Tempo', censura = 'Status')
+testq6 <- teste_hipo(opt_q_o)
+para <- c(opt_q_Sexo$par[3], opt_q_t$par[3], opt_q_e$par[3], opt_q_in$par[3],
+                                  opt_q_id$par[3], opt_q_o$par[3])
+test <- c(testq1[2], testq2[2], testq3[2], testq4[2], testq5[2], testq6[2])
+xt <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
+       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int', align = 'lcc')
+rownames(xt) <- c('Sexo', 'Turno', 'Escola', 'Ingresso', 'Idade', 'Origem')
+print.xtable(xt, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
+             comment = F, table.placement = 'H')
+```
+
+Segundo a tabela \ref{tab_int}, as variáveis sexo e forma de ingresso são as mais propícias a entrar no modelo, porém a variável de ingresso é mais significativa e por isso é a variável adicionada. Após isso, repetindo o processo para uma segunda variável, tem-se:
+
+```{r, results='asis'}
+opt_q_Sexo <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Sexo', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq1 <- teste_hipo(opt_q_Sexo)
+opt_q_t <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Turno', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq2 <- teste_hipo(opt_q_t)
+opt_q_e <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Escola', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq3 <- teste_hipo(opt_q_e)
+opt_q_id <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Idade', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq4 <- teste_hipo(opt_q_id)
+opt_q_o <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Origem', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+testq5 <- teste_hipo(opt_q_o)
+para <- c(opt_q_Sexo$par[3], opt_q_t$par[3], opt_q_e$par[3],
+                                  opt_q_id$par[3], opt_q_o$par[3])
+test <- c(testq1[2], testq2[2], testq3[2], testq4[2], testq5[2])
+xt1 <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
+       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int1', align = 'lcc')
+rownames(xt1) <- c('Sexo', 'Turno', 'Escola', 'Idade', 'Origem')
+print.xtable(xt1, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
+             comment = F, table.placement = 'H')
+```
+
+Pela tabela \ref{tab_int1}, nota-se que a variável sexo é a mais significativa e por isso deve ser incluída no modelo. Repetindo o processo para as variáveis restantes, encontra-se o seguinte:
+
+```{r, results='asis'}
+opt_q_t <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Turno', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
+testq2 <- teste_hipo(opt_q_t)
+opt_q_e <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Escola', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
+testq3 <- teste_hipo(opt_q_e)
+opt_q_id <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Idade', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
+testq4 <- teste_hipo(opt_q_id)
+opt_q_o <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Origem', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
+testq5 <- teste_hipo(opt_q_o)
+para <- c(opt_q_t$par[3], opt_q_e$par[3],
+                                  opt_q_id$par[3], opt_q_o$par[3])
+test <- c(testq2[2], testq3[2], testq4[2], testq5[2])
+xt1 <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
+       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int2', align = 'lcc')
+rownames(xt1) <- c('Turno', 'Escola', 'Idade', 'Origem')
+print.xtable(xt1, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
+             comment = F, table.placement = 'H')
+```
+
+Como nenhuma das variáveis se mostra significativa, não é incluído mais nenhum fator no modelo, chegando assim a um possível modelo final. Após a seleção do modelo, é necessário medir a qualidade do ajuste com o critério gráfico de Cox-Snell.
+
+```{r}
+opt_q_Sexo <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Sexo', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
+b <- opt_q_Sexo$par[-1]
+model_vars <- a[, c('x0', 'Sexo', 'Ingresso')]
+x_b <- as.matrix(model_vars)%*%b
+mu <- exp(x_b)
+e <- H_t(tempo = a[['Tempo']], beta = opt_q_Sexo$par[1], mu = mu)
+s_res_vit <- Surv(e, a[['Status']])
+km_vit <- surv_fit(s_res_vit ~ 1, a)
+a1 <- ggsurvplot(km_vit, data = vitamina, conf.int = F, legend = 'none', color = 'black')
+a1$plot + 
+  geom_line(aes(x = a1$plot$data$time,
+                exp(-a1$plot$data$time)))
+
+```
+
+Como é possível notar pelo gráfico, a curva da distribuição exponencial é muito próxima à curva de sobrevivência do resíduo do modelo e por isso, é possível dizer que o modelo aparenta ter boa qualidade de ajuste. Com isso, o modelo final para esse estudo é o modelo que explica o tempo segundo as variáveis Sexo e Forma de Ingresso.
+
+# Considerações Finais
+
+\hspace{24pt}Na análise de sobrevivência não existem muitas distribuições discretas para se realizar a modelagem, como uma alternativa para esse problema está a discretização de distribuições contínuas, tais como a Log-Logística.
+
+Pelos resultados apresentados no texto, a distribuição Log-Logística discretizada é uma boa alternativa no que tange a uma alternativa para tempos discretos na análise de sobrevivência. Os modelos estimados em ambos os bancos mostraram bons ajustes.
+
+No primeiro banco, o resultado seguiu esperado na análise exploratória com as variáveis de idade e tratamento sendo significativas. O mesmo aconteceu no segundo banco com as variáveis de sexo e turno. Essas variáveis em ambos os estudos aparentavam explicar bem o tempo independente da distribuição.
+
+# 7 Referências
