@@ -86,6 +86,12 @@ sobrevivência como:
   	\end{split}
 \end{equation} 
 
+Segundo @colosimo, uma das funções mais importantes para a análise de sobrevivência é a função de risco ou função de taxa de falha. Esta função é definida pela probabilidade de que o evento ocorra dentro de um intervalo, dado que não ocorreu antes do limite inferior desse intervalo. Essa função pode ser definida como:
+
+
+$$    h(t) = \dfrac{-d\log{S(t)}}{dt}, \hspace{1cm} t=0,1,2,3,... $$
+
+
 ## Estimação da Função de Sobrevivência por Kaplan Meier
 
 \hspace{24pt}O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier.
@@ -132,7 +138,7 @@ Dado que T é uma variável com distribuição Log-Logística, a função de pro
 p(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\mu}\right)^{\lambda}}
 \end{equation}
 
-Com relação ao comportamento da função de risco, quando $\lambda$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente.
+Com relação ao comportamento da função de risco, quando $\lambda$ é menor ou igual a 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função cresce até um valor máximo e após isso tem um comportamento decrescente.
 
 # Modelo de Regressão Log-Logístico discreto
 
