@@ -1,5 +1,5 @@
 ---
-title: "Relatório PIBIC"
+title: "Relatório PIBIC 2018: Estudo de Modelos para Dados Discretos em Análise de Sobrevivência"
 author: |
         | Daniel Lima Viegas^[e-mail: daniel.limaviegas454@gmail.com]
         | Juliana Betini Fachini-Gomes^[e-mail: jfachini@unb.br]
@@ -13,6 +13,8 @@ output:
   pdf_document:
     number_sections: yes
 bibliography: proposta_proj/referencias.bib
+nocite: |
+      @damiao
 ---
 
 ```{r, echo=F, include=F}
@@ -119,7 +121,7 @@ Com isso, é possível definir a função de sobrevivência para a distribuiçã
   S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}}, \hspace{1cm} t > 0, \mu > 0, \lambda > 0
 \end{equation}
 
-Segundo @damiao, dada uma variável aleatória contínua T, é possível encontrar sua função de probabilidade discretizada a partir de sua função de distribuição de probabilidade e função de Sobrevivência, através de:
+Segundo Santos (2017), dada uma variável aleatória contínua T, é possível encontrar sua função de probabilidade discretizada a partir de sua função de distribuição de probabilidade e função de Sobrevivência, através de:
 
 \begin{equation}
   \begin{split}
@@ -135,20 +137,24 @@ Segundo @damiao, dada uma variável aleatória contínua T, é possível encontr
 Dado que T é uma variável com distribuição Log-Logística, a função de probabilidade discretizada dessa variável pode ser descrita como:
 
 \begin{equation} \label{eq:ptLL}
-p(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\mu}\right)^{\lambda}}
+p(t) = \dfrac{1}{1 + \left(\dfrac{t}{\mu}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\mu}\right)^{\lambda}},
 \end{equation}
 
-Com relação ao comportamento da função de risco, quando $\lambda$ é menor ou igual a 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função cresce até um valor máximo e após isso tem um comportamento decrescente.
+em que, $\mu$ é o parâmetro de escala e $\lambda$ é o parâmetro de forma.
+
+Com relação ao comportamento da função de risco, quando $\lambda$ é menor ou igual a 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função cresce até um valor máximo e após isso tem um comportamento decrescente, ou seja, assumindo função de risco unimodal.
 
 # Modelo de Regressão Log-Logístico discreto
 
-\hspace{24pt}Uma das técnicas mais utilizadas para tentar explicar a variabilidade de uma variável segundo um conjunto de covariáveis é o modelo de regressão. Na análise de sobrevivência, utiliza-se de covariáveis para tentar explicar o tempo até a ocorrência do evento de interesse, com base na correlação entre a variável tempo e cada uma das covariáveis. Segundo @damiao, dado um vetor de covariáveis $\boldsymbol{x}^T = (1, x_1, ..., x_p)$ utiliza-se uma função de ligação $g(.)$ que conecte a variável resposta ao vetor $\boldsymbol{x}^T$.
+\hspace{24pt}Uma das técnicas mais utilizadas para tentar explicar a variabilidade de uma variável segundo um conjunto de covariáveis é o modelo de regressão. Na análise de sobrevivência, utiliza-se de covariáveis para tentar explicar o tempo até a ocorrência do evento de interesse, com base na correlação entre a variável tempo e cada uma das covariáveis. Segundo Santos (2017), dado um vetor de covariáveis $\boldsymbol{x}^T = (1, x_1, ..., x_p)$ utiliza-se uma função de ligação $g(.)$ que conecte a variável resposta ao vetor $\boldsymbol{x}^T$.
 
 Definindo o preditor linear como $\boldsymbol{x}^T\boldsymbol{\beta}$, em que, $\boldsymbol{\beta}$ é o vetor com p+1 coeficientes de regressão. Considerando uma variável aleatória $T$ com distribuição log-logística discreta definida na seção 2.3, pode-se utilizar o parâmetro de escala $\mu$, com $\mu > 0$ como a função de ligação, ou seja, $\mu = g(\eta) = \exp(\boldsymbol{x}^T\boldsymbol{\beta})$. Com isso, é possível descrever o modelo de regressão Log-Logístico discreto como:
 
 \begin{equation} \label{eq: modp}
-p(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty
+p(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}} - \dfrac{1}{1 + \left(\dfrac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\lambda}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty,
 \end{equation}
+
+em que, $\lambda$ é o parâmetro de forma e a $\exp(\boldsymbol{x}^T\boldsymbol{\beta})$ é o parâmetro de escala
 
 A partir dessa função, é possível descrever também a função sobrevivência da seguinte forma:
 
@@ -156,10 +162,10 @@ A partir dessa função, é possível descrever também a função sobrevivênci
   S(t|x) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty
 \end{equation}
 
-Como a função risco acumulado pode ser descrita como uma função da função de sobrevivência, esta possui a seguinte forma:
+Como a função de risco pode ser descrita como uma função da função de sobrevivência, esta possui a seguinte forma:
 
 \begin{equation} \label{eq: HazLLmod}
-h(t|x) = - \dfrac{d}{dt}\log{\frac{1}{1 + \left(\frac{t}{\boldsymbol{x}^T\boldsymbol{\beta}}\right)^{\lambda}}}, \hspace{0.75cm}  t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty,
+h(t|x) = 1 - \dfrac{1 + \left[\frac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right]^\lambda}{1 + \left[\frac{t+1}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right]^\lambda}, \hspace{0.5cm}t > 0, \lambda > 0, -\infty < \boldsymbol{\beta} < \infty
 \end{equation}
 
 Onde, $\lambda$ é o parâmetro de forma e $\boldsymbol{\beta}$ é o vetor de coeficientes do modelo.
@@ -228,7 +234,7 @@ g5 <- ggsurvplot(s_vit_idade, data = vitamina, conf.int = F, palette = c('green'
 plot_grid(g3$plot, g4$plot, g5$plot, align = 'h')
 ```
 
-As variáveis que melhor explicam o tempo sem considerar nenhuma distribuição, são aquelas que possuem maior diferença nas curvas quando facetadas. Ao observar os gráficos na figura \ref{fig: figs2} percebe-se que a variável de idade possui curvas muito diferentes, o que indica que a covariável explica bem o tempo. A variável tratamento também apresenta diferença, apesar de não ser tão perceptível. O sexo da criança não mostrou grande diferença, o que indica que esse fator não é muito explicativo para a variável resposta.
+As variáveis que melhor explicam o tempo sem considerar nenhuma distribuição, são aquelas que possuem maior diferença nas curvas quando facetadas. Ao observar os gráficos na Figura \ref{fig: figs2} percebe-se que a variável de idade possui curvas muito diferentes, o que indica que a covariável explica bem o tempo. A variável tratamento também apresenta diferença, apesar de não ser tão perceptível. O sexo da criança não mostrou grande diferença, o que indica que esse fator não é muito explicativo para a variável resposta.
 
 ### Modelagem dos dados
 
@@ -252,7 +258,7 @@ print.xtable(xt, include.rownames = T, include.colnames = T, sanitize.rownames.f
              comment = F, table.placement = 'H')
 ```
 
-Observando a tabela \ref{tab_selec}, nota-se que todas as variáveis são significativas ao nível de 5% de significância. Pelo método *backward*, não tem nenhuma variável a ser retirada do modelo, sendo assim, este é o modelo escolhido no estudo.
+Observando a Tabela \ref{tab_selec}, nota-se que todas as variáveis são significativas ao nível de 5% de significância. Pelo método *backward*, não tem nenhuma variável a ser retirada do modelo, sendo assim, este é o modelo escolhido no estudo.
 
 Para verificar a qualidade do ajuste do modelo, utiliza-se o critério gráfico de Cox-Snell. Neste critério, compara-se a curva de sobrevivência do resíduo do modelo com a curva de sobrevivência de uma exponêncial com parâmetro 1.
 
@@ -271,7 +277,9 @@ a$plot +
 
 ```
 
-Pela figura \ref{fig: snell_vit}, percebe-se que a curva estimada é próxima da curva da exponencial, o que mostra que o modelo ajustado possui boa qualidade, e por isso o modelo final para esse estudo é o modelo com as variáveis de idade e tipo de tratamento.
+Pela Figura \ref{fig: snell_vit}, percebe-se que a curva estimada é próxima da curva da exponencial, o que mostra que o modelo ajustado possui boa qualidade, e por isso o modelo final para esse estudo é o modelo com as variáveis de idade e tipo de tratamento.
+
+A interpretação do parâmetro de idade se dá por $e^{`r opt_vit_1[['par']][3]`} = `r exp(opt_vit_1[['par']][3])`$, o que pode ser interpretado como o tempo mediano das crianças com idade maior que 2 anos, é aproximadamente metade do tempo mediano das quais são mais novas. Com relação a variável do tipo de tratamento, sua interpretação $e^{`r opt_vit_1[['par']][4]`} = `r exp(opt_vit_1[['par']][4])`$, significa que o tempo mediano para pessoas que tomaram vitamina A é 1.13 vezes maior que as que foram suplementadas com placebo.
 
 ## Evasão dos alunos de química
 
@@ -323,78 +331,21 @@ Segundo os gráficos de cada covariável, nem todas aparentam ser bem explicativ
 
 ### Modelagem dos dados
 
-\hspace{24pt}Para modelagem deste banco de dados, será realizada uma adaptação mais fraca do método *forward* de seleção de variáveis. Assim, será realizada a estimação do modelo apenas com o intercepto e após isso, serão estimados modelos adicionando variáveis uma a uma e escolhendo a variável mais significativa. A seleção pára quando não tiver mais nenhuma variável significativa.
+\hspace{24pt}Para modelagem deste banco de dados, será realizada uma adaptação mais fraca do método *forward* de seleção de variáveis. O método começa com o modelo apenas com uma variável, desta forma, são gerados 6 modelos e é mantido o modelo que teve a variável mais significativa, após isso, é repetido o processo para as variáveis restantes, é escolhida a variável mais significativa e novamente repete-se o processo. O método para quando nenhuma das variáveis a serem adicionadas é significativa.
 
-O modelo apenas com o intercepto e uma variável apresentou os seguintes resultados:
-
-```{r, results='asis'}
-opt_q_Sexo <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Sexo')], tempo = 'Tempo', censura = 'Status')
-testq1 <- teste_hipo(opt_q_Sexo)
-opt_q_t <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Turno')], tempo = 'Tempo', censura = 'Status')
-testq2 <- teste_hipo(opt_q_t)
-opt_q_e <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Escola')], tempo = 'Tempo', censura = 'Status')
-testq3 <- teste_hipo(opt_q_e)
-opt_q_in <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq4 <- teste_hipo(opt_q_in)
-opt_q_id <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Idade')], tempo = 'Tempo', censura = 'Status')
-testq5 <- teste_hipo(opt_q_id)
-opt_q_o <- otimizador_max_veros(3, a[, c('Tempo', 'Status', 'x0', 'Origem')], tempo = 'Tempo', censura = 'Status')
-testq6 <- teste_hipo(opt_q_o)
-para <- c(opt_q_Sexo$par[3], opt_q_t$par[3], opt_q_e$par[3], opt_q_in$par[3],
-                                  opt_q_id$par[3], opt_q_o$par[3])
-test <- c(testq1[2], testq2[2], testq3[2], testq4[2], testq5[2], testq6[2])
-xt <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
-       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int', align = 'lcc')
-rownames(xt) <- c('Sexo', 'Turno', 'Escola', 'Ingresso', 'Idade', 'Origem')
-print.xtable(xt, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
-             comment = F, table.placement = 'H')
-```
-
-Segundo a tabela \ref{tab_int}, as variáveis sexo e forma de ingresso são as mais propícias a entrar no modelo, porém a variável de ingresso é mais significativa e por isso é a variável adicionada. Após isso, repetindo o processo para uma segunda variável, tem-se:
+Seguindo essa ideia, após realizar o modelo para todas as variáveis uma a uma, foi escolhida a variável ingresso, após isso, foi realizado o modelo novamente e a variável mais significativa se mostrou ser a variável sexo. Ao tentar a inclusão de outra variável, nenhuma se mostrou significativa e por isso não foi mais adicionada nenhuma variável. Desta forma o modelo escolhido como final é:
 
 ```{r, results='asis'}
 opt_q_Sexo <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Sexo', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq1 <- teste_hipo(opt_q_Sexo)
-opt_q_t <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Turno', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq2 <- teste_hipo(opt_q_t)
-opt_q_e <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Escola', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq3 <- teste_hipo(opt_q_e)
-opt_q_id <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Idade', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq4 <- teste_hipo(opt_q_id)
-opt_q_o <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Origem', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
-testq5 <- teste_hipo(opt_q_o)
-para <- c(opt_q_Sexo$par[3], opt_q_t$par[3], opt_q_e$par[3],
-                                  opt_q_id$par[3], opt_q_o$par[3])
-test <- c(testq1[2], testq2[2], testq3[2], testq4[2], testq5[2])
-xt1 <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
-       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int1', align = 'lcc')
-rownames(xt1) <- c('Sexo', 'Turno', 'Escola', 'Idade', 'Origem')
+testq1 <- round(teste_hipo(opt_q_Sexo), 4)
+
+xt1 <- xtable(data.frame('Parâmetro' = opt_q_Sexo$par[-1], 'P-valor' = testq1),caption = 'Parâmetros do modelo completo', label = 'tab_int2', align = 'lcc')
+rownames(xt1) <- c('Intercepto', 'Sexo', 'Ingresso')
 print.xtable(xt1, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
-             comment = F, table.placement = 'H')
+            comment = F, table.placement = 'H')
+
 ```
 
-Pela tabela \ref{tab_int1}, nota-se que a variável sexo é a mais significativa e por isso deve ser incluída no modelo. Repetindo o processo para as variáveis restantes, encontra-se o seguinte:
-
-```{r, results='asis'}
-opt_q_t <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Turno', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
-testq2 <- teste_hipo(opt_q_t)
-opt_q_e <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Escola', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
-testq3 <- teste_hipo(opt_q_e)
-opt_q_id <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Idade', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
-testq4 <- teste_hipo(opt_q_id)
-opt_q_o <- otimizador_max_veros(5, a[, c('Tempo', 'Status', 'x0', 'Origem', 'Ingresso', 'Sexo')], tempo = 'Tempo', censura = 'Status')
-testq5 <- teste_hipo(opt_q_o)
-para <- c(opt_q_t$par[3], opt_q_e$par[3],
-                                  opt_q_id$par[3], opt_q_o$par[3])
-test <- c(testq2[2], testq3[2], testq4[2], testq5[2])
-xt1 <- xtable(data.frame('Parâmetro' = para, 'P-valor' = round(test, 4)),
-       caption = 'Parâmetros do modelo apenas com o intercepto', label = 'tab_int2', align = 'lcc')
-rownames(xt1) <- c('Turno', 'Escola', 'Idade', 'Origem')
-print.xtable(xt1, include.rownames = T, include.colnames = T, sanitize.rownames.function = identity,
-             comment = F, table.placement = 'H')
-```
-
-Como nenhuma das variáveis se mostra significativa, não é incluído mais nenhum fator no modelo, chegando assim a um possível modelo final. Após a seleção do modelo, é necessário medir a qualidade do ajuste com o critério gráfico de Cox-Snell.
 
 ```{r}
 opt_q_Sexo <- otimizador_max_veros(4, a[, c('Tempo', 'Status', 'x0', 'Sexo', 'Ingresso')], tempo = 'Tempo', censura = 'Status')
@@ -413,6 +364,8 @@ a1$plot +
 ```
 
 Como é possível notar pelo gráfico, a curva da distribuição exponencial é muito próxima à curva de sobrevivência do resíduo do modelo e por isso, é possível dizer que o modelo aparenta ter boa qualidade de ajuste. Com isso, o modelo final para esse estudo é o modelo que explica o tempo segundo as variáveis Sexo e Forma de Ingresso.
+
+A interpretação da variável Sexo se dá por $e^{`r opt_q_Sexo[['par']][3]`} = `r exp(opt_q_Sexo[['par']][3])`$, isso significa que o tempo mediano das alunas de sexo feminino é 1.311 vezes maior que o tempo mediano referente ao sexo masculino Enquanto a variável indicadora de forma de ingresso pode ser interpretada por $e^{`r opt_q_Sexo[['par']][4]`} = `r exp(opt_q_Sexo[['par']][4])`$ que significa que o tempo mediano das pessoas que ingressaram pelo vestibular é pouco maior que 2 vezes o tempo mediano dos ingressantes pelo ENEM.
 
 # Considerações Finais
 

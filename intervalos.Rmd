@@ -1,0 +1,20 @@
+---
+title: "Untitled"
+author: "Daniel"
+date: "October 11, 2018"
+output: pdf_document
+---
+
+
+```{r, results='asis'}
+library(survival)
+library(dplyr)
+library(xtable)
+library(magrittr)
+source('programacao/leitura.R')
+df <- read_quimica('Dados/Banco de dados - QuimIn.csv')
+km <- survfit(Surv(df$Tempo, df$Status) ~ 1)
+a <- summary(km)
+a %$% cbind(time, n.risk, n.event) %>% knitr::kable()
+```
+
