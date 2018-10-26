@@ -44,7 +44,7 @@ l_reg <- function(par, data, tempo, cens){
   beta <- par[1]
   
   mu <- exp(as.matrix(data)%*%par[-1])
-  
+  print(mu)
   L1 = log(distr(tempo, mu, beta))
   L2 = log(sobrev(tempo, mu, beta))
   
@@ -74,7 +74,7 @@ otimizador_max_veros <- function(n, data, tempo, censura){
   }
   opt
 }
-
+otimizador_max_veros(5, d, 'tempo', 'censura')
 ## Função para realizar os testes de hipótese nos parâmetros da regressão
 
 teste_hipo <- function(opt){
