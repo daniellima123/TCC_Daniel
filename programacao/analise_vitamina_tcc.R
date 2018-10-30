@@ -1,8 +1,7 @@
 library(pacman)
 p_load(survival)
 p_load(survminer)
-p_load(foreach)
-p_load(doMC)
+
 # sub-funções que realizarão o cálculo
 sobrev<-function(tempo,mu,beta){
   
@@ -82,8 +81,36 @@ l_reg <- function(par, df, interval, s, censura, tempo){
     return(-1 * sum(val))
   } else print(gam); return(-Inf);
 }
+
+l_reg1 <- function(par, df, interval, s, censura, tempo){
+  alpha <- exp(as.matrix(df[,c('x0', 'idade', 'tratamento')])%*%par[-1])
+  gam <- par[1]
+  data_mod <- data.frame(tempo = df[[tempo]], cens = d[[censura]], alpha = alpha)
+  va <- sapply(1:nrow(int_df), function(x){
+    v <- ifelse(data_mod$tempo < int_df$inf[x], 0,
+                ifelse(data_mod$tempo < int_df$sup[x] & data_mod$cens == 1,
+                       log(1-(s(int_df$sup[x], data_mod$alpha, gam)/s(int_df$inf[x], data_mod$alpha, gam))),
+                       ifelse(data_mod$tempo < int_df$sup[x] & data_mod$cens == 0,
+                              0.5*log(s(int_df$sup[x], data_mod$alpha, gam)/s(int_df$inf[x], data_mod$alpha, gam)),
+                              log(s(int_df$sup[x], data_mod$alpha, gam)/s(int_df$inf[x], data_mod$alpha, gam)))
+                )
+    )
+    sum(v)
+  }
+  )
+  if(alpha > 0 && gam > 0){
+    #print(-1 * sum(val))
+    return(-1 * sum(va))
+  } else print(gam); return(-Inf);
+  
+}
+
+
 # 2.0085408  2.0550870  0.3617486 -1.0714221 -0.1203370 -0.1152171
-opt <- optim(par = c(1.65, 2.08, 0.27, -0.84), l_reg, df = d, interval = int_df, s = sobrev,
+opt_1 <- optim(par = c(1.65, 2.08, 0.27, -0.84), l_reg, df = d, interval = int_df, s = sobrev,
+             tempo = 'tempo', censura = 'censura', hessian = T)
+Sys.time()
+opt <- optim(par = c(1.65, 2.08, 0.27, -0.84), l_reg1, df = d, interval = int_df, s = sobrev,
              tempo = 'tempo', censura = 'censura', hessian = T)
 Sys.time()
 mu_semestre <- opt$par[1]
