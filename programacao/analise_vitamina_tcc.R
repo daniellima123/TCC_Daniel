@@ -83,6 +83,7 @@ l_reg <- function(par, df, interval, s, censura, tempo){
   } else print(gam); return(-Inf);
 }
 # 2.0085408  2.0550870  0.3617486 -1.0714221 -0.1203370 -0.1152171
+Sys.time()
 opt <- optim(par = c(1.65, 2.08, 0.27, -0.84), l_reg, df = d, interval = int_df, s = sobrev,
              tempo = 'tempo', censura = 'censura', hessian = T)
 Sys.time()
