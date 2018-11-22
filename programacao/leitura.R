@@ -5,7 +5,7 @@ read_vitamin <- function(path){
   df <- read.csv(path, sep = ';')
   df <- df[, -ncol(df)]
   names(df) <- c("tempo", "censura", "x0", "idade", "tratamento", "sexo")
-  df[,"idade"] <- ifelse(df$idade < 24, 1, 0)
+  df[,"idade"] <- ifelse(df$idade < 24, 0, 1)
   df
 }
 
@@ -21,6 +21,7 @@ read_quimica <- function(path, vars = NULL){
   }
   df <- df[, vari]
   if('Idade' %in% vari)
+    print(median(df$Idade, na.rm = T))
     df[,'Idade'] <- ifelse(df$Idade < median(df$Idade, na.rm = T), 1, 0)
   
   df[complete.cases(df),]

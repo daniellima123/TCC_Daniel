@@ -88,5 +88,53 @@ teste_hipo <- function(opt){
   p_val
 }
 
+### RODAR O OPTIM PARA TODAS AS VARIÁVEIS
+### RODAR O TESTE DE HIPOTESES
+### PEGAR A VARIÁVEL MENOS SIGNIFICANTE
+### TESTAR SE FOI BOM TIRAR OU NÃO
+### REPETIR PARA O MODELO ESCOLHIDO
+expl <- c('x0', 'Sexo', 'Turno', 'Escola', 'Ingresso', 'Idade', 'Origem')
+par <- c(1.65, 2.08, 3, 0.27, -0.84, -0.5, -0.3, -0.5)
+non_sig <- 5
+#model_vars <- expl
 
+  
+#init_param <- par
+back <- function(df, tempo, censura, sobrev, para = NULL, signi_level =0.1, vars = NULL){
+  if(is.null(vars)){
+    model_vars <- names(df[, -which(names(df) %in% c(tempo, censura))])
+    init_param <- c(1.65, 2.08, 3, 0.27, -0.84, -0.5, -0.3, -0.5)
+  } else {
+    model_vars <- vars
+    init_param <- para
+  }
+  opt <- optim(par = init_param, l_reg1, df = df, interval = interval, s = sobrev,
+               tempo = tempo, censura = censura, expl = model_vars, hessian = T, control = list(maxit = 10000))
+  tes <- teste_hipo(opt)
+  non_sig <- which.max(tes) + 1
+  opt_sem <- optim(par = init_param[-non_sig], l_reg1, df = df, interval = interval, s = sobrev,
+                   tempo = tempo, censura = censura, expl = model_vars[-(non_sig-1)], hessian = T,
+                   control = list(maxit = 10000))
+  print(model_vars[(non_sig-1)])
+  p_val <- pchisq(-2*(opt$value - opt_sem$value), 1, lower.tail = F)
+  print(round(p_val, 5))
+  if(p_val < signi_level) {
+    print(model_vars)
+    return(opt)
+  }
+  else{
+    model_vars <- model_vars[-(non_sig-1)]
+    init_param <- init_param[-non_sig]
+    return(back(df = df, tempo = tempo, censura = censura, sobrev = sobrev,
+                para = init_param, vars = model_vars))
+  }
+}
+Sys.time()
+opt <- back(df = d, tempo = 'Tempo', censura = 'Status', sobrev = sobrev, signi_level = 0.1)
+Sys.time()
+## 10% modelo = intercepto, sexo, turno, ingresso, idade
+## 5% modelo = intercepto, sexo, turno, ingresso
 
+opt <- back(df = d, tempo = 'tempo', censura = 'censura', sobrev = sobrev,
+            vars = c('x0', 'idade', 'tratamento', 'sexo'), para = c(1, 2, 3, 4, 5),
+            signi_level = 0.1)

@@ -55,7 +55,7 @@
 \usepackage{float}
 
 \usepackage{scalefnt} %muda tamanho da letra
-
+\usepackage[absolute]{textpos}
 %\usepackage{pdfpages}
 \newcommand*\NewPage{\newpage\null\newpage}
 \usepackage{parskip}
@@ -87,7 +87,7 @@
 \vskip 5em
 
 \begin{flushright}
-\small Proposta de Projeto Final\\
+
 \vskip 2em
 \small Orientador: Prof.ª Juliana Betini Fachini Gomes
 \end{flushright}
@@ -103,24 +103,32 @@ Setembro de 2017}
  
  %_________________________________Folha de rosto______________________________
  
-%  \centering{Daniel Lima Viegas}
-%  
-%  \vspace{10em}
-% 
-% {\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
-% 
-% \vspace{10em}
-% 
-% \begin{minipage}[t]{9cm}
-%   \flushright
-%   Orientadora:\\
-% Profª. Drª. \textbf{Juliana Betini Fachini Gomes}
-% \vspace{1cm}
-% 
-%   Relatório Parcial de Monografia apresentado ao Departamento de Estatística, Instituto de Ciências Exatas, Universidade de Brasília, como parte dos requisitos necessários para o grau de Bacharel em estatística. 
-% \end{minipage}
-% 
-% \NewPage
+\begin{center}
+Daniel Lima Viegas
+\end{center}
+
+
+\vspace{12em}
+
+{\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
+
+
+\begin{textblock*}{3.22in}(12cm, 14cm)
+ \begin{minipage}[t]{9cm}
+\vspace{8em}
+    Orientadora:\\
+  Profª. Drª. \textbf{Juliana Betini Fachini Gomes}
+ \vspace{6em}
+
+Monografia apresentada para a obtenção do título de Bacharel em Estatística.
+\end{minipage}
+\end{textblock*}
+\vspace{28em}
+\begin{center}
+Brasília\\2018
+\end{center}
+
+ \NewPage
 %___________________________________SUMÁRIO____________________________________
 
 \tableofcontents
@@ -134,12 +142,12 @@ Setembro de 2017}
 
 A análise de sobrevivência é um tópico importante utilizado em diversas áreas, como biologia, engenharia, medicina, entre outros. O principal objetivo desta análise é explicar ou predizer o tempo até a ocorrência do evento estudado, esse tempo é chamado de tempo de falha. A principal diferença desta técnica de modelagem para as demais é a capacidade de levar em consideração também os tempos em que não foi possível observar o evento de interesse, esse tipo de ocorrência é chamado de censura.
 
-Dentro os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar.
+Dentre os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar.
 
 Em diversos estudos de sobrevivência, estuda-se o relacionamento de covariáveis e o tempo, tendo o objetivo de realizar as análises estatísticas e tentando encontrar o melhor uso dessas variáveis para a criação de um modelo de regressão para dados censurados.
 
-Um dos objetivos deste trabalho é sugerir um modelo de regressão para dados grupados para analisar o banco de dados de Barreto et al. (1994).
-
+O trabalho possui como objetivo, sugerir um modelo para dois bancos de diferentes áreas utilizando a metodologia de dados grupados. Um dos bancos foi utilizado no estudo de \cite{Barreto} na área da saúde e foi cedido pela Universidade Federal da Bahia. O outro banco de dados é um banco de dados na área da educação cedido pela Universidade Estadual da Paraíba.
+\newpage
 %_________________________________Revisão de Literatura__________________________
 \section{Revisão de Literatura}
 
@@ -181,12 +189,12 @@ A partir desta função, é possível obter-se a função de distribuição acum
 
 \subsubsection{função densidade de probabilidade}
 
-Segundo Meyer (1983), uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
+Uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
 
 \begin{enumerate}
 
 	\item $f(x) \ge 0$ para todo $x$,
-	\item $\int_{\tiny{-\infty}}^{\tiny{+\infty}} f(x)dx = 1$,
+	\item $\int_{-\infty}^{+\infty} f(x)dx = 1$,
 	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
 \end{enumerate}
 	 
@@ -195,12 +203,17 @@ Segundo Meyer (1983), uma função densidade de probabilidade é uma função qu
 
 A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
 
-\begin{equation} \label{eq:1}
+\begin{equation}
+\label{eq}
 	\begin{split}
 		S(t) & = P(T > t) \\
 		& = \int_t^{\infty} f(v)dv 
   	\end{split}
 \end{equation} 
+
+\subsubsection{Função de Risco}
+
+Segundo , esta funçao especifica a taxa de falha instantânea no tempo t dado que o indivíduo não falhou até esse tempo. Desta forma, é possível definir a função de risco como o limite da probabilidade de um indivíduo falhar no intervalo de tempo $[t, \delta t)$, supondo que esse indivíduo não falhou até o tempo t, dividida pelo comprimento do intervalo infinitesimal $\delta t$
 
 \subsubsection{Função de Risco Acumulado}
 
@@ -248,51 +261,6 @@ A representação gráfica desse método se comporta em uma função da forma de
 
 \subsection{Modelos de Probabilidade}
 
-\subsubsection{Modelo Weibull}
-Sendo T uma variável aleatória contínua seguindo uma distribuição Weibull, sua função de densidade é dada por:
-
-$$ f(t) = \dfrac{\gamma}{\alpha^{\gamma}}t^{\gamma-1}\exp-\left\lbrace\left(\dfrac{t}{\alpha}\right)^{\gamma}\right\rbrace, \hspace{1cm} t \ge 0,$$
-
-Onde $\gamma$ e $\alpha$ são constantes positivas e correspondem aos parâmetros de forma e escala, respectivamente. O parâmetro $\alpha$ deve ter a mesma unidade de medida que t, enquanto o parâmetro $\gamma$ não possui nenhuma unidade de medida.
-
-É possível obter a função de sobrevivência para a distribuição Weibull a partir da equação \ref{eq:1}:
-
-\begin{equation} \label{eq:WeiHaz}
-S(t) = \exp \left\lbrace - \left( \dfrac{t}{\alpha} \right)^{\gamma} \right\rbrace, \hspace{1cm} t \ge 0
-\end{equation}
-
-E através da relação \ref{eq:riskcum}, tem-se que:
-
-\begin{equation} \label{eq:WeRis}
-	H(t) = - \left( \dfrac{t}{\alpha} \right)^{\gamma}
-\end{equation}
-
-O parâmetro $\gamma$ determina a forma da função de risco. Quando o parâmetro é menor que 1, a função de risco é monótona decrescente, caso o parâmetro seja maior que 1, a função de risco é monótona crescente e com o parâmetro assumindo valor igual a 1, a variável toma a forma de uma exponencial, que por sua vez, possui função risco constante.
-
-\subsubsection{Modelo Log-Normal}
-
-Considerando-se T uma variável aleatória contínua com distribuição Log-Normal, tem sua função densidade de probabilidade como:
-
-\begin{equation}
- f(t) = \dfrac{1}{(2\pi)^{\frac{1}{2}}\sigma t}\exp\left\lbrace -\dfrac{1}{2} \left( \dfrac{\log(t) - \mu}{\sigma} \right) \right\rbrace, \hspace{1cm} t > 0
-\end{equation}
-
-Onde $\mu$ e $\sigma$ são, respectivamente, a média e o desvio padrão da variável aleatória. Ambos os parâmetros são maiores que 0.
-
-As funções de sobrevivência e risco acumulado são descritas envolvendo a função distribuição de probabilidade da Normal Padrão devido a função distribuição de probabilidade não ser analiticamente explícita, sendo que normal padrão é descrita como:
-
-$$ \Phi(x) =  \int_{-\infty}^{x} \dfrac{1}{\sqrt{2\pi}\sigma} \exp \left\lbrace \dfrac{-u^2}{2\sigma^2} \right\rbrace du $$
-
-A função de sobrevivência da log-normal pode ser facilmente vista como:
-
-\begin{equation} \label{eq:LNSurv}
- S(t) = 1 - \Phi\left(\dfrac{\log(t) - \mu}{\sigma}\right)
-\end{equation}
-
-A partir dessa equação, e da relação \ref{eq:riskcum} é simples encontrar a função risco acumulado.
-
-O parâmetro $\sigma$ determina a forma da função de risco, sendo que a partir de $\sigma$<1, a função é monótona decrescente e para valores maiores ou iguais a 1 a função é monótona crescente.
-
 \subsubsection{Modelo Log-Logístico}
 
 Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística, sua função densidade de probabilidade é descrita como
@@ -321,17 +289,23 @@ Para a estimação dos parâmetros da função de distribuição, e também para
 
 Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade.
 
-Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo:2006}:
+Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo}:
 
 \begin{equation} \label{eq:maxv1}
-  L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[f(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i}, 
+  L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[f(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i},
 \end{equation}
 
 onde $\delta_i$ é a variável indicadora de falha e $\boldsymbol{\theta}$ é o vetor de parâmetros que serão estimados.
 
+Para encontrar o estimador de máxima verossimilhança, é necessário encontrar o vetor gradiente da função. Caracteriza-se como um candidato a estimador os valores em que o gradiente da função é igual a 0. O candidato deve atender ao requisito de que a matriz gerada pela segunda derivada da função é positiva definida.% CONFIRMAR ISSO DAQUI!!!!!
+
 \subsection{Dados Grupados}
 
 A análise de sobrevivência com censura intervalar, tem como caso particular os dados grupados. Essa particularidade acontece quando acontece um número excessivo de empates, ou seja, os tempos de vida se repetem diversas vezes. Este tipo de experimento pode ser encontrado em estudos de medidas repetidas longitudinais.
+
+Para esse tipo de estudo, os tempos são separados em intervalos arbitrários e disjuntos isso significa que os intervalos não precisam ter o mesmo tamanho e que não podem haver interseções entre os intervalos. As funções utilizadas na análise, tais como função de sobrevivência e de risco são as mesmas utilizadas quando o tempo é contínuo.
+
+A função de verossimilhança 
 
 
 
@@ -360,7 +334,8 @@ Para a análise dos dados, será utilizado o software estatístico R por meio da
 
 \addcontentsline{toc}{section}{Referências}
 
-\bibliography{referencias}
+\bibliography{referencias.bib}
+\nocite{colosimo, Barreto}
 
 
 \end{document} 

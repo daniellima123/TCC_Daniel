@@ -1,7 +1,8 @@
 library(pacman)
 p_load(survival)
 p_load(survminer)
-
+p_load(foreach)
+p_load(doMC)
 # sub-funções que realizarão o cálculo
 sobrev<-function(tempo,mu,beta){
   
@@ -44,7 +45,7 @@ l_group <- function(par, df, interval, s, censura, tempo){
                    log(s(interval$sup[i], par[1], par[2])/s(interval$inf[i], par[1], par[2])))
         }
       }
-       
+      
     }
   }
   if(par[1] > 0 && par[2] > 0){
@@ -55,7 +56,7 @@ l_group <- function(par, df, interval, s, censura, tempo){
 
 
 l_reg <- function(par, df, interval, s, censura, tempo){
-  alpha <- exp(as.matrix(df[,c('x0', 'idade', 'tratamento')])%*%par[-1])
+  alpha <- exp(as.matrix(df[,c('x0', 'Sexo', 'Turno', 'Escola', 'Ingresso', 'Idade', 'Origem')])%*%par[-1])
   gam <- par[1]
   val <- c()
   for(i in seq_len(nrow(interval))){
@@ -73,7 +74,7 @@ l_reg <- function(par, df, interval, s, censura, tempo){
                    log(s(interval$sup[i], alpha[j], gam)/s(interval$inf[i], alpha[j], gam)))
         }
       }
-       
+      
     }
   }
   if(alpha > 0 && gam > 0){
@@ -82,6 +83,9 @@ l_reg <- function(par, df, interval, s, censura, tempo){
   } else print(gam); return(-Inf);
 }
 
+# Origem é o mais não significativo.
+# Verificando se a retirada é significativa.
+#
 l_reg1 <- function(par, df, interval, s, censura, tempo, expl){
   alpha <- exp(as.matrix(df[,expl])%*%par[-1])
   gam <- par[1]
@@ -105,28 +109,23 @@ l_reg1 <- function(par, df, interval, s, censura, tempo, expl){
   
 }
 
-opt_vazio <- optim(par = c(1, 2), l_group, df = d, interval = int_df, s = sobrev, tempo = 'tempo',
-                   censura = 'censura', hessian = T)
+# 2.0085408  2.0550870  0.3617486 -1.0714221 -0.1203370 -0.1152171 14:06
+Sys.time()
+opt <- optim(par = c(1.65, 2.08, 3, 0.27, -0.84, -0.5, -0.3), l_reg, df = d, interval = int_df, s = sobrev,
+             tempo = 'Tempo', censura = 'Status', hessian = T, control = list(maxit = 10000))
+Sys.time()
+opt_1 <- optim(par = c(1.65, 2.08, 3, 0.27, -0.84, -0.5, -0.3), l_reg1, df = d, interval = int_df, s = sobrev,
+             tempo = 'Tempo', censura = 'Status', hessian = T, control = list(maxit = 10000))
+Sys.time()
+teste_hipo(opt_1)
 
-opt_1 <- optim(par = c(1.65, 2.08, 0.27, -0.84), l_reg, df = d, interval = int_df, s = sobrev,
-             tempo = 'tempo', censura = 'censura', hessian = T)
-Sys.time()
-opt <- optim(par = c(1.65, 2.08, 0.27, -0.84, 2), l_reg1, df = d, interval = int_df, s = sobrev,
-             tempo = 'tempo', censura = 'censura', hessian = T, expl = c('x0', 'idade', 'tratamento', 'sexo'))
-Sys.time()
+val_1 <- opt_1$value
+val_2 <- opt_2$value
+
+
+
 mu_semestre <- opt$par[1]
 beta_semestre <- opt$par[2]
 mu_ano <- opt$par[1]
 beta_ano <- opt$par[2]
 
-alpha <- opt_vazio$par[1]
-gamma <- opt_vazio$par[2]
-km <- surv_fit(Surv(d$tempo, d$censura) ~ 1, data = d)
-a <- ggsurvplot(km, conf.int = F, color = 'red', legend = 'none',
-                ggtheme = theme_bw())
-a$plot+
-  geom_line(aes(x = a$plot$data$time, sobrev(a$plot$data$time, alpha, gamma)))+
-  xlab('tempo')+ylab('S(t)')
-
-qplot(d$tempo, geom='histogram', binwidth=1)+theme_bw()+xlab('Tempo')+ylab('Frequência')
-ggsurv

@@ -21,16 +21,17 @@ teste_hipo(opt)
 
 
 betas <- opt$par[-1]
-model_vars <- df[, -which(names(df) %in% c('Tempo', 'Status'))]
+model_vars <- df[, c('x0', 'Sexo', 'Turno', 'Ingresso', 'Idade')]
+model_vars <- d[, c('x0', 'idade', 'tratamento')]
 x_b <- as.matrix(model_vars)%*%betas
 
 mu <- exp(x_b)
-e <- H_t(tempo = df[['Tempo']], beta = opt$par[1], mu = mu)
+e <- H_t(tempo = d[['tempo']], beta = opt$par[1], mu = mu)
 
-s <- Surv(e, df[['Status']])
-km <- survfit(s ~ 1, df)
-a <- ggsurv(km, CI = F, surv.col = 'red')
-a + 
-  geom_line(aes(x = a$data$time,
-                exp(-a$data$time)))+
+s <- Surv(e, d[['censura']])
+km <- survfit(s ~ 1, d)
+a <- ggsurvplot(km,conf.int = F, col = 'red', legend='none')
+a$plot + 
+  geom_line(aes(x = a$plot$data$time,
+                exp(-a$plot$data$time)))+xlab('Resíduo')+ylab('S(t)')+
   theme_bw()

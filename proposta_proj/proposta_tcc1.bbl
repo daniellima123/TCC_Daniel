@@ -1,3 +1,23 @@
-\begin{thebibliography}{}
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.6 }
+
+\bibitem[]{Lawless}
+\abntrefinfo{nada}{NADA}{a}
+{COLOSIMO, E, A. and Giolo, S. R. [S.l.: s.n.].}
+
+\bibitem[Barreto et al. 1994]{Barreto}
+\abntrefinfo{Barreto et al.}{BARRETO et al.}{1994}
+{BARRETO, M.~L. et al. Effect of vitamin a supplementation on diarrhoea acute
+  lower-respiratory-tract infection in young children in brazil.
+\emph{Lancet 344}, p. 228--231, 1994.}
+
+\bibitem[Colosimo E e Giolo 2006]{colosimo}
+\abntrefinfo{Colosimo E e Giolo}{COLOSIMO E; GIOLO}{2006}
+{COLOSIMO E, A.; GIOLO, S.~R. \emph{Análise de Sobrevivência Aplicada}. São
+  Paulo: Editora Bucher, 2006.}
 
 \end{thebibliography}
