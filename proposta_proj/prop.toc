@@ -1,30 +1,30 @@
-\babel@toc {brazil}{}
-\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{7}
-\contentsline {section}{\numberline {2}Revis\IeC {\~a}o de Literatura}{8}
-\contentsline {subsection}{\numberline {2.1}vari\IeC {\'a}vel resposta e censuras}{8}
-\contentsline {subsection}{\numberline {2.2}Tempo}{9}
-\contentsline {subsection}{\numberline {2.3}Fun\IeC {\c c}\IeC {\~o}es}{10}
-\contentsline {subsubsection}{\numberline {2.3.1}Fun\IeC {\c c}\IeC {\~a}o densidade de probabilidade}{10}
-\contentsline {subsubsection}{\numberline {2.3.2}fun\IeC {\c c}\IeC {\~a}o densidade de probabilidade}{10}
-\contentsline {subsubsection}{\numberline {2.3.3}fun\IeC {\c c}\IeC {\~a}o de sobreviv\IeC {\^e}ncia}{10}
-\contentsline {subsubsection}{\numberline {2.3.4}Fun\IeC {\c c}\IeC {\~a}o de Risco}{11}
-\contentsline {subsubsection}{\numberline {2.3.5}Fun\IeC {\c c}\IeC {\~a}o de Risco Acumulado}{11}
-\contentsline {subsection}{\numberline {2.4}Estimadores da fun\IeC {\c c}\IeC {\~a}o de sobreviv\IeC {\^e}ncia}{12}
-\contentsline {subsubsection}{\numberline {2.4.1}Estima\IeC {\c c}\IeC {\~a}o simples}{12}
-\contentsline {subsubsection}{\numberline {2.4.2}Kaplan-Meier}{13}
-\contentsline {subsection}{\numberline {2.5}Modelos de Probabilidade}{14}
-\contentsline {subsubsection}{\numberline {2.5.1}Modelo Log-Log\IeC {\'\i }stico}{14}
-\contentsline {subsection}{\numberline {2.6}M\IeC {\'e}todo de M\IeC {\'a}xima Verossimilhan\IeC {\c c}a}{15}
-\contentsline {subsection}{\numberline {2.7}Dados Grupados}{15}
-\contentsline {subsection}{\numberline {2.8}Res\IeC {\'\i }duos de Cox-Snell}{16}
-\contentsline {section}{\numberline {3}Metodologia}{18}
-\contentsline {subsection}{\numberline {3.1}Material}{18}
-\contentsline {subsection}{\numberline {3.2}M\IeC {\'e}todos}{18}
-\contentsline {subsubsection}{\numberline {3.2.1}Modelo de Regress\IeC {\~a}o Log-Log\IeC {\'\i }stico}{18}
-\contentsline {section}{\numberline {4}Resultados e Discuss\IeC {\~a}o}{21}
-\contentsline {subsection}{\numberline {4.1}Suplementa\IeC {\c c}\IeC {\~a}o de Vitamina}{21}
-\contentsline {subsubsection}{\numberline {4.1.1}An\IeC {\'a}lise Descritiva}{21}
-\contentsline {subsubsection}{\numberline {4.1.2}Modelagem}{25}
-\contentsline {subsection}{\numberline {4.2}Evas\IeC {\~a}o Curso de Qu\IeC {\'\i }mica}{28}
-\contentsline {subsubsection}{\numberline {4.2.1}An\IeC {\'a}lise Descritiva}{28}
-\contentsline {section}{Refer\IeC {\^e}ncias}{29}
+\babel@toc {portuguese}{}
+\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{11}
+\contentsline {section}{\numberline {2}Revis\IeC {\~a}o de Literatura}{13}
+\contentsline {subsection}{\numberline {2.1}Vari\IeC {\'a}vel resposta e censuras}{13}
+\contentsline {subsection}{\numberline {2.2}Fun\IeC {\c c}\IeC {\~o}es}{15}
+\contentsline {subsubsection}{\numberline {2.2.1}Fun\IeC {\c c}\IeC {\~a}o densidade de probabilidade}{15}
+\contentsline {subsubsection}{\numberline {2.2.2}Fun\IeC {\c c}\IeC {\~a}o de sobreviv\IeC {\^e}ncia}{15}
+\contentsline {subsubsection}{\numberline {2.2.3}Fun\IeC {\c c}\IeC {\~a}o de Risco}{16}
+\contentsline {subsubsection}{\numberline {2.2.4}Fun\IeC {\c c}\IeC {\~a}o de Risco Acumulado}{16}
+\contentsline {subsection}{\numberline {2.3}Estimadores da fun\IeC {\c c}\IeC {\~a}o de sobreviv\IeC {\^e}ncia}{18}
+\contentsline {subsubsection}{\numberline {2.3.1}Estima\IeC {\c c}\IeC {\~a}o na aus\IeC {\^e}ncia de censura}{18}
+\contentsline {subsubsection}{\numberline {2.3.2}Kaplan-Meier}{18}
+\contentsline {subsection}{\numberline {2.4}Modelos de Probabilidade}{19}
+\contentsline {subsubsection}{\numberline {2.4.1}Modelo Log-Log\IeC {\'\i }stico}{19}
+\contentsline {subsection}{\numberline {2.5}M\IeC {\'e}todo de M\IeC {\'a}xima Verossimilhan\IeC {\c c}a}{20}
+\contentsline {subsection}{\numberline {2.6}Dados Grupados}{20}
+\contentsline {section}{\numberline {3}Metodologia}{23}
+\contentsline {subsection}{\numberline {3.1}Material}{23}
+\contentsline {subsection}{\numberline {3.2}M\IeC {\'e}todos}{23}
+\contentsline {subsubsection}{\numberline {3.2.1}Modelo de Regress\IeC {\~a}o Log-Log\IeC {\'\i }stico}{23}
+\contentsline {subsection}{\numberline {3.3}Res\IeC {\'\i }duos de Cox-Snell}{26}
+\contentsline {section}{\numberline {4}Resultados e Discuss\IeC {\~a}o}{29}
+\contentsline {subsection}{\numberline {4.1}Suplementa\IeC {\c c}\IeC {\~a}o de Vitamina}{29}
+\contentsline {subsubsection}{\numberline {4.1.1}An\IeC {\'a}lise Descritiva}{29}
+\contentsline {subsubsection}{\numberline {4.1.2}Modelagem}{33}
+\contentsline {subsection}{\numberline {4.2}Evas\IeC {\~a}o Curso de Qu\IeC {\'\i }mica}{36}
+\contentsline {subsubsection}{\numberline {4.2.1}An\IeC {\'a}lise Descritiva}{36}
+\contentsline {subsubsection}{\numberline {4.2.2}Modelagem}{42}
+\contentsline {section}{\numberline {5}Conclus\IeC {\~a}o}{47}
+\contentsline {section}{Refer\IeC {\^e}ncias}{49}

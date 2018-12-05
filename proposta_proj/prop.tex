@@ -1,12 +1,15 @@
 \documentclass[a4paper,12pt]{article}
 
-\usepackage{amsthm,amsmath,natbib,vmargin}
 
+
+\usepackage{amsthm,amsmath,natbib,vmargin, amsfonts}
+\usepackage{lmodern}
 \usepackage[ansinew,utf8]{inputenc}
+%\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
 
 \usepackage{multirow,colortbl,color,array}
 
-\usepackage[brazil]{babel}
+\usepackage[portuguese]{babel}
 
 \usepackage{bm}
 
@@ -50,6 +53,10 @@
 %\usepackage{indentfirst}
 
 \usepackage[a4paper,left=6cm,right=0cm,top=5cm,bottom=0cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
 
 \usepackage[]{xcolor}
 
@@ -72,6 +79,9 @@
 \setlength{\parindent}{1.25cm}
 \setstretch{1.5}
 
+\usepackage{etoolbox}
+\pretocmd\section{\cleardoublepage}{}%
+  {\errmessage{Patching \noexpand\section failed}}
 
 
 \begin{document}
@@ -84,10 +94,9 @@
  \begin{center}
  \includegraphics[height=1.5cm,keepaspectratio]{unb}\\
  {\Large Universidade de Brasília\\
- IE - Departamento de Estatística\\
- Estágio Supervisionado 1}
- \vskip 10em
- {\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
+ IE - Departamento de Estatística }
+ \vskip 11em
+ {\Large \textbf{Modelo de regressão Log-Logístico para dados grupados na presença de censura}}
  \par
  \vskip 5em
 
@@ -105,23 +114,23 @@
 \vskip 6em
 {\setlength{\baselineskip}{.5cm}
 Brasília\\
-Setembro de 2017}
+2018}
 
  \end{center}
  \NewPage
  
  
  %_________________________________Folha de rosto______________________________
- 
+
 \begin{center}
 Daniel Lima Viegas
-\end{center}
+
 
 
 \vspace{12em}
 
-{\Large \textbf{Análise de Sobrevivência para Dados Grupados}}
-
+{\large \textbf{\textbf{Modelo de regressão Log-Logístico para dados grupados na presença de censura}}}
+\end{center}
 
 \begin{textblock*}{3.22in}(12cm, 14cm)
  \begin{minipage}[t]{9cm}
@@ -139,9 +148,34 @@ Brasília\\2018
 \end{center}
 
  \NewPage
+ 
+
+\section*{Agradecimentos}
+
+Agradeço primeiramente a Deus por me conceder saúde e disposição e por permitir a realização dos meus feitos.
+
+À Profa. Dra. Juiliana Betini Fachini Gomes pelo apoio, paciência e compreensão. Uma das melhores professoras que tive na graduação. Agradeço pela paciência nesses um ano e meio de trabalho.
+
+Aos meus pais por todo apoio que me deram durante toda a minha graduação. O suporte financeiro e principalmente emocional nos momentos que eu mais precisei, são coisas as quais eu serei eternamente grato.
+
+Aos amigos que fiz na graduação, agradeço pela aprendizado nas matérias mais difíceis, a colaboração nos trabalhos e o companheirismo nos momentos complicados.
+
+Aos amigos que fiz no Ipea, me ajudaram a superar diversos obstáculos no meu aprendizado profissional, além de ajudar nos problemas emocionais sofridos.
+
+Com esses agradecimentos, percebo que sou uma pessoa abençoada e rodeada de pessoas dispostas a ajudar e a alegrar os dias.
+
 %___________________________________SUMÁRIO____________________________________
 
 \tableofcontents
+
+\NewPage
+
+\section*{Resumo}
+
+Neste trabalho é proposto um modelo de regressão Log-Logístico para dados de sobrevivência grupados. Este tipo de modelagem é realizada quando o banco de dados em questão possui muitos empates nos tempos, ou seja, quando os tempos se repetem muitas vezes. Para o desenvolvimento do modelo foi utilizada a distribuição Log-Logística que tem se mostrado bastante flexível em situações práticas. Para a estimação dos parâmetros do modelo foi utilizado o algoritmo computacional BFGS. Por fim, dois bancos de dados reais foram utilizados para exemplificar o ajuste do modelo de regressão proposto. \\ \\
+
+\textbf{Palavras-chave:} Modelos de regressão; Distribuição Log-Logística; Dados de sobrevivência grupados;
+
 \NewPage
 
 %__________________________________INTRODUÇÃO__________________________________
@@ -152,21 +186,21 @@ Brasília\\2018
 
 A análise de sobrevivência é um tópico importante utilizado em diversas áreas, como biologia, engenharia, medicina, entre outros. O principal objetivo desta análise é explicar ou predizer o tempo até a ocorrência do evento estudado, esse tempo é chamado de tempo de falha. A principal diferença desta técnica de modelagem para as demais é a capacidade de levar em consideração também os tempos em que não foi possível observar o evento de interesse, esse tipo de ocorrência é chamado de censura.
 
-Dentre os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar.
+Dentre os tipos de censuras existentes, a mais genérica é a censura intervalar. Esse tipo de censura ocorre quando não é possível determinar o tempo de ocorrência, mas se tem o intervalo de tempo onde ele ocorreu. Por exemplo, no estudo sobre o tempo até uma lâmpada queimar, deixa-se a lâmpada ligada até que ela queime, em um dia, ela está funcionando, o pesquisador sai da área onde está acontecendo o experimento e quando retorna, a lâmpada está queimada. Neste caso, sabe-se que o intervalo de tempo onde a lâmpada queimou é entre o tempo em que o pesquisador saiu e o que ele voltou. O objetivo deste trabalho é estudar o comportamento de dados grupados, que é um caso particular da censura intervalar. O caso de dados grupados pode ser um caso particular da censura intervalar quando todos os indivíduos estão sendo avaliados no mesmo intervalo de tempo e também ocorre quando existem muitos tempos iguais dentro do banco de dados.
 
 Em diversos estudos de sobrevivência, estuda-se o relacionamento de covariáveis e o tempo, tendo o objetivo de realizar as análises estatísticas e tentando encontrar o melhor uso dessas variáveis para a criação de um modelo de regressão para dados censurados.
 
-O trabalho possui como objetivo, sugerir um modelo para dois bancos de diferentes áreas utilizando a metodologia de dados grupados. Um dos bancos foi utilizado no estudo de \cite{Barreto} na área da saúde e foi cedido pela Universidade Federal da Bahia. O outro banco de dados é um banco de dados na área da educação cedido pela Universidade Estadual da Paraíba.
-\newpage
+O trabalho possui como objetivo, sugerir um modelo para dois bancos de diferentes áreas utilizando a metodologia de dados grupados. Um dos bancos foi utilizado no estudo de \cite{Barreto} na área da saúde e foi cedido pela Universidade Federal da Bahia. O outro banco de dados é um banco de dados na área da educação cedido pela Universidade Estadual da Paraíba. Para a realização das análises foi utilizado o \textit{software} R.
+\NewPage
 %_________________________________Revisão de Literatura__________________________
 \section{Revisão de Literatura}
 
 A fim de dar fundamento teórico ao trabalho na área de análise de sobrevivência, serão apresentados, a seguir, conceitos e notações presentes nas literaturas do tema.
 
-\subsection{variável resposta e censuras}
+\subsection{Variável resposta e censuras}
 Chama-se evento de interesse, aquilo que se deseja encontrar informações sobre a ocorrência. Na análise de sobrevivência, esse evento pode ser a morte de um indivíduo, a cura, um casamento, divórcio ou funcionamento de um dispositivo ou componente de uma máquina. Em análise de sobrevivência, a variável resposta é geralmente o tempo até a ocorrência de um evento de interesse, sendo esse tempo denominado tempo de falha.%citar colosimo;giolo%
 
-A principal característica dos dados de sobrevivência é a presença de censuras, ou seja, observações que por algum motivo não consegue-se determinar o tempo com precisão. Existem três tipos principais de censura, a mais usual é a censura à direita, esta censura acontece quando não se consegue registrar a ocorrência do evento de interesse. Em estudos médicos que analisam o tempo desde a obtenção da doença até a morte do paciente, por exemplo, este tipo de censura acontece quando o paciente é curado, morre por outra razão ou simplesmente não se pode mais observar tal paciente. Este tipo de censura tem três tipos de classificação:
+A principal característica dos dados de sobrevivência é a presença de censuras, ou seja, observações que por algum motivo não consegue-se observar a ocorrência do evento de interesse do estudo. Existem três tipos principais de censura, a mais usual é a censura à direita. Esta censura acontece quando um indivíduo entra no estudo e por algum motivo ele não pode mais ser acompanhado e então não é possível registrar a ocorrência do evento de interesse. Em estudos médicos que analisam o tempo desde a obtenção da doença até a morte do paciente, por exemplo, este tipo de censura acontece quando o paciente é curado, morre por outra razão ou simplesmente não se pode mais observar tal paciente. Este tipo de censura tem três tipos de classificação:
 
 \begin{itemize}
 	\item Censura do Tipo I: acontece quando a pesquisa tem um tempo pré-determinado. Ao final do estudo, as observações que não falharam são consideradas censuras. Nesse tipo de estudo, o percentual de censura é descrito como uma variável aleatória.
@@ -183,23 +217,23 @@ A censura intervalar pode ser dita como um caso genérico das outras censuras. C
 ocorreu, porém sabe-se que ele não ocorreu antes de um determinado tempo. Por exemplo, em um estudo médico é necessário que hajam visitas regulares para a detecção de certas doenças, tal como câncer. Nesse tipo de experimento, sabe-se que a doença apareceu antes do tempo de uma consulta (V), mas também sabe-se que ela apareceu depois de uma consulta (U), ou seja, a doença se manifestou no intervalo [U, V). Quando V = $\infty$
 tem-se a censura a direita, e quando a o tempo U = 0, essa censura se torna a esquerda. Daí vem o conhecimento de caso genérico da censura.
 
-\subsection{Tempo}
+Uma das definições de dados grupados é um caso particular da censura intervalar, esta acontece quando os indivíduos são acompanhados durante o mesmo intervalo de tempo. Outra forma de definir dados grupados é quando existem muitos empates nos tempos de estudo dos indivíduos.
 
-Como visto anteriormente, a variável resposta do experimento em questão é o tempo até o evento de interesse. Quando esse tempo pode assumir qualquer ponto real não-negativo, descreve-se essa variável como contínua. Esse é o tipo mais comum de variável na análise de sobrevivência, devido a grande diversidade de distribuições contínuas. %% talvez complemente, talvez seja desnecessário.
-
-Em alguns casos, não faz sentido utilizar uma distribuição contínua para descrever o tempo, mas sim uma discreta. Pode-se ter como exemplo o tempo que um aluno leva para sair da universidade, pode levar 8 semestres, 9 semestres e assim por diante, ou seja, nunca vai levar um tempo real e sim um tempo pertencente aos naturais.%% Complementar
+% \subsection{Tempo}
+% 
+% Como visto anteriormente, a variável resposta do experimento em questão é o tempo até o evento de interesse. Quando esse tempo pode assumir qualquer ponto real não-negativo, descreve-se essa variável como contínua. Esse é o tipo mais comum de variável na análise de sobrevivência, devido a grande diversidade de distribuições contínuas. %% talvez complemente, talvez seja desnecessário.
+% 
+% Em alguns casos, não faz sentido utilizar uma distribuição contínua para descrever o tempo, mas sim uma discreta. Pode-se ter como exemplo o tempo que um aluno leva para sair da universidade, pode levar 8 semestres, 9 semestres e assim por diante, ou seja, nunca vai levar um tempo real e sim um tempo pertencente aos naturais.%% Complementar
 
 \subsection{Funções}
 
 \subsubsection{Função densidade de probabilidade}
 
-Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando esse intervalo tende a zero. Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
+ Dada uma variável aleatória contínua, não negativa, que represente o tempo de falha de uma observação. Chama-se função densidade, uma função \textit{f}, que descreva a probabilidade de um indivíduo falhar em um intervalo de tempo, quando o limite desse intervalo tende a zero.% Sendo assim, essa função descreve a distribuição de probabilidade ao longo do intervalo de zero a infinito.
 
 A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
 
-\subsubsection{função densidade de probabilidade}
-
-Uma função densidade de probabilidade é uma função que que satisfaz as seguintes condições:%citar Meyer 1983
+Uma função densidade de probabilidade é uma função que satisfaz as seguintes condições:%citar Meyer 1983
 
 \begin{enumerate}
 
@@ -207,9 +241,11 @@ Uma função densidade de probabilidade é uma função que que satisfaz as segu
 	\item $\int_{-\infty}^{+\infty} f(x)dx = 1$,
 	\item para quaisquer a, b com $-\infty < a < b < +\infty$, teremos $P(a \le X \le b) = \int_a^b f(x)dx$.
 \end{enumerate}
-	 
+
+A partir desta função, é possível obter-se a função de distribuição acumulada, denominada função \textit{F}. No caso contínuo, esta função é obtida a partir do cálculo da integral da função densidade sobre todo seu suporte. Ou seja, dada uma variável aleatória T:
+
 		
-\subsubsection{função de sobrevivência}
+\subsubsection{Função de sobrevivência}
 
 A função de sobrevivência é definida como a probabilidade de um indivíduo não falhar até um determinado tempo t, ou seja, é a probabilidade de uma observação viver além do tempo t. Dada uma variável aleatória T, contínua, não negativa. Pode-se descrever a função de sobrevivência como:
 
@@ -217,13 +253,19 @@ A função de sobrevivência é definida como a probabilidade de um indivíduo n
 \label{eq}
 	\begin{split}
 		S(t) & = P(T > t) \\
-		& = \int_t^{\infty} f(v)dv 
+		& = \int_t^{\infty} f(v)dv.
   	\end{split}
 \end{equation} 
 
+A função de sobrevivência também pode ser encontrada por meio da função de distribuição acumulada pela seguinte relação entre elas:
+
+\begin{equation*}
+S(t) = 1 - F(t).
+\end{equation*}
+
 \subsubsection{Função de Risco}
 
-Segundo \cite{Lawless}, esta funçao especifica a taxa de falha instantânea no tempo t dado que o indivíduo não falhou até esse tempo. Desta forma, é possível definir a função de risco como o limite da probabilidade de um indivíduo falhar no intervalo de tempo $[t, \delta t)$, supondo que esse indivíduo não falhou até o tempo t, dividida pelo comprimento do intervalo infinitesimal $\Delta t$. Com isso, é possível visualizar matematicamente a definição dessa função como:
+Segundo \cite{Lawless}, esta funçao especifica a taxa de falha instantânea no tempo t dado que o indivíduo não falhou até esse tempo. Desta forma, é possível definir a função de risco como o limite da probabilidade de um indivíduo falhar no intervalo de tempo $[t, \Delta t)$, supondo que esse indivíduo não falhou até o tempo t, dividida pelo comprimento do intervalo infinitesimal $\Delta t$. Com isso, é possível visualizar matematicamente a definição dessa função como:
 
 \begin{equation} \label{eq:haz}
 h(t) = \lim_{\Delta t \to 0}\dfrac{P(t \le T < t+\Delta t|T\ge t)}{\Delta t}.
@@ -232,16 +274,16 @@ h(t) = \lim_{\Delta t \to 0}\dfrac{P(t \le T < t+\Delta t|T\ge t)}{\Delta t}.
 Além disso, também é possível estabelecer uma relação entre esta função, a função de densidade e a função de sobrevivência:
 
 \begin{equation} \label{eq:haz_surv}
-h(t) = \dfrac{-dS(t)}{dt}
+h(t) = \dfrac{f(t)}{S(t)}.
 \end{equation}
 
 
 \subsubsection{Função de Risco Acumulado}
 
-A função de risco acumulado é uma função que não possui uma interpretação simples, porém possui importância dentro do campo da análise de sobrevivência. Esta função, denotada como $H(t)$, pode ser definida como o logaritmo da função de sobrevivência multiplicado por menos um, ou seja:
+A função de risco acumulado é uma função que não possui uma interpretação simples, porém possui importância dentro do campo da análise de sobrevivência.Esta função, denotada como $H(t)$, pode ser definida como o logaritmo da função de sobrevivência multiplicado por menos um, ou seja:
 
 \begin{equation} \label{eq:riskcum}
- H(t) = -log(S(t))
+ H(t) = -log(S(t)).
 \end{equation}
 
 Esta função também pode ser obtida através da Função de Risco:
@@ -254,7 +296,7 @@ O gráfico desta função pode assumir algumas diferentes formas. Essas formas s
 \begin{figure}[H]
   \centering
   \includegraphics[width=10cm]{risco_acum.png}
-  \caption{Comportamentos da Função Risco Acumulada}
+  \caption{Retirado de Nakano (2017), representa os comportamentos da Função Risco Acumulada}
 \end{figure}
 
 \begin{itemize}
@@ -267,42 +309,36 @@ risco é monotonicamente crescente ou decrescente, respectivamente.
 
 \subsection{Estimadores da função de sobrevivência}
 
-\subsubsection{Estimação simples}
+\subsubsection{Estimação na ausência de censura}
 
 A função de sobrevivência pode ser estimada amostralmente, como a proporção dos dados que não falharam até o tempo t. Esse estimador poderia ser escrito da seguinte forma:
 
 $$ \hat{S}(t) = \dfrac{n^o \ de \ dados \ com \ tempo \ > \ t}{n^o \ total \ de \ individuos}, \forall \ t \ \in t\ge 0$$
 
-Caso os dados sejam ordenados de forma crescente, pode-se representar a função de sobrevivência da seguinte forma:
-
-$$ \hat{S}(t) = \dfrac{n_j - d_j}{n} $$
-
-Onde $n_j$ é o número de indivíduos que podem falhar, $d_j$ é o número de indivíduos que que falharam no tempo e n é o número total de indivíduos.
-
 \subsubsection{Kaplan-Meier}
 
 Os estimadores apresentados acima, não podem ser usados nesse tipo de estudo porque não existe nenhuma forma de se incluir censuras.
 
-O estimador a ser usado nesse trabalho será o estimador não-paramétrico de Kaplan-Meier. Esse estimador é muito popular em pesquisas que usam análise de sobrevivência. O estimador é escrito da seguinte forma:
+O estimador a ser usado neste trabalho será o estimador não-paramétrico de Kaplan-Meier. Esse estimador é muito popular em pesquisas que usam análise de sobrevivência. O estimador é escrito da seguinte forma:
 
-$$ \hat{S}(t) = \prod_{j:t_{(j)}\le t} \dfrac{n_j - d_j}{n_j}$$
+$$ \hat{S}(t) = \prod_{j:t_{(j)}\le t} \dfrac{n_j - d_j}{n_j},$$
 
-Onde, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. 
+Em que, $n_j$ representa o número de dados em risco de falha, $d_j$ são os dados que falharam no tempo $t_j$, em que, $0 \le t_{(1)} \le \hdots \le t_{(n)}$, são os tempos distintos e ordenados de falha. Esta técnica não utiliza covariáveis para a estimação, mas pode usar variável categóricas para verificar se as funções estimadas são diferentes. 
 
-A representação gráfica desse método se comporta em uma função da forma de escada, uma vez que a estimação entre o tempo $t_{(j)}$ e $t_{(j+1)}$ é constante.
+A representação gráfica desse método se comporta em uma função na forma de escada, uma vez que a estimação entre o tempo $t_{(j)}$ e $t_{(j+1)}$ é constante.
 
 
 \subsection{Modelos de Probabilidade}
 
 \subsubsection{Modelo Log-Logístico}
 
-Para os casos onde T é uma variável aleatória contínua seguindo uma distribuição Log-Logística com parâmetro de escala $\alpha$ e de forma $\gamma$, sua função densidade de probabilidade é descrita como
+Para os casos em que T é uma variável aleatória contínua seguindo uma distribuição Log-Logística com parâmetro de escala $\alpha$ e de forma $\gamma$, sua função densidade de probabilidade é descrita como
 
-\begin{equation}
+\begin{equation} \label{eq:densLL}
   f(t) = \dfrac{\gamma\left(\dfrac{t}{\alpha}\right)^{\gamma - 1}}{\alpha\left[1+\left(\dfrac{t}{\alpha}\right)^{\gamma}\right]^2}, \hspace{1cm} t > 0
 \end{equation}
 
-Onde $\alpha$ e $\gamma$ são constantes, ambas maiores que 0. Com base na função densidade, é possível descrever a função de sobrevivência da variável aleatória T como:
+Em que $\alpha$ e $\gamma$ são constantes, ambas maiores que 0. Com base na função densidade, é possível descrever a função de sobrevivência da variável aleatória T como:
 
 \begin{equation} \label{eq: LLSurv}
   S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\alpha}\right)^{\gamma}}
@@ -311,40 +347,43 @@ Onde $\alpha$ e $\gamma$ são constantes, ambas maiores que 0. Com base na funç
 E a partir desta função pode-se encontrar a função risco acumulado:
 
 \begin{equation} \label{eq: HazLL}
-H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\alpha}\right)^{\gamma}}}
+H(t) = - \log\left[\dfrac{1}{1 + \left(\dfrac{t}{\alpha}\right)^{\gamma}}\right]
 \end{equation}
 
-Com relação ao comportamento da função de risco, quando $\gamma$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente.
 
-A partir da função \ref{eq: LLSurv} ainda é possível definir a função de risco do modelo:
+A partir da equação (\ref{eq:densLL}) e (\ref{eq: LLSurv}) ainda é possível definir a função de risco do modelo:
 
 \begin{equation} \label{eq: hazLL}
-h(t) = \dfrac{\gamma(t/\alpha)^{\gamma-1}}{\alpha[1+(t/\alpha)^\gamma]}
+h(t) = \dfrac{\gamma(t/\alpha)^{\gamma-1}}{\alpha[1+(t/\alpha)^\gamma]}.
 \end{equation}
+
+Com relação ao comportamento da função de risco, quando $\gamma$ é menor que 1, esta é monótona decrescente, enquanto para valores maiores que 1 a função tem um comportamento monótono crescente até certo ponto e depois decresce, o que representa função de risco unimodal.
 
 
 \subsection{Método de Máxima Verossimilhança}
 
-Para a estimação dos parâmetros da função de distribuição, e também para os parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
+Para a estimação dos parâmetros do modelo, existe uma grande variedade de formas para efetuar tal procedimento. Como a característica principal da análise de sobrevivência é a presença de censuras, o procedimento também deve incorporar tal característica. Por esse motivo, é descartado alguns métodos para a estimação.
 
-Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade.
+Um método que consegue incorporar a censura é o método da máxima verossimilhança. Este método tem como objetivo encontrar o valor do parâmetro que maximiza a probabilidade da amostra observada ser encontrada. Este método mostra-se adequado por permitir a incorporação das censuras através da inclusão da função de sobrevivência para os tempos censurados, enquanto os tempos em que ocorreram falha, considera-se a função densidade de probabilidade.
 
-Para os tipos de censura à direita mostrados, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por \cite{colosimo}:
+Para os tipos de censura à direita, a função de máxima verossimilhança a ser maximizada pode ser descrita analíticamente e a menos de constantes, é dada por (Colosimo e Giolo, 2006):
 
 \begin{equation} \label{eq:maxv1}
   L(\boldsymbol{\theta}) \propto \prod_{i=1}^n \left[f(t_i;\boldsymbol{\theta})\right]^{\delta_i} \left[S(t_i;\boldsymbol{\theta})\right]^{1-\delta_i},
 \end{equation}
 
-onde $\delta_i$ é a variável indicadora de falha e $\boldsymbol{\theta}$ é o vetor de parâmetros que serão estimados.
+Em que $\delta_i$ é a variável indicadora de falha e $\boldsymbol{\theta}$ é o vetor de parâmetros que serão estimados.
 
-Para encontrar o estimador de máxima verossimilhança, deriva-se a função de verossimilhança, ou o log da função, em todos os parâmetros e iguala as funções resultantes a zero encontrando assim um valor para todos os parâmetros no vetor $\boldsymbol{\theta}$. Para a resolução do sistema são geralmente utilizados métodos computacionais de otimização numérica devido a grande complexidade dos cálculos. 
+Para encontrar o estimador de máxima verossimilhança, deriva-se a função de verossimilhança, ou o log da função, em relação aos parâmetros e iguala as funções resultantes a zero encontrando assim um valor para todos os parâmetros no vetor $\boldsymbol{\theta}$. Para a resolução do sistema são geralmente utilizados métodos computacionais de otimização numérica, tais como Newton-Raphson e BFGS devido a grande complexidade dos cálculos. 
 
 
 \subsection{Dados Grupados}
 
-A análise de sobrevivência com censura intervalar, tem como caso particular os dados grupados. Essa particularidade acontece quando acontece um número excessivo de empates, ou seja, os tempos de vida se repetem diversas vezes. Este tipo de experimento pode ser encontrado em estudos de medidas repetidas longitudinais.
+A análise de sobrevivência com censura intervalar, tem como caso particular os dados grupados. Essa particularidade acontece quando todos os indivíduos são avaliados dentro do mesmo instante, se tornando assim o mesmo intervalo para todas as observações. A outra forma que define-se os dados grupados é quando acontece um número excessivo de empates, ou seja, vários indivíduos falham ao chegar em determinado tempo. Este tipo de experimento pode ser encontrado em estudos de medidas repetidas longitudinais.
 
 Para esse tipo de estudo, os tempos são separados em intervalos arbitrários e disjuntos isso significa que os intervalos não precisam ter o mesmo tamanho e que não podem haver interseções entre os intervalos. As funções utilizadas na análise, tais como função de sobrevivência e de risco são as mesmas utilizadas quando o tempo é contínuo.
+
+Os intervalos em questão são formados por dois valores arbitrários, $a_j$ e $a_{j+1} \in \mathbb{N}$, em que $j = 1, ..., k$ e k é uma constante indicando o número de intervalos. O intervalo $I_j = [a_j, a_{j+1})$ deve ser tal que $I_j\cap I_{j+1} = \{\emptyset\} \ \ \ \forall \ j \in k$.
 
 A função de verossimilhança se diferencia da forma utilizada na análise de sobrevivência devido a agregação dos valores em intervalos. Segundo \cite{elisangela}, a função de verossimilhança para esse caso pode ser descrita como:
 
@@ -356,25 +395,12 @@ A função de verossimilhança se diferencia da forma utilizada na análise de s
   \end{split}
 \end{equation}
 
-\noindent onde, $\boldsymbol{\theta}$ é o vetor de parâmetros, k é o número de intervalos no estudo, $F_j$ é o grupo de individuos que falharam, $R_j$ é o grupo de indivíduos que sobreviveram, ou não falharam, nesse intervalo e $C_j$ são os individuos que foram censurados naquele intervalo. Os valores de $a_j$ e $a_{j+1}$ são os limites dos intervalos, sendo o primeiro o limite inferior e o segundo o superior.
+\noindent em que, $\boldsymbol{\theta}$ é o vetor de parâmetros, k é o número de intervalos no estudo, $F_j$ é o grupo de individuos que falharam, $R_j$ é o grupo de indivíduos que sobreviveram, ou não falharam, nesse intervalo e $C_j$ são os individuos que foram censurados naquele intervalo. Os valores de $a_j$ e $a_{j+1}$ são os limites dos intervalos, sendo o primeiro o limite inferior e o segundo o limite superior.
 
-\subsection{Resíduos de Cox-Snell}
-
-Para avaliar a qualidade do ajuste do modelo, realiza-se o cálculo de medidas que possam mensurar essa qualidade. Por se tratar de modelos censurados, a análise de resíduos na análise de sobrevivência não são tão visualizáveis e por isso, existem diversas medidas de resíduos passíveis de serem utilizados. Esta subseção comenta os resíduos de Cox-Snell.
-
-Segundo \cite{colosimo}, esses resíduos são obtidos através da função risco acumulada obtida pelo modelo ajustado:
-
-\begin{equation} \label{eq:cox}
-  \hat{e_i} = \hat{H}(ti|\boldsymbol{x})
-\end{equation}
-
-Os resíduos $\hat{e_i}$ devem seguir distribuição exponencial padrão (\cite{Lawless}). Cada tempo presente no banco de dados gera um resíduo, desta forma cada resíduo possui um indicador de censura. Para realizar a análise gráfica do modelo, calcula-se o estimador de Kaplan-Meier para a função de sobrevivência dos resíduos e cria o gráfico desta estimativa sobreposta pela curva de sobrevivência da distribuição exponencial padrão.
-
-A qualidade do ajuste é determinada a partir da proximidade entre as duas curvas. Caso a curva gerada pelos resíduos aparente ter uma distribuição exponencial e sobrepor de forma satisfatória a curva gerada pela exponencial padrão, então diz-se que o modelo possui um bom ajuste.
 
 
 %__________________________________METODOLOGIA__________________________________
-\newpage
+\NewPage
 \section{Metodologia}
 \noindent
 
@@ -388,9 +414,7 @@ Além deste, será utilizado um banco de dados cedido pela Universidade Estadual
 
 \subsubsection{Modelo de Regressão Log-Logístico}
 
-Nos estudos em sobrevivência, é comum utilizar modelos de regressão para entender se o tempo em estudo é bem explicado por alguma distribuição de probabilidade, nesse caso utiliza-se o método de máxima verossimilhança para encontrar os parâmetros da distribuição escolhida e verifica-se o ajuste de tal distribuição graficamente.
-
-Além disso, pode-se desejar entender o comportamento da variável resposta segundo covariáveis. Nesse caso, utiliza-se uma reparametrização de um parâmetro da distribuição escolhida através de uma função de ligação. Para este trabalho, foi escolhida a distribuição Log-Logística e o parâmetro que será reparametrizado, será o parâmetro de escala citado na subseção 2.5.1.
+Nos estudos em sobrevivência, é comum utilizar modelos de regressão para entender a efeito de covariáveis explicativas no tempo de falha em estudo. Nesse caso, utiliza-se uma reparametrização de um parâmetro da distribuição escolhida através de uma função de ligação. Para este trabalho, foi escolhida a distribuição Log-Logística e o parâmetro que será reparametrizado, será o parâmetro de escala citado na subseção 2.4.1.
 
 A função de ligação tem como objetivo conectar as covariáveis com a variável resposta através de um preditor linear definido como o produto da matriz transposta de covariáveis com o vetor de parâmetros, tal que para um conjunto de covariáveis o parâmetro de escala presente na distribuição pode ser descrito como:
 
@@ -398,21 +422,25 @@ A função de ligação tem como objetivo conectar as covariáveis com a variáv
   \alpha = g(\boldsymbol{\eta}) = \exp(\boldsymbol{x}^T\boldsymbol{\beta})
 \end{equation}
 
-Com isso, é possível reescrever as funções presentes em 2.5.1 para adaptá-las ao modelo de regressão Log-Logístico com covariáveis. As funções necessárias para a realização da modelagem será a função de sobrevivência e para calcular o resíduo de Cox-Snell será utilizada também a função risco acumulada.
+em que $\boldsymbol{x}^T = (1, x_1, ..., x_p)$ é o vetor de covariáveis e $\boldsymbol{\beta} = (\beta_0, \beta_1, ..., \beta_p)$ é o vetor dos coeficientes associados às covariáveis.
 
-A função de sobrevivência da distribuição Log-Logística adicionando as covariáveis pode ser descrita como:
+Com isso, é possível reescrever as funções presentes em 2.4.1 para adaptá-las ao modelo de regressão Log-Logístico com covariáveis. As funções necessárias para a realização da modelagem será a função de sobrevivência e para calcular o resíduo de Cox-Snell será utilizada também a função risco acumulada.
+
+Dessa forma, a função de sobrevivência do modelo de regressão Log-Logístico pode ser descrita como:
 
 \begin{equation} \label{eq: LLSurvMod}
-  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}
+  S(t) = \dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}},
 \end{equation}
+
+em que $\gamma > 0$ é o parâmetro de forma.
 
 E a partir desta, é possível encontrar a função risco acumulada:
 
 \begin{equation} \label{eq: HazLLMod}
-H(t) = - \log{\dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}}
+H(t) = - \log\left[\dfrac{1}{1 + \left(\dfrac{t}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}\right]
 \end{equation}
 
-Para a estimação dos parâmetros do modelo é utilizada a função de verossimilhança. Utiliza-se o log desta função para a estimação dos parâmetros. Assim, utilizando a função \ref{eq:like_group} tem-se:
+Para a estimação dos parâmetros do modelo é utilizada a função de verossimilhança. Utiliza-se o log desta função para a estimação dos parâmetros. Assim, utilizando a função de verossimilhança definida na equação (\ref{eq:like_group}), tem-se:
 
 \begin{equation} \label{eq:like_groupMod}
   \begin{split}
@@ -422,9 +450,9 @@ Para a estimação dos parâmetros do modelo é utilizada a função de verossim
 \end{split}
 \end{equation}
 
-Finalmente, substituindo \ref{eq: LLSurvMod} em \ref{eq:like_groupMod}:
+Finalmente, substituindo (\ref{eq: LLSurvMod}) em (\ref{eq:like_groupMod}) tem-se que:
 
-\begin{equation} \label{eq:like_groupMod}
+\begin{equation} \label{eq:llike_groupMod}
   \begin{split}
     l(\boldsymbol{\theta}) = & \sum\limits_{j=1}^k\Bigg\{ \sum\limits_{i\in F_j} \log\left[1 - \dfrac{1 + \left(\dfrac{a_j}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}{1 + \left(\dfrac{a_{j+1}}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}\right] \\
     & +\sum\limits_{i\in R_j} \log\left[\dfrac{1 + \left(\dfrac{a_j}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}{1 + \left(\dfrac{a_{j+1}}{\exp(\boldsymbol{x}^T\boldsymbol{\beta})}\right)^{\gamma}}\right] \\
@@ -432,12 +460,25 @@ Finalmente, substituindo \ref{eq: LLSurvMod} em \ref{eq:like_groupMod}:
   \end{split}
 \end{equation}
 
-\noindent em que, $l(\boldsymbol{\theta}) = \log(L(\boldsymbol{\theta}))$. A partir desse ponto, deve-se seguir o processo de otimização citado na subseção 2.6, ou seja, calcula-se a derivada da função log-verossimilhança e encontra o ponto onde todos as equações geradas são iguais a zero. Por se tratarem de diversos parâmetros, são utilizados procedimentos de otimização numérica para se estimar tais valores. Para estes procedimentos será utilizado o \textit{software} R(\cite{R}).
+\noindent em que, $l(\boldsymbol{\theta}) = \log(L(\boldsymbol{\theta}))$. A partir desse ponto, deve-se seguir o processo de otimização citado na subseção 2.5, ou seja, calcula-se a derivada da função log-verossimilhança e encontra o ponto onde todos as equações geradas são iguais a zero. Por se tratarem de diversos parâmetros, são utilizados procedimentos de otimização numérica para se estimar tais valores. Para estes procedimentos será utilizado o \textit{software} R(\cite{R}), utilizando o método BFGS da função \textit{optim}.
 
-Para a avaliação da modelagem será utlizado o método gráfico dos resíduos de Cox-Snell. Esses resíduos são gerados a partir da função risco acumulada da distribuição em questão gerada pelos parâmetros do modelo. Os resíduos de Cox-Snell, nesse caso serão dados por \ref{eq: HazLLMod}.
+\subsection{Resíduos de Cox-Snell}
+
+Para avaliar a qualidade do ajuste do modelo, realiza-se o cálculo de medidas que possam mensurar essa qualidade. Por se tratar de modelos censurados, a análise de resíduos na análise de sobrevivência não são tão visualizáveis e por isso, existem diversas medidas de resíduos passíveis de serem utilizados. Esta subseção aborda os resíduos de Cox-Snell.
+
+Segundo Colosimo e Giolo (2006), esses resíduos são obtidos através da função risco acumulada obtida pelo modelo ajustado:
+
+\begin{equation} \label{eq:cox}
+  \hat{e_i} = \hat{H}(ti|\boldsymbol{x_i})
+\end{equation}
+
+em que $\boldsymbol{x_i} = (1, x_{i1}, ..., x_{ip})$ é o vetor de covariáveis do i-ésimo indivíduo.
+Os resíduos $\hat{e_i}$ devem seguir distribuição exponencial padrão (\cite{Lawless}). Cada tempo presente no banco de dados gera um resíduo, desta forma cada resíduo possui um indicador de censura. Para realizar a análise gráfica do modelo, calcula-se o estimador de Kaplan-Meier para a função de sobrevivência dos resíduos e cria o gráfico desta estimativa sobreposta pela curva de sobrevivência da distribuição exponencial padrão dos resíduos.
+
+A qualidade do ajuste é determinada a partir da proximidade entre as duas curvas. Caso a curva gerada pelos resíduos aparente ter uma distribuição exponencial e sobrepor de forma satisfatória a curva gerada pela exponencial padrão, então diz-se que o modelo possui um bom ajuste.
 
 
-\newpage
+\NewPage\null
 
 \section{Resultados e Discussão}
 
@@ -464,7 +505,7 @@ Outro procedimento passível de ser realizado para a análise exploratória é a
   \end{center}
 \end{figure}
 
-Para a realização do estudo utilizando a metodologia de dados grupos, o tempo de sobrevivência foi grupado em 12 intervalos, como dito na seção 3.1. A Tabela 1 apresenta os intervalos escolhidos, o número de falhas, o de censuras e o número de indivíduos sob risco.
+Para a realização do estudo utilizando a metodologia de dados grupados, o tempo de sobrevivência foi grupado em 12 intervalos, como dito na seção 3.1. A Tabela 1 apresenta os intervalos escolhidos, o número de falhas, o de censuras e o número de indivíduos sob risco.
 
 \begin{table}[H]
 \centering
@@ -500,6 +541,7 @@ Intervalo & Número de falhas & Número de censuras & Número sob risco \\
 \end{tabular}
 \end{table}
 
+A Tabela 1 mostra um grande número de falhas em quase todos os intervalos com exceção das duas últimas, esse é mais um indicativo de que a metodologia para dados grupados deve ser utilizada.
 
 Após observar o comportamento da função de sobrevivência estimada considerando apenas o tempo, pode-se incluir covariáveis uma a uma e avaliar a diferença entre as curvas de sobrevivências geradas.
 
@@ -531,7 +573,7 @@ A Figura 6 mostra o efeito do tipo de tratamento na variável tempo. As curvas a
 \end{figure}
 
 
-O gráfico da função risco acumulada é utilizada para identificar um comportamento na função de risco e desta forma auxilia na suposição de um modelo adequado, como foi visto na seção 2.3.5.
+O gráfico da função risco acumulada é utilizado para identificar um comportamento na função de risco e desta forma auxilia na suposição de um modelo adequado, como foi visto na seção 2.3.5.
 
 \begin{figure}[H] \label{fig:surv_vit}
   \begin{center}
@@ -540,13 +582,15 @@ O gráfico da função risco acumulada é utilizada para identificar um comporta
   \end{center}
 \end{figure}
 
-Observando o gráfico, nota-se que o comportamento é muito similar ao (C) da seção 2.3.5 o que indica que a função de risco tem um comportamento decrescente. Desta forma, uma distribuição de probabilidade possível seria a Log-Logística.
+Observando a Figura 7, nota-se que o comportamento é muito similar ao (C) da seção 2.2.4 o que indica que a função de risco tem um comportamento decrescente. Desta forma, uma distribuição de probabilidade possível seria a Log-Logística.
+
+Então com base na Figura 2 e na Tabela 1, conclui-se que a metodologia de dados grupados deveria ser utilizada. Com base na Figura 7, escolheu-se a distribuição Log-Logística para o modelo. Desta forma, o próximo passo será construir o modelo de regressão Log-Logístico para dados grupados.
 
 \subsubsection{Modelagem}
 
 Tendo como objetivo encontrar um modelo que explique bem a variável tempo de sobrevivência, nesta seção serão tratados a modelagem, a seleção de variáveis e a análise de resíduos.
 
-Ao realizar a modelagem sem considerar nenhuma covariável e apenas estimar os parâmetros da distribuição Log-Logística, é possível realizar a comparação entre a função distribuição estimada pela função de máxima verossimilhança adapatada para o método de dados grupados e a função de sobrevivência estimada por Kaplan-Meier.
+Ao realizar a modelagem sem considerar nenhuma covariável e apenas estimar os parâmetros da distribuição Log-Logística, é possível realizar a comparação entre a função sobrevivência estimada pela função de máxima verossimilhança adapatada para o método de dados grupados e a função de sobrevivência estimada por Kaplan-Meier.
 
 \begin{figure}[H] \label{fig:surv_vit}
   \begin{center}
@@ -566,12 +610,12 @@ Parâmetro & Estimativa & Erro Padrão \\
 \hline
 $\alpha$ & 44,57 & 1,98  \\
 
-$\gamma$ & 1,23 & 0.045 \\
+$\gamma$ & 1,23 & 0,045 \\
 \hline
 \end{tabular}
 \end{table}
 
-Outra parte da modelagem que será realizada é a inclusão de covariáveis para verificar quais variáveis são significativas ao tentar explicar o tempo. Para isso, mais uma vez será realizada a estimação dos parâmetros através da função de máxima verossimilhança utilizando a metodologia em questão e para a inclusão das covariáveis, será utilizada a função de ligação $g(\eta) = \exp(\boldsymbol{x}^T\boldsymbol{\beta})$. Assim, o parâmetro $\alpha$ pode ser escrito, utilizando todas as variáveis explicativas, da seguinte forma:
+Mais um indicativo para o uso do modelo em questão é o alto valor de $\alpha$, o que indica uma grande heterogeneidade. Outra parte da modelagem que será realizada é a inclusão de covariáveis para verificar quais variáveis são significativas ao tentar explicar o tempo. Para isso, mais uma vez será realizada a estimação dos parâmetros através da função de máxima verossimilhança utilizando a metodologia em questão e para a inclusão das covariáveis, será utilizada a função de ligação $g(\eta) = \exp(\boldsymbol{x}^T\boldsymbol{\beta})$. Assim, o parâmetro $\alpha$ pode ser escrito, utilizando todas as variáveis explicativas, da seguinte forma:
 
 \begin{equation} \label{eq:conn_vit}
 \alpha_i = exp(\beta_0 + \beta_1Idade_i + \beta_2Tratamento_i + \beta_3Sexo_i)
@@ -586,7 +630,7 @@ Como pode ser observado na equação \ref{eq:conn_vit} as variáveis possuem o n
 \hline
 Parâmetro & Estimativa & Erro Padrão & p-valor \\
 \hline
-Intercepto & 3.24 & 0,087 & < 0,001 \\
+Intercepto & 3,24 & 0,087 & < 0,001 \\
 
 Idade & 0,83 & 0,082 & < 0,001 \\
 
@@ -603,7 +647,7 @@ A tabela acima mostra que todas as covariáveis foram significantes menos a vari
 
 \begin{table}[H]
 \centering
-\caption{Estimativas dos parâmetros do modelo completo.}
+\caption{Estimativas dos parâmetros do modelo final.}
 \begin{tabular}{c|ccc}
 \hline
 Parâmetro & Estimativa & Erro Padrão & p-valor \\
@@ -619,23 +663,24 @@ $\gamma$ & 1,31 & 0.047 & - \\
 \end{tabular}
 \end{table}
 
-Pelos resultados, tem-se que todos as variáveis são significativas tanto a um nível de 5\%. Além disso, o Teste da Razão de Verossimilhança indica que não devem ser retiradas nenhuma variável do modelo e por isso, esse foi escolhido como candidato ao modelo final. Pelos resultados dos parâmetros, percebe-se que o modelo apresenta taxa de falha unimodal devido a estimação do parâmetro $\gamma$ ser 1,31. A estimativa do parâmetro de idade indica que crianças com idade maior que 24 meses possuem maior probabilidade de sobrevivência. Quanto a variável tratamento, quem apresenta maior probabilidade são as que crianças que foram suplementadas com Vitamina A.
-
+Pelos resultados, tem-se que todos as variáveis são significativas tanto a um nível de 5\% de significância. Além disso, o Teste da Razão de Verossimilhança indica que não devem ser retiradas nenhuma variável do modelo e por isso, esse foi escolhido como candidato ao modelo final. 
 Com o objetivo de verificar a qualidade do ajuste do modelo, realiza-se a análise gráfica de resíduos de Cox-Snell. A Figura 9 mostra os resíduos gerados pelo candidato a modelo final.
 
 \begin{figure}[H] \label{fig:surv_vit}
   \begin{center}
-    \includegraphics[width=10cm]{mod_vazio_vit}
+    \includegraphics[width=10cm]{res_vit}
     \caption{Resíduos de Cox-Snell.}
   \end{center}
 \end{figure}
 
 No gráfico, é possível perceber que a curva do resíduo se aproxima bem da curva da exponencial padrão. Com isso, percebe-se que o modelo explica bem o tempo e por isso esse modelo pode ser considerado como modelo final.
 
+Pelos resultados dos parâmetros, percebe-se que o modelo apresenta taxa de falha unimodal devido a estimação do parâmetro $\gamma$ ser 1,31. A estimativa do parâmetro de idade indica que crianças com idade maior que 24 meses possuem maior probabilidade de sobrevivência. Quanto a variável tratamento, quem apresenta maior probabilidade são as que crianças que foram suplementadas com Vitamina A. Os resultados encontrados pelo modelo de regressão Log-Logístico refletem os resultados ilustrados pela análise exploratória, o que reforça a qualidade do modelo encontrado.
+
 \subsection{Evasão Curso de Química}
 \subsubsection{Análise Descritiva}
 
-A fim de explorar inicialmente os dados, é realizada um histograma da variável tempo sem considerar nenhuma covariável nem a indicação de censura.
+A fim de explorar inicialmente os dados, é realizado um histograma da variável tempo sem considerar nenhuma covariável nem a indicação de censura.
 
 \begin{figure}[H]
   \centering
@@ -643,18 +688,232 @@ A fim de explorar inicialmente os dados, é realizada um histograma da variável
   \caption{Histrograma dos tempos de evasão}
 \end{figure}
 
-Como é possível observar, devido ao fato de que os alunos só podem permanecer na universidade por 12 semestres existem muitos empates dentro desse modelo, justificando assim o uso da metodologia de dados grupados.
+Como é possível observar, devido ao fato de que os alunos só podem permanecer na universidade por 12 semestres existem muitos empates nos semestres. Além disso, o evento de interesse só é observado ao final dos semestres o que significa medir os dados a cada intervalo de um semestre e essa é a caracterização de dados grupados.
 
 Para verificar a forma da estimativa da função de sobrevivência, é realizada a estimação por Kaplan-Meier e faz-se o gráfico dessa estimativa.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=10cm]{quim_hist}
+  \includegraphics[width=10cm]{surv_quim.eps}
   \caption{Histrograma dos tempos de evasão}
 \end{figure}
 
+A Figura 11 apresenta uma caída maior nos tempos iniciais, principalmente nos tempos 0 e 1. O gráfico possui um formato de escada devido ao tempo ser uma variável discreta e por isso as censuras só aparecem nos valores discretos. Como os tempos se tratam de semestres, o uso de um semestre como intervalo é uma forma natural de se pensar, assim são utilizados 13 intervalos. A Tabela 5 mostra os intervalos, o número de falhas, o de censuras e número de pessoas sob risco naquele intervalo.
 
-\newpage
+\begin{table}[H]
+\centering
+\caption{Descrição dos tempos de evasão utilizando os intervalos grupados.}
+\begin{tabular}{cccc}
+  \hline
+ Intervalo & Número de Falhas & Número de Censuras & Número sob risco \\ 
+  \hline
+  [0, 1) & 65 & 41 & 671 \\
+  
+  [1, 2)  & 80 & 47 & 565 \\ 
+  
+  [2, 3)  & 38 & 42 & 438 \\ 
+  
+  [3, 4)  & 23 & 48 & 358 \\ 
+  
+  [4, 5)  & 20 & 29 & 287 \\ 
+  
+  [5, 6)  & 15 & 30 & 238 \\ 
+  
+  [6, 7)  & 18 & 17 & 193 \\ 
+  
+  [7, 8)  & 18 & 21 & 158 \\ 
+  
+  [8, 9)  & 10 & 17 & 119 \\ 
+  
+  [9, 10)  & 11 & 32 & 92 \\ 
+  
+  [10, 11)  & 5 & 18 & 49 \\ 
+  
+  [11, 12)  & 2 & 20 & 26 \\ 
+  
+  [12, 13)  & 0 & 4 & 4 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+A Tabela 5 mostra um grande número de empates na maioria dos intervalos, o que indica o uso da metodologia de dados grupados. Além disso, todas as observações são avaliadas nos mesmos intervalos, o que indica o caso particular da censura intervalar. Todos esses motivos apontam para o uso da metodologia de dados grupados.
+
+Para observar o efeito das covariáveis, é realizado o gráfico de Kaplan-Meier para a variável tempo separada pelas variáveis explicativas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_sexo}
+\caption{Função de sobrevivência por sexo}
+\end{figure}
+
+A Figura 12 mostra que existe um afastamento entre as curvas do sexo masculino e feminino o que pode indicar que a variável será significativa para o modelo. Essa figura ainda mostra que a probabilidade de sobrevivência das alunas do sexo feminino possuem uma probabilidade de sobrevivência menor que os alunos do sexo masculino.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_turn}
+\caption{Função de sobrevivência por turno}
+\end{figure}
+
+Pela Figura 13 percebe-se que a diferença entre as curvas vai se acentuando conforme o tempo passa. Pelo distanciamento das curvas pode ser que a informação do turno do aluno seja significante, apesar do início próximo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_ing}
+\caption{Função de sobrevivência por meio de ingresso}
+\end{figure}
+
+Percebe-se na Figura 14 uma grande diferença entre as curvas, o que pode indicar que a variável meio de ingresso explica bem a variável tempo de evasão.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_ida}
+\caption{Função de sobrevivência por idade}
+\end{figure}
+
+A variável idade tem suas curvas bem próximas até o tempo 7 e após isso, as curvas se distanciam mais sendo difícil dizer se esta variável será ou não significativa, o que será mostrado ao realizar a modelagem.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_esc}
+\caption{Função de sobrevivência por tipo de escola}
+\end{figure}
+
+O gráfico da variável escola (Figura 16) mostra que as curvas são extremamente próximas durante toda a sua extensão, podendo esta variável não ser significativa por não possuir diferença nas curvas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{exp_quim_ori}
+\caption{Função de sobrevivência por cidade de origem}
+\end{figure}
+
+Já a variável que indica a cidade de origem não aparenta explicar bem a variável tempo, devido a suas curvas serem muito próximas, como mostra a Figura 17.
+
+Para a suposição da distribuição de probabilidade que será utilizada para a etapa de modelagem, é feito o gráfico da função risco acumulada com o objetivo de observar seu comportamento e determinar a forma da função de risco, encontrando assim uma distribuição que seja adequada.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{cum_quim}
+\caption{Função risco acumulada do tempo de evasão dos alunos.}
+\end{figure}
+
+Segundo a Figura 18, a função risco acumulada aparenta possuir um comportamento semelhante ao comportamento (C) da Figura 1 na seção 2.2.4, assim como na análise do banco anterior. Desta forma, também será utilizada a distribuição Log-Logística para o ajuste do modelo.
+
+\subsubsection{Modelagem}
+
+Nesta seção serão abordados os resultados do modelo final para o banco de dados do curso de química. Para a estimação do modelo, será utilizada a função de máxima verossimilhança para o caso de dados grupados e para a otimização da função será utilizada a função \textit{optim()} do \textit{software R}, assim como no modelo do banco anterior.
+
+Realizando a modelagem sem nenhuma covariável, utilizando apenas os grupos dos tempos até a evasão dos alunos e a informação da censura pode-se verificar a explicação da variável apenas pela distribuição. A Figura 19 mostra o resultado desse modelo através da função de sobrevivência estimada por Kaplan-Meier(Curva Vermelha) e a função de sobrevivência da distribuição Log-Logística estimada pela verossimilhança modificada para incorporar as informações do grupo (Linha Preta).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{mod_log_quim}
+\caption{Função de Sobrevivência Estimada.}
+\end{figure}
+
+Como mostra a Figura 19, o modelo se aproxima bem no começo, subestima os valores após determinado tempo. Agora, são adicionadas covariáveis com o intuito de entender melhor se essas variáveis explicam o tempo de evasão dos alunos e quão bem elas explicam.  A Tabela 6 mostra os parâmetros da Log-Logística estimada, assim como seus erros padrões.
+
+\begin{table}[H]
+\centering
+\caption{Estimativas dos parâmetros da distribuição log-logística sem covariáveis.}
+\begin{tabular}{c|cc}
+\hline
+Parâmetro & Estimativa & Erro Padrão \\
+\hline
+$\alpha$ & 4,99 & 0,33  \\
+
+$\gamma$ & 1,21 & 0,065 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+O preditor linear do modelo completo utilizado para ligar as variáveis explicativas a variável resposta pode ser descrito por:
+
+\begin{equation} \label{eq:mod_quim}
+  \alpha_i = \exp(\beta_0 + \beta_1 Sexo_i + \beta_2Turno_i + \beta_3Escola_i + \beta_4Ingresso_i + \beta_5 Idade_i + \beta_6 Origem_i)
+\end{equation}
+
+
+Estima-se os parâmetros da equação (\ref{eq:mod_quim}) através do método de máxima verossimilhança. A Tabela 7 mostra o resultado da estimação dos parâmetros do modelo completo, seus erros padrão e o p-valor dessa estimativa.
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros estimados do modelo completo.}
+\begin{tabular}{lccc}
+  \hline
+ Parâmetro & Estimativa & Erro Padrão & P-valor \\ 
+  \hline
+  Intercepto & 2,15 & 0,151  & < 0,001 \\
+  
+  Sexo & 0,41 & 0,109 & < 0,001  \\
+  
+  Turno & -0,24 & 0,110 & 0,024  \\ 
+  
+  Escola & -0,01 & 0,111 & 0,91  \\ 
+  
+  Ingresso & -1,09 & 0,108 & < 0,001  \\ 
+  
+  Idade & -0,18 & 0,121 & 0,123  \\ 
+  
+  Origem & 0,12 & 0,110 & 0,284  \\ 
+  
+  $\gamma$ & 1,44 & 0,079 & -  \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+A Tabela 7 mostra que têm variáveis com p-valor muito baixo e outros muito altos. A um nível de significância de 10\% o modelo possui 3 variáveis não significativas. Ao realizar um procedimento para a seleção de variáveis, foi definido que as variáveis Escola e Origem não são significativas a um nível de 10\% e pelo teste da razão de verossimilhança foi determinado que o modelo candidato a modelo final está descrito na Tabela 8:
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros estimados do modelo final.}
+\begin{tabular}{lccc}
+  \hline
+ Parâmetro & Estimativa & Erro Padrão & P-valor \\ 
+  \hline
+  Intercepto & 2,2 & 0,116  & < 0,001 \\
+  
+  Sexo & 0,42 & 0,109 & < 0,001  \\
+  
+  Turno & -0,25 & 0,109 & 0,017  \\ 
+  
+  Ingresso & -1,07 & 0,109 & < 0,001  \\ 
+  
+  Idade & -0,21 & 0,107 & 0,078  \\ 
+  
+  $\gamma$ & 1,44 & 0,079 & -  \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+Na Tabela 8, é possível ver que todas as variáveis têm o p-valor abaixo do nível de significância de 10\% o que indica que todas essas informações são significativas a esse nível, o que aponta que o modelo é um bom candidato a modelo final. 
+
+Para decidir se esse modelo pode ser ou não o modelo final, é realizada a análise gráfica de Cox-Snell.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{res_quim}
+\caption{Gráfico do resíduo de Cox-Snell.}
+\end{figure}
+
+Como é possível perceber na Figura 20, a curva do resíduo se aproxima bem da curva da exponencial padrão, o que indica um bom ajustamento do modelo. Desta forma, é possível escolher esse modelo como modelo final.
+
+O modelo mostra que as alunas do sexo feminino possuem maior probabilidade de sobrevivência com relação aos alunos do sexo masculino. Pela variável turno, os alunos que estudam no período diurno possuem maior probabilidade de continuar no curso. A variável ingresso indica que os alunos que ingressaram pelo Vestibular têm maior probabilidade de sobreviver no curso quando comparado com alunos ingressantes pelo Enem. Por fim, os alunos com idade maior ou igual a 19 têm uma probabilidade de sobrevivência menor que os alunos menores de 19 anos.
+
+
+\NewPage
+
+\section{Conclusão}
+
+Neste trabalho foi proposto o uso do modelo de regressão Log-Logístico para dados de sobrevivência grupados. Para a aplicação do modelo foram escolhidos dois bancos de dados, o de Vitamina A e os dados do curso de química. Para a aplicação no primeiro banco encontrou-se que as variáveis que explicavam bem o modelo foram idade e tipo de tratamento, enquanto no segundo modelo encontrou-se que as variáveis significativas foram o sexo do aluno, o turno em que ele estuda, a forma de ingresso e a idade do mesmo.
+
+Ambos os dados têm muitos empates nos tempos o que indica o uso da metodologia de dados grupados. Mesmo assim, o modelo de regressão Log-Logístico forneceu bons resultados para ambos. O segundo banco de dados trabalhado possui tempo com natureza discreta e mesmo utilizando a distribuição Log-Logística para dados contínuos, com o uso da metodologia de dados grupados o ajuste do modelo encontrado foi bom e os resultados coerentes com a análise descritiva.
+
+O modelo de regressão Log-Logístico, aparenta ter sido uma boa escolha de distribuição tendo em vista o bom ajustamento dos resíduos de Cox-Snell. Como continuação do trabalho, seria interessante observar o ajuste levando em consideração outras distribuições com a função de risco decrescente.
+
+Existe um indicativo de indivíduos curados nos dois bancos de dados, ou seja, que deixaram de ser sucetíveis ao evento de interesse. Com isso, talvez obtenha-se um melhor ajuste ao considerar o modelo de regressão Log-Logístico com fração de cura.
+
+\NewPage
 \addcontentsline{toc}{section}{Referências}
 
 
